@@ -35,11 +35,7 @@ export default function Assistant() {
         { role: "user", content: userMessage }
       ];
 
-      const response = await apiRequest("/api/ai/chat", {
-        method: "POST",
-        body: JSON.stringify({ messages: chatMessages }),
-      });
-
+      const response = await apiRequest("POST", "/api/ai/chat", { messages: chatMessages });
       return response.json().then((data: { response: string }) => data.response);
     },
     onSuccess: (aiResponse, userMessage) => {

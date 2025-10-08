@@ -28,11 +28,7 @@ export default function Dashboard() {
         costTrend: "stable"
       };
       
-      const response = await apiRequest("/api/ai/dashboard-insights", {
-        method: "POST",
-        body: JSON.stringify(metrics),
-      });
-
+      const response = await apiRequest("POST", "/api/ai/dashboard-insights", metrics);
       return response.json().then((data: { insights: string }) => data.insights);
     },
     onSuccess: (insights) => {
