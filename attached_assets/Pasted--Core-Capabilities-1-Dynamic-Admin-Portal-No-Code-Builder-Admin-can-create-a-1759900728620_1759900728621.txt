@@ -1,0 +1,219 @@
+### 🔷 Core Capabilities
+
+1. **Dynamic Admin Portal (No-Code Builder)**
+
+   * Admin can create and modify pages, dashboards, forms, and data widgets using a drag-and-drop interface.
+   * Supports adding components like:
+
+     * Text blocks, buttons, charts, tables, iframes, input fields, dropdowns, radio buttons, checkboxes, and API data widgets.
+   * Admin can visually connect UI components to data sources (REST APIs, Databricks queries, ServiceNow, etc.) using a visual binding panel.
+   * All created pages are stored as JSON in the backend (`layout.json`) for dynamic rendering.
+   * Admin can publish, version, and revert pages without coding.
+
+2. **Viewer Portal**
+
+   * Dynamically renders pages created by Admins.
+   * Supports live refresh, search, filters, and export (PDF, Excel, CSV).
+   * Optimized for Databricks Streamlit rendering (using `st.components.v1.html` for embedded views).
+
+3. **Tool / Connector Manager**
+
+   * Admin can add, edit, test, and delete connectors (Databricks, Power BI, ServiceNow, etc.).
+   * Supports multiple auth types (API Key, OAuth2, Basic).
+   * Automatically validates connections and caches responses.
+   * Securely stores credentials (e.g., Azure Key Vault compatible).
+
+4. **Workflow & Automation Builder**
+
+   * Drag-and-drop flow designer to connect triggers and actions (e.g., *Databricks job failed → create ServiceNow ticket → send Teams alert*).
+   * Supports manual runs, scheduling, and history tracking.
+
+5. **Monitoring & Alerts**
+
+   * Monitors job statuses, tickets, and system health.
+   * Creates alerts for failures or anomalies and routes via email, Teams, or Slack.
+
+6. **User & Role Management**
+
+   * Roles: Admin, Editor, Viewer, Auditor, Integrator.
+   * Integrates with Azure AD for SSO authentication.
+   * Fine-grained permission system for pages, tools, and workflows.
+
+7. **Audit Logs & Versioning**
+
+   * Tracks all changes with timestamps and rollback capability.
+   * JSON diff viewer for comparing versions.
+
+8. **Settings**
+
+   * Manage branding, theme (light/dark), API keys, SMTP, and backup/export of configurations.
+   * Export full system config as portable JSON for Databricks Streamlit import.
+
+---
+
+### 💡 Technical Requirements
+
+#### ✅ Frontend
+
+* React + TypeScript (or Next.js React if possible)
+* Component libraries: `shadcn/ui`, `lucide-react`, `framer-motion`
+* Dashboard grid layout: `react-grid-layout`
+* No-code editor engine: JSON-driven, saved via backend API
+
+#### ✅ Backend
+
+* Python (FastAPI preferred) or Node.js Express (choose based on Replit AI’s best compatibility)
+* REST API endpoints:
+
+  * `/api/pages` (CRUD for dynamic pages)
+  * `/api/tools` (connector management)
+  * `/api/workflows`
+  * `/api/alerts`
+  * `/api/audit`
+* Database: SQLite (default), easy switch to PostgreSQL or Azure SQL
+* Secure storage for secrets (local `.env`, optional Key Vault integration)
+
+#### ✅ Databricks Streamlit Compatibility
+
+* Include a **`requirements.txt`** that lists all dependencies:
+
+  * `streamlit`, `requests`, `pandas`, `sqlalchemy`, `plotly`, `fastapi`, `uvicorn`, `aiohttp`, `jinja2`, `pyjwt`, `cryptography`, `python-dotenv`
+* Include a **`setup.sh`** script that:
+
+  ```bash
+  #!/bin/bash
+  pip install -r requirements.txt
+  export PYTHONPATH=$PWD
+  echo "✅ Environment setup completed for Databricks Streamlit"
+  ```
+* Include a **`main_streamlit.py`** file that:
+
+  ```python
+  import streamlit as st
+  import os, json
+  from app import main as run_app  # assume app/main.py exists
+
+  st.set_page_config(layout="wide", page_title="Azure Platform Builder")
+  st.markdown("# Azure Platform Builder App")
+  st.write("This app is running inside Databricks Streamlit environment.")
+
+  # Run the web app inside an iframe
+  st.components.v1.html(
+      f"""
+      <iframe src="http://localhost:8000" width="100%" height="800px" frameborder="0"></iframe>
+      """,
+      height=800,
+  )
+  ```
+* The Streamlit wrapper should:
+
+  * Auto-detect the environment (Databricks or Replit).
+  * Install missing packages if any (auto installer).
+  * Log setup status in console and on-screen.
+  * Prevent “server not reachable” or “missing config” issues.
+
+#### ✅ Auto Environment Setup
+
+* Include a `bootstrap.py` that:
+
+  ```python
+  import os, subprocess, sys
+  required = ["streamlit", "fastapi", "uvicorn", "pandas", "requests", "plotly"]
+  for pkg in required:
+      try:
+          __import__(pkg)
+      except ImportError:
+          subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+  print("✅ Environment verified & all packages installed")
+  ```
+* Automatically runs when app starts, ensuring a ready-to-use environment in Databricks or Replit.
+
+#### ✅ Deployment Behavior
+
+* On Replit: standard FastAPI or Node.js web app with browser UI.
+* On Databricks: run `main_streamlit.py` to launch inside Streamlit.
+* On startup:
+
+  * Auto-load `.env` for secrets.
+  * Auto-check and install missing dependencies.
+  * Log “Environment validated successfully.”
+
+---
+
+### 🌐 Integration Points
+
+| Tool                  | Data Source           | Purpose                        |
+| --------------------- | --------------------- | ------------------------------ |
+| Databricks            | Jobs API              | Job success/failure monitoring |
+| ServiceNow            | Incident API          | Ticket sync                    |
+| Power BI / Tableau    | Embed URLs            | Dashboard embedding            |
+| Azure DevOps          | REST API              | Build/deployment status        |
+| Email / Teams / Slack | Notification channels | Alerts                         |
+
+---
+
+### ⚙️ Optional Advanced Features
+
+* AI-powered page builder (natural language to layout)
+* Plugin SDK: allow developers to contribute custom widgets
+* Audit dashboard using Streamlit native charts
+* Offline-first JSON backup system
+* Dark mode persistence across users
+* Live logs viewer (tail Databricks job logs)
+
+---
+
+### 🧱 File Structure Example
+
+```
+/app
+ ├── main.py
+ ├── pages/
+ │    └── builder.py
+ ├── components/
+ │    └── widgets/
+ ├── api/
+ │    ├── tools.py
+ │    ├── pages.py
+ │    └── workflows.py
+ ├── static/
+ │    └── themes/
+ ├── templates/
+ │    └── index.html
+ ├── requirements.txt
+ ├── setup.sh
+ ├── bootstrap.py
+ ├── main_streamlit.py
+ └── README.md
+```
+
+---
+
+### 🚀 Expected Behavior
+
+1. When deployed in Replit — app launches with full dashboard & no-code builder UI.
+
+2. When exported and deployed inside Databricks Streamlit —
+
+   * Automatically sets up Python environment
+   * Installs all dependencies
+   * Loads the same UI inside a Streamlit iframe without manual intervention
+   * No server/config/package errors occur
+
+3. Admins can:
+
+   * Add new tools
+   * Create pages visually
+   * Connect APIs
+   * Monitor status & trigger workflows — all from UI.
+
+4. Users can:
+
+   * View dashboards
+   * Search, filter, and export results
+   * Get real-time data from connected tools.
+
+---
+
+**Goal:**
+A fully modular, portable, no-code web app built in Replit that runs seamlessly inside Azure Databricks Streamlit environments, automatically configuring dependencies, resolving missing packages, and ensuring the same UX without manual setup.

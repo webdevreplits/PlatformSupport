@@ -1,15 +1,17 @@
-# Azure Platform Dashboard - No-Code App Builder
+# Azure Platform Support - No-Code App Builder
 
 ## Overview
 
-A production-grade, modular no-code web application for Azure platform operations teams to manage and monitor enterprise tools (Databricks, Power BI, Tableau, ServiceNow, Teradata, etc.). The platform features a drag-and-drop WYSIWYG builder for creating dynamic, database-driven dashboards without writing code.
+A production-grade, modular no-code web application for Azure platform support teams to monitor and manage enterprise infrastructure and services. The platform provides real-time monitoring of Databricks jobs, ServiceNow incidents, workflow automation, and tool integrations with a visual page builder for creating custom dashboards without writing code.
 
 **Core Capabilities:**
-- Visual page builder with drag-and-drop widgets (Text, Button, Table, Chart, Iframe, Form, Search, Filter)
-- Generic connector framework supporting multiple authentication methods (OAuth2, API keys, Basic Auth, Webhooks)
-- Tool/Connector Manager for registering and mapping external services
-- Workflow automation with triggers, actions, and alerts
-- Enterprise-grade security with SSO, RBAC/ABAC, audit logs, and versioning
+- **Dashboard Overview**: Real-time monitoring of Active Incidents, Databricks Jobs, Workflows, and System Health
+- **Incidents Management**: ServiceNow ticket tracking with priority and status filtering
+- **Jobs Monitoring**: Databricks job execution tracking with success rates and performance metrics
+- **Tools Integration**: Connected services dashboard (Databricks, ServiceNow, Power BI, Azure DevOps)
+- **Visual Page Builder**: Drag-and-drop widgets (Heading, Text, Button, Metric, Chart, Table)
+- **Workflow Automation**: Triggers, actions, and alerts for platform operations
+- **Enterprise Security**: JWT authentication, role-based access control, audit logging
 
 ## User Preferences
 
@@ -144,5 +146,22 @@ Preferred communication style: Simple, everyday language.
 
 **Seed Data:**
 - Demo organization with admin/editor/viewer users (passwords: admin123, editor123, viewer123)
-- Sample dashboard page with pre-configured widgets
-- Mock tool integrations for Databricks, ServiceNow, Power BI demonstrations
+- Main Dashboard page with metric widgets
+- Tool integrations: Databricks, ServiceNow, Power BI, Azure DevOps
+
+**Dashboard Features:**
+- **Active Incidents**: ServiceNow ticket tracking (23 active, 5 critical)
+- **Databricks Jobs**: Job monitoring (142 running, 98% success rate)
+- **Active Workflows**: Automation flow status (47 operational)
+- **System Health**: Platform uptime tracking (99.8% uptime)
+- **Recent Activity**: Real-time feed of platform events
+- **Connected Services**: Integration status for all tools
+
+**Navigation Menu:**
+- Dashboard: Azure platform overview
+- Pages: Custom page builder and management
+- Incidents: ServiceNow incident tracking
+- Jobs: Databricks job monitoring
+- Tools: Connector and integration management
+- Settings: Platform configuration
+- Help: Support documentation

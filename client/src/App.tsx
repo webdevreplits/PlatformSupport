@@ -10,9 +10,9 @@ import Dashboard from "@/pages/Dashboard";
 import Pages from "@/pages/Pages";
 import PageForm from "@/pages/PageForm";
 import PageView from "@/pages/PageView";
-import Monitoring from "@/pages/Monitoring";
-import Analytics from "@/pages/Analytics";
-import Resources from "@/pages/Resources";
+import Incidents from "@/pages/Incidents";
+import Jobs from "@/pages/Jobs";
+import Tools from "@/pages/Tools";
 import Settings from "@/pages/Settings";
 import Help from "@/pages/Help";
 import Login from "@/pages/Login";
@@ -68,24 +68,24 @@ function Router() {
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
-      <Route path="/monitoring">
+      <Route path="/incidents">
         <ProtectedRoute>
           <ProtectedLayout>
-            <Monitoring />
+            <Incidents />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
-      <Route path="/analytics">
+      <Route path="/jobs">
         <ProtectedRoute>
           <ProtectedLayout>
-            <Analytics />
+            <Jobs />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
-      <Route path="/resources">
+      <Route path="/tools">
         <ProtectedRoute>
           <ProtectedLayout>
-            <Resources />
+            <Tools />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>

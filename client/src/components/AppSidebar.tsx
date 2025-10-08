@@ -15,9 +15,9 @@ import { Button } from "@/components/ui/button";
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/" },
   { icon: FileText, label: "Pages", path: "/pages" },
-  { icon: BarChart3, label: "Monitoring", path: "/monitoring" },
-  { icon: Activity, label: "Analytics", path: "/analytics" },
-  { icon: Box, label: "Resources", path: "/resources" },
+  { icon: Activity, label: "Incidents", path: "/incidents" },
+  { icon: BarChart3, label: "Jobs", path: "/jobs" },
+  { icon: Box, label: "Tools", path: "/tools" },
   { icon: Settings, label: "Settings", path: "/settings" },
   { icon: HelpCircle, label: "Help", path: "/help" },
 ];
