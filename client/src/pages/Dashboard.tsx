@@ -3,16 +3,46 @@ import { GlassmorphicCard } from "@/components/GlassmorphicCard";
 import { CircularProgress } from "@/components/CircularProgress";
 import { MiniAreaChart } from "@/components/MiniAreaChart";
 import { StatusToggle } from "@/components/StatusToggle";
-import { Activity, AlertCircle, CheckCircle2, Database, Server, Workflow } from "lucide-react";
+import { Activity, AlertCircle, CheckCircle2, Database, Server, Workflow, Sparkles, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const chartData = [30, 45, 35, 60, 55, 70, 65, 80, 75, 90];
+  const [aiInsights, setAiInsights] = useState<string>("");
 
   const handleThemeToggle = () => {
     document.documentElement.classList.toggle("dark");
   };
+
+  const insightsMutation = useMutation({
+    mutationFn: async () => {
+      const metrics = {
+        incidents: 23,
+        jobs: 142,
+        health: 99.8,
+        costTrend: "stable"
+      };
+      
+      const response = await apiRequest("/api/ai/dashboard-insights", {
+        method: "POST",
+        body: JSON.stringify(metrics),
+      });
+
+      return response.json().then((data: { insights: string }) => data.insights);
+    },
+    onSuccess: (insights) => {
+      setAiInsights(insights);
+    }
+  });
+
+  useEffect(() => {
+    insightsMutation.mutate();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,6 +198,37 @@ export default function Dashboard() {
                 <Badge variant="outline">Running</Badge>
               </div>
             </div>
+          </Card>
+
+          <Card className="shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-semibold">AI Insights</h3>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => insightsMutation.mutate()}
+                disabled={insightsMutation.isPending}
+                data-testid="button-refresh-insights"
+              >
+                {insightsMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Refresh"
+                )}
+              </Button>
+            </div>
+            {insightsMutation.isPending && !aiInsights ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <div className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {aiInsights || "No insights available"}
+              </div>
+            )}
           </Card>
 
           <Card className="shadow-sm p-6">
