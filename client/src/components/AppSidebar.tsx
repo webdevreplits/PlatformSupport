@@ -1,6 +1,16 @@
-import { Home, BarChart3, Settings, HelpCircle, Activity, Box } from "lucide-react";
+import { Home, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/" },
@@ -13,6 +23,7 @@ const navItems = [
 
 export function AppSidebar() {
   const [location] = useLocation();
+  const { user, logout } = useAuth();
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-16 border-r border-white/10 bg-background/80 backdrop-blur-xl flex flex-col items-center py-4 gap-6 z-40">
@@ -44,7 +55,31 @@ export function AppSidebar() {
         })}
       </nav>
 
-      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-chart-2 to-chart-3" />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-chart-2 to-chart-3"
+            data-testid="button-user-menu"
+          >
+            <User className="w-5 h-5 text-white" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" side="right" className="w-56">
+          <DropdownMenuLabel>
+            <div className="flex flex-col">
+              <span className="text-sm">{user?.email}</span>
+              <span className="text-xs text-muted-foreground capitalize">{user?.role}</span>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={logout} data-testid="button-logout">
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </aside>
   );
 }

@@ -3,6 +3,8 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppSidebar } from "@/components/AppSidebar";
 import Dashboard from "@/pages/Dashboard";
 import Monitoring from "@/pages/Monitoring";
@@ -10,17 +12,66 @@ import Analytics from "@/pages/Analytics";
 import Resources from "@/pages/Resources";
 import Settings from "@/pages/Settings";
 import Help from "@/pages/Help";
+import Login from "@/pages/Login";
 import NotFound from "@/pages/not-found";
+
+function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex">
+      <AppSidebar />
+      <div className="flex-1 ml-16">
+        {children}
+      </div>
+    </div>
+  );
+}
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/monitoring" component={Monitoring} />
-      <Route path="/analytics" component={Analytics} />
-      <Route path="/resources" component={Resources} />
-      <Route path="/settings" component={Settings} />
-      <Route path="/help" component={Help} />
+      <Route path="/login" component={Login} />
+      <Route path="/">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Dashboard />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/monitoring">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Monitoring />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/analytics">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Analytics />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/resources">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Resources />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/settings">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Settings />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/help">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Help />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
@@ -29,15 +80,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <div className="flex">
-          <AppSidebar />
-          <div className="flex-1 ml-16">
-            <Router />
-          </div>
-        </div>
-        <Toaster />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
