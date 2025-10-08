@@ -7,6 +7,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppSidebar } from "@/components/AppSidebar";
 import Dashboard from "@/pages/Dashboard";
+import Pages from "@/pages/Pages";
+import PageForm from "@/pages/PageForm";
 import Monitoring from "@/pages/Monitoring";
 import Analytics from "@/pages/Analytics";
 import Resources from "@/pages/Resources";
@@ -34,6 +36,27 @@ function Router() {
         <ProtectedRoute>
           <ProtectedLayout>
             <Dashboard />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/pages">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Pages />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/pages/new">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <PageForm />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/pages/:id/edit">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <PageForm />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>

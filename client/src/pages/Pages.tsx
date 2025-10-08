@@ -1,0 +1,137 @@
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Edit, Trash2, Eye, Loader2 } from "lucide-react";
+import { Link } from "wouter";
+import type { Page } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
+
+export default function Pages() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const { data: pages, isLoading } = useQuery<Page[]>({
+    queryKey: ["/api/pages"],
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (pageId: number) => {
+      await apiRequest("DELETE", `/api/pages/${pageId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/pages"] });
+      toast({
+        title: "Success",
+        description: "Page deleted successfully",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete page",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const canEdit = user?.role === "admin" || user?.role === "editor";
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Pages</h1>
+            <p className="text-white/60 mt-1">Manage your application pages</p>
+          </div>
+          {canEdit && (
+            <Link href="/pages/new">
+              <Button data-testid="button-create-page">
+                <Plus className="mr-2 h-4 w-4" />
+                Create Page
+              </Button>
+            </Link>
+          )}
+        </div>
+
+        {pages && pages.length === 0 ? (
+          <Card className="border-white/10">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <p className="text-muted-foreground mb-4">No pages found</p>
+              {canEdit && (
+                <Link href="/pages/new">
+                  <Button variant="outline" data-testid="button-create-first-page">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create your first page
+                  </Button>
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {pages?.map((page) => (
+              <Card key={page.id} className="border-white/10 backdrop-blur-xl bg-card/50" data-testid={`card-page-${page.id}`}>
+                <CardHeader className="gap-2">
+                  <div className="flex items-start justify-between gap-4">
+                    <CardTitle className="text-lg">{page.name}</CardTitle>
+                    <Badge 
+                      variant={page.status === "published" ? "default" : page.status === "draft" ? "secondary" : "outline"}
+                      data-testid={`badge-status-${page.id}`}
+                    >
+                      {page.status}
+                    </Badge>
+                  </div>
+                  <CardDescription>
+                    Slug: /{page.slug} • Version {page.version}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-2">
+                    <Link href={`/pages/${page.id}/view`}>
+                      <Button variant="outline" size="sm" data-testid={`button-view-${page.id}`}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        View
+                      </Button>
+                    </Link>
+                    {canEdit && (
+                      <>
+                        <Link href={`/pages/${page.id}/edit`}>
+                          <Button variant="outline" size="sm" data-testid={`button-edit-${page.id}`}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => deleteMutation.mutate(page.id)}
+                          disabled={deleteMutation.isPending}
+                          data-testid={`button-delete-${page.id}`}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
