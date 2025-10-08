@@ -15,6 +15,7 @@ import Jobs from "@/pages/Jobs";
 import Tools from "@/pages/Tools";
 import CostAnalysis from "@/pages/CostAnalysis";
 import Resources from "@/pages/Resources";
+import Assistant from "@/pages/Assistant";
 import Settings from "@/pages/Settings";
 import Help from "@/pages/Help";
 import Login from "@/pages/Login";
@@ -81,6 +82,13 @@ function Router() {
         <ProtectedRoute>
           <ProtectedLayout>
             <Jobs />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/assistant">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Assistant />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>

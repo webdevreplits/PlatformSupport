@@ -1,4 +1,4 @@
-import { Home, FileText, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User, DollarSign } from "lucide-react";
+import { Home, FileText, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User, DollarSign, Sparkles } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/" },
+  { icon: Sparkles, label: "AI Assistant", path: "/assistant" },
   { icon: DollarSign, label: "Cost Analysis", path: "/cost-analysis" },
   { icon: Box, label: "Resources", path: "/resources" },
   { icon: FileText, label: "Pages", path: "/pages" },

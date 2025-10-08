@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import bcrypt from "bcryptjs";
 import { generateToken, authenticateToken, requireRole, type AuthRequest } from "./middleware/auth";
 import { insertUserSchema, insertOrganizationSchema, insertPageSchema, insertWidgetSchema, insertToolSchema, insertConnectionSchema, insertWorkflowSchema, insertAlertSchema, insertAuditLogSchema } from "@shared/schema";
+import { generateChatCompletion, summarizeIncident, generateFixScript, generateDashboardInsights, generateReport } from "./utils/openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -331,6 +332,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get versions error:", error);
       res.status(500).json({ error: "Failed to get versions" });
+    }
+  });
+
+  // AI routes
+  app.post("/api/ai/chat", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const { messages } = req.body;
+      const response = await generateChatCompletion(messages);
+      
+      await storage.createAuditLog({
+        actorId: req.user!.id,
+        action: "create",
+        resourceType: "ai",
+        resourceId: 0,
+      });
+
+      res.json({ response });
+    } catch (error) {
+      console.error("AI chat error:", error);
+      res.status(500).json({ error: "Failed to generate AI response" });
+    }
+  });
+
+  app.post("/api/ai/summarize-incident", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const incidentData = req.body;
+      const summary = await summarizeIncident(incidentData);
+      res.json({ summary });
+    } catch (error) {
+      console.error("Incident summarization error:", error);
+      res.status(500).json({ error: "Failed to summarize incident" });
+    }
+  });
+
+  app.post("/api/ai/generate-fix", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const incidentData = req.body;
+      const script = await generateFixScript(incidentData);
+      res.json({ script });
+    } catch (error) {
+      console.error("Fix script generation error:", error);
+      res.status(500).json({ error: "Failed to generate fix script" });
+    }
+  });
+
+  app.post("/api/ai/dashboard-insights", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const metrics = req.body;
+      const insights = await generateDashboardInsights(metrics);
+      res.json({ insights });
+    } catch (error) {
+      console.error("Dashboard insights error:", error);
+      res.status(500).json({ error: "Failed to generate insights" });
+    }
+  });
+
+  app.post("/api/ai/generate-report", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const { reportType, data } = req.body;
+      const report = await generateReport(reportType, data);
+      res.json({ report });
+    } catch (error) {
+      console.error("Report generation error:", error);
+      res.status(500).json({ error: "Failed to generate report" });
     }
   });
 
