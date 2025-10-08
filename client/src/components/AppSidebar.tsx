@@ -1,4 +1,4 @@
-import { Home, FileText, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User, DollarSign, Sparkles } from "lucide-react";
+import { Home, FileText, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User, DollarSign, Sparkles, LineChart } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +17,7 @@ const navItems = [
   { icon: Sparkles, label: "AI Assistant", path: "/assistant" },
   { icon: DollarSign, label: "Cost Analysis", path: "/cost-analysis" },
   { icon: Box, label: "Resources", path: "/resources" },
+  { icon: LineChart, label: "Analytics", path: "/analytics" },
   { icon: FileText, label: "Pages", path: "/pages" },
   { icon: Activity, label: "Incidents", path: "/incidents" },
   { icon: BarChart3, label: "Jobs", path: "/jobs" },

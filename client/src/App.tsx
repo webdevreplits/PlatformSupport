@@ -16,6 +16,7 @@ import Tools from "@/pages/Tools";
 import CostAnalysis from "@/pages/CostAnalysis";
 import Resources from "@/pages/Resources";
 import Assistant from "@/pages/Assistant";
+import Analytics from "@/pages/Analytics";
 import Settings from "@/pages/Settings";
 import Help from "@/pages/Help";
 import Login from "@/pages/Login";
@@ -110,6 +111,13 @@ function Router() {
         <ProtectedRoute>
           <ProtectedLayout>
             <Tools />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/analytics">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Analytics />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
