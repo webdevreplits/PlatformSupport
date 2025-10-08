@@ -1,14 +1,19 @@
-# Azure Platform Support - No-Code App Builder
+# AzureOps Intelligence - AI-Powered Azure Platform Support
 
 ## Overview
 
-A production-grade, modular no-code web application for Azure platform support teams to monitor and manage enterprise infrastructure and services. The platform provides real-time monitoring of Databricks jobs, ServiceNow incidents, workflow automation, and tool integrations with a visual page builder for creating custom dashboards without writing code.
+AzureOps Intelligence is a next-generation AI-powered no-code internal dashboard and app builder platform designed for Azure Platform Support teams. The platform combines real-time infrastructure monitoring, AI-powered assistance, cost analysis, and workflow automation to streamline Azure operations and support.
 
 **Core Capabilities:**
+- **AI Assistant**: GPT-4o-mini powered chat interface for Azure support queries, ARM template generation, and intelligent automation
+- **AI Dashboard Insights**: Automated operational insights and recommendations based on platform metrics
+- **AI Incident Analysis**: Automated incident summarization, root cause analysis, and fix script generation
 - **Dashboard Overview**: Real-time monitoring of Active Incidents, Databricks Jobs, Workflows, and System Health
-- **Incidents Management**: ServiceNow ticket tracking with priority and status filtering
+- **Cost Analysis**: Azure spending tracking with cost breakdown by category and time range filtering
+- **Resource Management**: Infrastructure resource tracking across Compute, Storage, Database, and Networking
+- **Platform Analytics**: Comprehensive performance metrics, job success rates, and user activity tracking
+- **Incidents Management**: ServiceNow ticket tracking with AI-powered summarization and automated fix generation
 - **Jobs Monitoring**: Databricks job execution tracking with success rates and performance metrics
-- **Tools Integration**: Connected services dashboard (Databricks, ServiceNow, Power BI, Azure DevOps)
 - **Visual Page Builder**: Drag-and-drop widgets (Heading, Text, Button, Metric, Chart, Table)
 - **Workflow Automation**: Triggers, actions, and alerts for platform operations
 - **Enterprise Security**: JWT authentication, role-based access control, audit logging
@@ -17,28 +22,105 @@ A production-grade, modular no-code web application for Azure platform support t
 
 Preferred communication style: Simple, everyday language.
 
+## AI Features
+
+### OpenAI Integration
+
+The platform integrates with OpenAI GPT-4o-mini for intelligent assistance across all operations:
+
+**Backend API Routes:**
+- `POST /api/ai/chat` - General chat completion for Azure support queries
+- `POST /api/ai/dashboard-insights` - Generate operational insights from platform metrics
+- `POST /api/ai/summarize-incident` - Analyze incidents and provide root cause analysis
+- `POST /api/ai/generate-fix` - Generate automated fix scripts (PowerShell/Azure CLI)
+- `POST /api/ai/generate-report` - Create AI-generated operational reports
+
+**AI Capabilities:**
+- ARM/Bicep template generation
+- Azure infrastructure troubleshooting
+- Cost optimization recommendations
+- Incident root cause analysis
+- Automated fix script generation
+- Operational insights and predictions
+
+### AI Assistant Page
+
+**Features:**
+- Chat interface with message history
+- Azure-specific knowledge base
+- Quick action buttons for common tasks:
+  - Generate ARM Template
+  - Cost Analysis
+  - Troubleshoot Issue
+  - Create Runbook
+- Real-time AI responses with loading states
+- Code syntax highlighting for scripts
+
+**Technical Details:**
+- Uses OpenAI GPT-4o-mini model
+- System prompt optimized for Azure platform support
+- Conversation context maintained across messages
+- Audit logging for all AI queries
+
+### Dashboard AI Insights
+
+**Features:**
+- Automated insights generation on dashboard load
+- Manual refresh capability
+- Actionable recommendations based on:
+  - Active incident count
+  - Databricks job performance
+  - System health metrics
+  - Cost trends
+
+**Implementation:**
+- Fetches platform metrics automatically
+- Generates 2-3 concise insights
+- Updates dynamically with refresh button
+- Loading states during generation
+
+### Incident AI Analysis
+
+**Features:**
+- AI Summary button per incident
+- Generate Fix button for automation scripts
+- Displays analysis inline with incident details
+- Loading indicators during generation
+
+**AI Summary Provides:**
+- Brief incident summary
+- Root cause analysis
+- Recommended actions
+- Prevention tips
+
+**Generate Fix Provides:**
+- PowerShell or Azure CLI scripts
+- Well-commented code
+- Error handling
+- Safety checks
+
 ## System Architecture
 
 ### Frontend Architecture
 
 **Framework:** React with TypeScript using Vite as the build tool
 - **UI Library:** shadcn/ui components built on Radix UI primitives
-- **Styling:** TailwindCSS with custom glassmorphic design system
+- **Styling:** TailwindCSS with professional corporate design
 - **State Management:** TanStack React Query for server state
 - **Routing:** Wouter (lightweight client-side routing)
 - **Form Handling:** React Hook Form with Zod validation
 
 **Design System:**
-- Glassmorphic aesthetic with gradient overlays inspired by modern fintech dashboards (Stripe, Plaid, Linear)
-- Deep blue-purple gradient backgrounds (220-250 hue range)
+- Professional corporate aesthetic with clean light theme as default
+- System fonts: Segoe UI, Roboto, Helvetica Neue, sans-serif
+- Clean white cards with subtle shadows
 - Custom color tokens for charts, actions, and status indicators
-- Inter font for UI, JetBrains Mono for numerical data
+- JetBrains Mono for numerical data and code blocks
 - Responsive grid system with mobile-first approach
 
 **Key Components:**
-- `GlassmorphicCard`: Reusable card component with backdrop blur and gradient variants
+- `Card`: Professional card components with shadow-sm
 - `MetricCard`: Dashboard metrics display with icons, trends, and badges
-- `PhoneMockup`: Mobile preview component for responsive testing
 - `DashboardHeader`: Global navigation with search and theme toggle
 - `AppSidebar`: Fixed sidebar navigation with icon-based menu
 
@@ -50,10 +132,12 @@ Preferred communication style: Simple, everyday language.
 - **Database Driver:** Neon Serverless (PostgreSQL) with WebSocket support
 - **Authentication:** JWT-based with bcrypt password hashing
 - **Session Management:** Custom middleware with role-based access control
+- **AI Integration:** OpenAI SDK for GPT-4o-mini
 
 **API Structure:**
 - RESTful endpoints under `/api` prefix
 - Authentication routes: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
+- AI routes: `/api/ai/chat`, `/api/ai/summarize-incident`, `/api/ai/generate-fix`, `/api/ai/dashboard-insights`, `/api/ai/generate-report`
 - Resource routes for pages, widgets, tools, connections, workflows, alerts, and audit logs
 - Middleware chain: Request logging → JSON parsing → Authentication → Authorization → Route handlers
 
@@ -62,6 +146,7 @@ Preferred communication style: Simple, everyday language.
 - Middleware-based authentication with `authenticateToken` and `requireRole` guards
 - Centralized error handling middleware
 - Request/response logging with duration tracking
+- AI utility functions in `server/utils/openai.ts`
 
 ### Data Storage & Schema
 
@@ -78,7 +163,7 @@ Preferred communication style: Simple, everyday language.
 6. **connections**: OAuth/API credentials storage with encryption
 7. **workflows**: Automation rules with triggers and actions
 8. **alerts**: Notification configurations
-9. **audit_logs**: Complete activity tracking with user, action, resource type, and changes
+9. **audit_logs**: Complete activity tracking with user, action, resource type, and changes (includes AI queries)
 10. **versions**: Page/widget version history for rollback capability
 
 **Data Relationships:**
@@ -112,6 +197,7 @@ Preferred communication style: Simple, everyday language.
 **Core Infrastructure:**
 - **Neon Database:** Serverless PostgreSQL with WebSocket connections for real-time queries
 - **Drizzle ORM:** Type-safe database toolkit with schema-first design
+- **OpenAI:** GPT-4o-mini for AI-powered features
 
 **UI Components:**
 - **Radix UI:** Headless component primitives (30+ components: Dialog, Dropdown, Popover, Tabs, etc.)
@@ -154,11 +240,12 @@ Preferred communication style: Simple, everyday language.
 - **Databricks Jobs**: Job monitoring (142 running, 98% success rate)
 - **Active Workflows**: Automation flow status (47 operational)
 - **System Health**: Platform uptime tracking (99.8% uptime)
-- **Recent Activity**: Real-time feed of platform events
+- **AI Insights**: Automated operational insights with refresh capability
 - **Connected Services**: Integration status for all tools
 
 **Navigation Menu:**
-- **Dashboard**: Azure platform overview with real-time metrics
+- **Dashboard**: Azure platform overview with real-time metrics and AI insights
+- **AI Assistant**: Chat interface for Azure support queries and automation
 - **Cost Analysis**: Azure spending tracking and optimization
   - Total cost monitoring with trend analysis
   - Cost breakdown by category (Compute, Storage, Database, Networking)
@@ -169,8 +256,13 @@ Preferred communication style: Simple, everyday language.
   - Storage: Storage accounts, Data Lakes
   - Database: SQL Database, Cosmos DB
   - Networking: VNets, Application Gateways
+- **Analytics**: Platform performance and usage metrics
+  - Overview: Job performance, success rates, user activity
+  - Databricks: Job-specific performance metrics
+  - User Activity: Platform usage tracking
+  - System Metrics: Resource utilization
 - **Pages**: Custom page builder (Admin/Editor only)
-- **Incidents**: ServiceNow incident tracking
+- **Incidents**: ServiceNow incident tracking with AI analysis
 - **Jobs**: Databricks job monitoring
 - **Settings**: Platform configuration
 
@@ -179,6 +271,17 @@ Preferred communication style: Simple, everyday language.
 - Category filters: Compute, Storage, Database, Networking, Analytics, Security
 - Theme toggle (light/dark mode)
 - Notifications with badge counter
+
+## Environment Variables
+
+**Required:**
+- `DATABASE_URL`: PostgreSQL connection string (Neon)
+- `SESSION_SECRET`: JWT signing secret
+- `OPENAI_API_KEY`: OpenAI API key for AI features
+
+**Optional:**
+- `NODE_ENV`: Environment (development/production)
+- `PORT`: Server port (default: 5000)
 
 ## Deployment
 
@@ -196,9 +299,10 @@ The app is fully compatible with Azure Databricks Streamlit deployment:
 # 1. Install Python dependencies
 pip install -r requirements-streamlit.txt
 
-# 2. Set environment variables (optional)
+# 2. Set environment variables
 export DATABASE_URL="postgresql://..."
-export JWT_SECRET="your-secret"
+export SESSION_SECRET="your-secret"
+export OPENAI_API_KEY="sk-..."
 
 # 3. Run Streamlit app
 streamlit run streamlit_app.py --server.port 8000
@@ -210,7 +314,34 @@ streamlit run streamlit_app.py --server.port 8000
 - ✅ Graceful degradation without database
 - ✅ Embedded React app in iframe
 - ✅ Direct access at localhost:5000
+- ✅ AI features with OpenAI integration
 
 ### Standard Deployment
 
 See README-DATABRICKS.md for complete deployment instructions.
+
+## Recent Updates
+
+### AI Integration (Latest)
+- Added OpenAI GPT-4o-mini integration for intelligent assistance
+- Created AI Assistant page with chat interface and quick actions
+- Enhanced Dashboard with AI insights panel
+- Added AI incident summarization and automated fix generation
+- Created Analytics page with comprehensive platform metrics
+- All AI operations include audit logging and error handling
+
+### Design Transformation
+- Transformed UI to professional corporate design with clean light theme as default
+- Implemented system fonts (Segoe UI, Roboto, Helvetica Neue)
+- Replaced glassmorphic effects with clean white cards and subtle shadows
+- Enhanced Cost Analysis page with spending tracking
+- Enhanced Resources page with tabbed interface
+- Fixed filter tabs to work as functional pill-shaped toggle buttons
+
+### Platform Features
+- Azure Cost Analysis with time range filtering
+- Resource management across multiple categories
+- ServiceNow incident tracking
+- Databricks job monitoring
+- Workflow automation framework
+- Enterprise authentication and RBAC
