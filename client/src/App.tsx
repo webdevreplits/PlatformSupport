@@ -13,6 +13,8 @@ import PageView from "@/pages/PageView";
 import Incidents from "@/pages/Incidents";
 import Jobs from "@/pages/Jobs";
 import Tools from "@/pages/Tools";
+import CostAnalysis from "@/pages/CostAnalysis";
+import Resources from "@/pages/Resources";
 import Settings from "@/pages/Settings";
 import Help from "@/pages/Help";
 import Login from "@/pages/Login";
@@ -82,6 +84,20 @@ function Router() {
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
+      <Route path="/cost-analysis">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <CostAnalysis />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/resources">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Resources />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
       <Route path="/tools">
         <ProtectedRoute>
           <ProtectedLayout>
@@ -93,13 +109,6 @@ function Router() {
         <ProtectedRoute>
           <ProtectedLayout>
             <Settings />
-          </ProtectedLayout>
-        </ProtectedRoute>
-      </Route>
-      <Route path="/help">
-        <ProtectedRoute>
-          <ProtectedLayout>
-            <Help />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>

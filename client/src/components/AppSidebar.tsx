@@ -1,4 +1,4 @@
-import { Home, FileText, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User } from "lucide-react";
+import { Home, FileText, BarChart3, Settings, HelpCircle, Activity, Box, LogOut, User, DollarSign } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,12 +14,12 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/" },
+  { icon: DollarSign, label: "Cost Analysis", path: "/cost-analysis" },
+  { icon: Box, label: "Resources", path: "/resources" },
   { icon: FileText, label: "Pages", path: "/pages" },
   { icon: Activity, label: "Incidents", path: "/incidents" },
   { icon: BarChart3, label: "Jobs", path: "/jobs" },
-  { icon: Box, label: "Tools", path: "/tools" },
   { icon: Settings, label: "Settings", path: "/settings" },
-  { icon: HelpCircle, label: "Help", path: "/help" },
 ];
 
 export function AppSidebar() {

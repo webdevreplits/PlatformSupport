@@ -158,10 +158,59 @@ Preferred communication style: Simple, everyday language.
 - **Connected Services**: Integration status for all tools
 
 **Navigation Menu:**
-- Dashboard: Azure platform overview
-- Pages: Custom page builder and management
-- Incidents: ServiceNow incident tracking
-- Jobs: Databricks job monitoring
-- Tools: Connector and integration management
-- Settings: Platform configuration
-- Help: Support documentation
+- **Dashboard**: Azure platform overview with real-time metrics
+- **Cost Analysis**: Azure spending tracking and optimization
+  - Total cost monitoring with trend analysis
+  - Cost breakdown by category (Compute, Storage, Database, Networking)
+  - Top resource cost tracking
+  - Time range filtering (7/30/90 days)
+- **Resources**: Infrastructure resource management
+  - Compute: VMs, Databricks, Kubernetes clusters
+  - Storage: Storage accounts, Data Lakes
+  - Database: SQL Database, Cosmos DB
+  - Networking: VNets, Application Gateways
+- **Pages**: Custom page builder (Admin/Editor only)
+- **Incidents**: ServiceNow incident tracking
+- **Jobs**: Databricks job monitoring
+- **Settings**: Platform configuration
+
+**Header Features:**
+- Smart search: "Search resources, costs, or incidents..."
+- Category filters: Compute, Storage, Database, Networking, Analytics, Security
+- Theme toggle (light/dark mode)
+- Notifications with badge counter
+
+## Deployment
+
+### Azure Databricks Streamlit ✅
+
+The app is fully compatible with Azure Databricks Streamlit deployment:
+
+**Deployment Files:**
+- `streamlit_app.py`: Streamlit wrapper that embeds the React/Express app
+- `requirements-streamlit.txt`: Python dependencies for Streamlit
+- `README-DATABRICKS.md`: Complete deployment guide
+
+**Quick Deploy to Databricks:**
+```bash
+# 1. Install Python dependencies
+pip install -r requirements-streamlit.txt
+
+# 2. Set environment variables (optional)
+export DATABASE_URL="postgresql://..."
+export JWT_SECRET="your-secret"
+
+# 3. Run Streamlit app
+streamlit run streamlit_app.py --server.port 8000
+```
+
+**Features in Databricks:**
+- ✅ Auto-detects environment (Databricks/Replit/Local)
+- ✅ Auto-installs Node.js dependencies
+- ✅ Graceful degradation without database
+- ✅ Embedded React app in iframe
+- ✅ Direct access at localhost:5000
+
+### Standard Deployment
+
+See README-DATABRICKS.md for complete deployment instructions.

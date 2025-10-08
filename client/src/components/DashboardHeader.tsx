@@ -1,4 +1,4 @@
-import { Search, SlidersHorizontal, Bell, Moon, Sun } from "lucide-react";
+import { Search, Bell, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +12,14 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeaderProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
-  const filters = ["App", "Aury", "Nlev", "Esso", "Gallup", "Bi.mes", "Biling_Nlissues"];
+  const filters = [
+    { key: "compute", label: "Compute" },
+    { key: "storage", label: "Storage" },
+    { key: "database", label: "Database" },
+    { key: "networking", label: "Networking" },
+    { key: "analytics", label: "Analytics" },
+    { key: "security", label: "Security" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-xl">
@@ -32,7 +39,7 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Spot Cost | Jo Hotlook"
+                placeholder="Search resources, costs, or incidents..."
                 className="pl-10 bg-white/5 border-white/10 focus-visible:ring-primary"
                 data-testid="input-search"
               />
@@ -50,27 +57,24 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
             </Button>
             <Button variant="ghost" size="icon" data-testid="button-notifications">
               <Bell className="w-4 h-4" />
-            </Button>
-            <Button variant="default" className="hidden sm:flex" data-testid="button-primary-action">
-              Coni.hotnorr
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                3
+              </Badge>
             </Button>
           </div>
         </div>
 
         <div className="flex items-center gap-2 pb-3 overflow-x-auto scrollbar-hide">
-          <Button variant="ghost" size="sm" className="gap-2" data-testid="button-filters">
-            <SlidersHorizontal className="w-3 h-3" />
-            Filters
-          </Button>
+          <span className="text-sm text-muted-foreground mr-2">Filter by:</span>
           {filters.map((filter) => (
             <Badge
-              key={filter}
-              variant={activeFilter === filter ? "default" : "outline"}
+              key={filter.key}
+              variant={activeFilter === filter.key ? "default" : "outline"}
               className="cursor-pointer hover-elevate"
-              onClick={() => setActiveFilter(activeFilter === filter ? null : filter)}
-              data-testid={`filter-${filter.toLowerCase()}`}
+              onClick={() => setActiveFilter(activeFilter === filter.key ? null : filter.key)}
+              data-testid={`filter-${filter.key}`}
             >
-              {filter}
+              {filter.label}
             </Badge>
           ))}
         </div>

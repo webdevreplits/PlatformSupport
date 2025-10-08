@@ -1,77 +1,123 @@
-import { DashboardHeader } from "@/components/DashboardHeader";
-import { GlassmorphicCard } from "@/components/GlassmorphicCard";
-import { Button } from "@/components/ui/button";
-import { Server, Database, HardDrive, Cpu } from "lucide-react";
-import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Server, Database, HardDrive, Network } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Resources() {
-  const [isDark, setIsDark] = useState(true);
+  const resources = {
+    compute: [
+      { name: "vm-prod-web-01", type: "Virtual Machine", status: "Running", region: "East US", size: "Standard_D4s_v3" },
+      { name: "databricks-workspace", type: "Databricks", status: "Running", region: "East US", tier: "Premium" },
+      { name: "aks-cluster-prod", type: "Kubernetes", status: "Running", region: "West Europe", nodes: 5 },
+    ],
+    storage: [
+      { name: "storageprod001", type: "Storage Account", status: "Active", region: "Central US", capacity: "2.5 TB" },
+      { name: "datalake-analytics", type: "Data Lake", status: "Active", region: "East US", capacity: "15.3 TB" },
+    ],
+    database: [
+      { name: "sqldb-prod-main", type: "SQL Database", status: "Online", region: "East US", tier: "Business Critical" },
+      { name: "cosmos-global-db", type: "Cosmos DB", status: "Online", region: "Multi-region", consistency: "Strong" },
+    ],
+    networking: [
+      { name: "vnet-prod-eastus", type: "Virtual Network", status: "Active", region: "East US", addressSpace: "10.0.0.0/16" },
+      { name: "appgw-prod-lb", type: "Application Gateway", status: "Running", region: "East US", tier: "WAF v2" },
+    ],
+  };
 
-  const handleThemeToggle = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle("dark");
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, "default" | "secondary" | "destructive"> = {
+      Running: "default",
+      Active: "default",
+      Online: "default",
+      Stopped: "secondary",
+      Failed: "destructive",
+    };
+    return <Badge variant={variants[status] || "secondary"}>{status}</Badge>;
+  };
+
+  const getIcon = (category: string) => {
+    const icons: Record<string, any> = {
+      compute: Server,
+      storage: HardDrive,
+      database: Database,
+      networking: Network,
+    };
+    const Icon = icons[category] || Server;
+    return <Icon className="h-5 w-5" />;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)]">
-      <DashboardHeader onThemeToggle={handleThemeToggle} isDark={isDark} />
-
-      <main className="container mx-auto px-4 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+      <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Resources</h1>
-          <p className="text-muted-foreground">System resources and infrastructure</p>
+          <h1 className="text-3xl font-bold text-white">Azure Resources</h1>
+          <p className="text-white/60 mt-1">Manage and monitor infrastructure resources</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <GlassmorphicCard gradient="blue" className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Servers</h3>
-                <p className="text-3xl font-bold font-mono">24</p>
-                <p className="text-sm text-muted-foreground mt-1">Active instances</p>
-              </div>
-              <Server className="w-10 h-10 text-chart-1" />
-            </div>
-            <Button className="w-full" data-testid="button-manage-servers">Manage Servers</Button>
-          </GlassmorphicCard>
+        <Tabs defaultValue="compute" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="compute" data-testid="tab-compute">Compute</TabsTrigger>
+            <TabsTrigger value="storage" data-testid="tab-storage">Storage</TabsTrigger>
+            <TabsTrigger value="database" data-testid="tab-database">Database</TabsTrigger>
+            <TabsTrigger value="networking" data-testid="tab-networking">Networking</TabsTrigger>
+          </TabsList>
 
-          <GlassmorphicCard gradient="mint" className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Databases</h3>
-                <p className="text-3xl font-bold font-mono">8</p>
-                <p className="text-sm text-muted-foreground mt-1">Connected databases</p>
-              </div>
-              <Database className="w-10 h-10 text-chart-2" />
-            </div>
-            <Button className="w-full" data-testid="button-manage-databases">Manage Databases</Button>
-          </GlassmorphicCard>
-
-          <GlassmorphicCard gradient="coral" className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Storage</h3>
-                <p className="text-3xl font-bold font-mono">2.4TB</p>
-                <p className="text-sm text-muted-foreground mt-1">Total capacity used</p>
-              </div>
-              <HardDrive className="w-10 h-10 text-chart-3" />
-            </div>
-            <Button className="w-full" data-testid="button-manage-storage">Manage Storage</Button>
-          </GlassmorphicCard>
-
-          <GlassmorphicCard gradient="purple" className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">CPU Usage</h3>
-                <p className="text-3xl font-bold font-mono">68%</p>
-                <p className="text-sm text-muted-foreground mt-1">Average utilization</p>
-              </div>
-              <Cpu className="w-10 h-10 text-chart-4" />
-            </div>
-            <Button className="w-full" data-testid="button-view-metrics">View Metrics</Button>
-          </GlassmorphicCard>
-        </div>
-      </main>
+          {Object.entries(resources).map(([category, items]) => (
+            <TabsContent key={category} value={category} className="space-y-4">
+              {items.map((resource: any, idx) => (
+                <Card key={idx} className="border-white/10 backdrop-blur-xl bg-card/50">
+                  <CardHeader>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          {getIcon(category)}
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{resource.name}</CardTitle>
+                          <CardDescription className="mt-1">{resource.type}</CardDescription>
+                        </div>
+                      </div>
+                      {getStatusBadge(resource.status)}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Region:</span>
+                        <span>{resource.region}</span>
+                      </div>
+                      {resource.size && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">Size:</span>
+                          <span>{resource.size}</span>
+                        </div>
+                      )}
+                      {resource.tier && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">Tier:</span>
+                          <span>{resource.tier}</span>
+                        </div>
+                      )}
+                      {resource.capacity && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">Capacity:</span>
+                          <span>{resource.capacity}</span>
+                        </div>
+                      )}
+                      {resource.nodes && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">Nodes:</span>
+                          <span>{resource.nodes}</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
     </div>
   );
 }
