@@ -9,6 +9,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import Dashboard from "@/pages/Dashboard";
 import Pages from "@/pages/Pages";
 import PageForm from "@/pages/PageForm";
+import PageView from "@/pages/PageView";
 import Monitoring from "@/pages/Monitoring";
 import Analytics from "@/pages/Analytics";
 import Resources from "@/pages/Resources";
@@ -57,6 +58,13 @@ function Router() {
         <ProtectedRoute>
           <ProtectedLayout>
             <PageForm />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/pages/:id/view">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <PageView />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
