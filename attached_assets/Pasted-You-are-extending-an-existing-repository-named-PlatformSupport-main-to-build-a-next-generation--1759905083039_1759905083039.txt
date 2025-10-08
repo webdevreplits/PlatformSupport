@@ -1,0 +1,190 @@
+You are extending an existing repository named **PlatformSupport-main** to build a next-generation, AI-powered, intelligent platform support application called **AzureOps Intelligence**.
+
+This app should modernize and extend the current repo, replacing or improving outdated features where necessary, while preserving the base layout, styling, and reusable components.
+
+---
+
+### 🎯 Objective
+
+Transform the existing **PlatformSupport** site into a **Smart Azure Platform Support Hub** for real-time monitoring, automation, analytics, and AI-driven insights — built for internal Azure platform support engineers.
+
+The final app should run seamlessly on **Replit** and later be deployable as a **Streamlit app within Azure Databricks**.
+
+---
+
+### 🧠 Core Goals
+
+1. Enhance the existing pages to serve as:
+
+   * **Dashboard Overview:** Real-time operational intelligence and KPIs.
+   * **AI Assistant Page:** Conversational OpenAI-powered Azure helper.
+   * **Incident Hub:** Track, summarize, and auto-suggest fixes.
+   * **Analytics & Reports Page:** Visual and predictive insights.
+   * **Admin & Config Page:** Manage users, APIs, and system settings.
+2. Add modular APIs and components to integrate with **OpenAI** and **Databricks**.
+3. Implement **activity tracking**, **AI summarization**, and **automation capabilities**.
+
+---
+
+### 🧩 Core Enhancements (mapped to your repo structure)
+
+#### 1. `/src/pages/Dashboard.jsx`
+
+Replace or extend the old dashboard with:
+
+* Azure resource summary cards (VMs, Storage, Functions, AKS, etc.)
+* Live metrics from mock Azure API (to be replaced with real endpoints later)
+* Graphs: cost trends, uptime, health score (using Chart.js)
+* AI summary panel: “Today’s System Health” using OpenAI completion
+* Quick links: Azure Portal, ServiceNow, Monitoring
+
+#### 2. `/src/pages/Assistant.jsx`
+
+Replace existing placeholder with:
+
+* Chat interface using OpenAI API (GPT-4 or GPT-4o-mini)
+* Commands like:
+
+  * “Generate ARM/Bicep for VM creation”
+  * “Find top 5 costly subscriptions”
+* Voice input (OpenAI Whisper API)
+* Conversation memory stored in local DB (SQLite/Azure SQL)
+* Toggle button for **Databricks Mode** → runs queries using Databricks API
+
+#### 3. `/src/pages/Incidents.jsx`
+
+Upgrade with:
+
+* Incident timeline and severity tags
+* Integration hooks for Azure Monitor / ServiceNow (mock API)
+* “Summarize Incident” button (OpenAI summary)
+* “Generate Fix Script” using OpenAI Codex
+* Add auto-categorization and AI-based incident grouping
+
+#### 4. `/src/pages/Analytics.jsx`
+
+New page combining:
+
+* Databricks model predictions (cost forecasting, resource failure probability)
+* Charts for daily/weekly platform cost, utilization, incident trend
+* Streamlit export integration (for Databricks usage)
+* Button: “Retrain Model on Latest Data” → opens Databricks notebook
+
+#### 5. `/src/pages/Reports.jsx`
+
+Enhance or add with:
+
+* AI-generated daily/weekly/monthly platform summaries
+* Export reports to PDF, Excel, or Power BI
+* Push summarized reports to Teams/Slack via webhook
+* Auto-email summary via Azure Logic App integration
+
+#### 6. `/src/pages/Admin.jsx`
+
+Add configuration & telemetry section:
+
+* Manage users, roles, API keys
+* Configure Databricks and OpenAI credentials
+* Activity analytics (IP, session time, click heatmap)
+* Export all activity logs to Databricks for clustering
+* Security monitoring: show unusual login activity (AI anomaly detection)
+
+---
+
+### ⚙️ Backend Enhancements (FastAPI or Flask)
+
+Add new routes for:
+
+* `/api/ai/query` → Sends user prompts to OpenAI
+* `/api/insights/predict` → Fetches Databricks model outputs
+* `/api/activity/log` → Tracks user actions (page visits, clicks)
+* `/api/incidents/summarize` → AI summary of incidents
+* `/api/reports/generate` → AI report generator and file exporter
+
+Include `utils/ai_helper.py` for OpenAI calls and `utils/databricks_client.py` for Databricks REST API.
+
+---
+
+### 🔍 Activity & Telemetry Tracker
+
+Implement a small middleware (frontend + backend) that logs:
+
+* Username / IP / Browser / OS
+* Pages visited / Time spent / Clicks / Referrer URL
+* Session start & end timestamps
+  Store data locally in SQLite (or Azure SQL) and visualize on Admin > Analytics.
+
+---
+
+### 🚀 Advanced Add-ons
+
+* **AI Ops Feed:** Real-time AI-generated insights summary on dashboard.
+* **Predictive Scaling Suggestion:** Databricks model recommends scaling up/down.
+* **Incident Replay:** Recreate incident chain visually for training.
+* **Gamified Support:** Assign points for fast resolution.
+* **Voice-based Actions:** Say “Show last 10 failed resources” → responds instantly.
+* **ChatOps Integration:** Sync alerts with Teams/Slack.
+
+---
+
+### 🖼️ Design & UX
+
+Keep the visual consistency of your repo (PlatformSupport theme), but modernize with:
+
+* Glassmorphism or minimal dark mode
+* Floating AI button on every page
+* Toast notifications for insights & status
+* Responsive layout with grid system
+
+---
+
+### 📊 Wireframe Overview
+
+```
+Top Nav: [Logo] [Dashboard] [Assistant] [Incidents] [Analytics] [Reports] [Admin] [Profile]
+
+Dashboard:
+ - KPI Cards: Cost | Health | Incidents | AI Insights
+ - Charts (usage, cost)
+ - AI summary banner
+ - Recent Alerts
+
+Assistant:
+ - Chat Window (GPT)
+ - Command suggestions
+ - Voice Input
+ - Command History
+
+Incidents:
+ - List View + AI Summaries
+ - Auto Fix Script Button
+ - Tag/Severity/Category
+ - Integration with Monitoring
+
+Analytics:
+ - Cost Forecast Graph
+ - Resource Failure Prediction
+ - Databricks Model Toggle
+
+Reports:
+ - Generate Report Button
+ - Past Reports Table
+ - Export to PDF/Power BI
+
+Admin:
+ - API Config
+ - User Roles
+ - Telemetry Visualization
+```
+
+---
+
+### 🧩 Deployment Notes
+
+* Must run fully on Replit.
+* Provide `databricks_export.py` script to push data for Streamlit deployment.
+* Modularize so Streamlit version uses same APIs and components.
+
+---
+
+**Goal:** Make the existing repo look like a next-gen **AI-powered AzureOps Copilot** webapp, ready for production and Databricks deployment.
