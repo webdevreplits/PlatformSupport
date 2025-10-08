@@ -25,12 +25,12 @@ export default function CostAnalysis() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Cost Analysis</h1>
-            <p className="text-white/60 mt-1">Monitor and optimize Azure spending</p>
+            <h1 className="text-3xl font-bold">Cost Analysis</h1>
+            <p className="text-muted-foreground mt-1">Monitor and optimize Azure spending</p>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-40" data-testid="select-timerange">
@@ -45,7 +45,7 @@ export default function CostAnalysis() {
         </div>
 
         <div className="grid gap-6 mb-6">
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+          <Card className="shadow-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -66,7 +66,7 @@ export default function CostAnalysis() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+          <Card className="shadow-sm">
             <CardHeader>
               <CardTitle>Cost by Category</CardTitle>
               <CardDescription>Resource type breakdown</CardDescription>
@@ -96,7 +96,7 @@ export default function CostAnalysis() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+          <Card className="shadow-sm">
             <CardHeader>
               <CardTitle>Top Cost Resources</CardTitle>
               <CardDescription>Highest spending resources</CardDescription>

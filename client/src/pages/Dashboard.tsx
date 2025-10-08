@@ -15,17 +15,17 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)]">
-      <DashboardHeader onThemeToggle={handleThemeToggle} isDark={true} />
+    <div className="min-h-screen bg-background">
+      <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
 
       <main className="container mx-auto px-4 lg:px-8 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">Azure Platform Support</h1>
-          <p className="text-white/70">Monitor and manage your Azure infrastructure and services</p>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Azure Platform Support</h1>
+          <p className="text-muted-foreground">Monitor and manage your Azure infrastructure and services</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
               <CardTitle className="text-sm font-medium">Active Incidents</CardTitle>
               <AlertCircle className="h-4 w-4 text-chart-3" />
@@ -41,7 +41,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+          <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
               <CardTitle className="text-sm font-medium">Databricks Jobs</CardTitle>
               <Database className="h-4 w-4 text-chart-1" />
@@ -58,7 +58,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+          <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
               <CardTitle className="text-sm font-medium">Active Workflows</CardTitle>
               <Workflow className="h-4 w-4 text-chart-2" />
@@ -74,7 +74,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/10 backdrop-blur-xl bg-card/50">
+          <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
               <CardTitle className="text-sm font-medium">System Health</CardTitle>
               <Server className="h-4 w-4 text-chart-4" />
@@ -92,8 +92,8 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <GlassmorphicCard gradient="blue" className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <Card className="shadow-sm p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-sm font-medium text-foreground/70">Incident Response Time</h3>
@@ -103,9 +103,9 @@ export default function Dashboard() {
             </div>
             <div className="text-xs text-muted-foreground mb-2">Average Resolution Time</div>
             <Badge variant="default">Within SLA</Badge>
-          </GlassmorphicCard>
+          </Card>
 
-          <GlassmorphicCard gradient="light" className="p-6">
+          <Card className="shadow-sm p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-sm font-medium text-foreground/70">Job Success Rate</h3>
@@ -115,9 +115,9 @@ export default function Dashboard() {
             <div className="h-20 flex items-center justify-center">
               <CircularProgress value={98} size={80} strokeWidth={8} className="text-green-500" />
             </div>
-          </GlassmorphicCard>
+          </Card>
 
-          <GlassmorphicCard gradient="dark" className="p-6">
+          <Card className="shadow-sm p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-sm font-medium text-foreground/70">Active Alerts</h3>
@@ -130,11 +130,11 @@ export default function Dashboard() {
               <Badge variant="destructive">3 High</Badge>
               <Badge variant="secondary">9 Medium</Badge>
             </div>
-          </GlassmorphicCard>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <GlassmorphicCard gradient="light" className="p-6">
+          <Card className="shadow-sm p-6">
             <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
@@ -168,9 +168,9 @@ export default function Dashboard() {
                 <Badge variant="outline">Running</Badge>
               </div>
             </div>
-          </GlassmorphicCard>
+          </Card>
 
-          <GlassmorphicCard gradient="blue" className="p-6">
+          <Card className="shadow-sm p-6">
             <h3 className="text-lg font-semibold mb-4">Connected Services</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
@@ -213,7 +213,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-          </GlassmorphicCard>
+          </Card>
         </div>
       </main>
     </div>

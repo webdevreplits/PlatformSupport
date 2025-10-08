@@ -64,18 +64,19 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
           </div>
         </div>
 
-        <div className="flex items-center gap-2 pb-3 overflow-x-auto scrollbar-hide">
-          <span className="text-sm text-muted-foreground mr-2">Filter by:</span>
+        <div className="flex items-center gap-2 pb-4 overflow-x-auto scrollbar-hide">
+          <span className="text-sm font-medium text-foreground/70 mr-1">Filter by:</span>
           {filters.map((filter) => (
-            <Badge
+            <Button
               key={filter.key}
-              variant={activeFilter === filter.key ? "default" : "outline"}
-              className="cursor-pointer hover-elevate"
+              variant={activeFilter === filter.key ? "default" : "ghost"}
+              size="sm"
+              className={`rounded-full px-4 ${activeFilter === filter.key ? '' : 'hover-elevate'}`}
               onClick={() => setActiveFilter(activeFilter === filter.key ? null : filter.key)}
               data-testid={`filter-${filter.key}`}
             >
               {filter.label}
-            </Badge>
+            </Button>
           ))}
         </div>
       </div>
