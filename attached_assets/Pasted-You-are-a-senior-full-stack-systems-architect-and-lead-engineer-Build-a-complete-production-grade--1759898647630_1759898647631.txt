@@ -1,0 +1,1063 @@
+You are a senior full-stack systems architect and lead engineer. Build a complete, production-grade **No-Code Internal Dashboard & App Builder** targeted at Azure Platform teams (but extensible to any cloud). The deliverable must include a working Replit-ready prototype (monorepo) and all artifacts for production deployment (IaC, Docker/K8s manifests, CI/CD pipelines, tests, docs). The product must enable non-developer admins to **create, edit, and operate dashboards, forms, connectors, and automations** via a WYSIWYG UI only — no developer changes needed to add new tools or pages.
+
+Build a **modular, no-code web application** that allows an Azure platform operations team to manage and monitor multiple enterprise tools (Databricks, Power BI, Tableau, ServiceNow, Teradata, etc.) through a unified dashboard.
+The app should be designed and packaged so that it can **run natively in both Replit and the Databricks Streamlit app environment**, automatically configuring dependencies, environment variables, and runtime settings on deployment.
+
+
+Produce code, configuration, scripts, and documentation. Structure the repository and output as described. Deliverables must be runnable by following a README with minimal steps. Include mock data & seeds, and fully documented environment variables.
+
+--- PRODUCT SUMMARY / VISION
+- A dynamic, database-driven frontend (pages and widgets defined by JSON schemas).
+- A drag-and-drop WYSIWYG builder for Admins to create/arrange components and bind them to data sources without writing code.
+- A Tool/Connector Manager where admins register any tool (Databricks, ServiceNow, Power BI, Tableau, Snowflake, Teradata, custom API) and map fields to widgets using a visual mapper.
+- A generic connector framework supporting OAuth2, API keys, Basic Auth, and Webhooks.
+- Workflows and automations (no-code) for triggers, actions, alerts.
+- Full enterprise features: SSO (Azure AD), RBAC & ABAC, audit logs, versioning, approvals, encryption, observability, backups, CI/CD.
+
+--- ACCEPTANCE CRITERIA (must be demonstrable in prototype)
+1. Admin can log in → open Page Builder → create a new page → drag widgets (Text, Button, Table, Chart, Iframe, Form, Search, Filter) → bind a widget to a registered Tool’s API → save → publish.
+2. Viewer logs in → sees the published page exactly as configured (responsive).
+3. Admin can add a new Tool by specifying: name, base URL, auth method (API key / OAuth2), sample response, mapping rules; then create widgets bound to that tool.
+4. Built-in examples: Databricks job monitor widget, ServiceNow ticket widget, Power BI embed link widget, a sample custom API widget.
+5. Pages and widgets are stored as JSON in DB; UI is rendered entirely from DB configuration.
+6. Admin can create a workflow: When Databricks job fails → send Slack/Teams/email and create ServiceNow incident (mock endpoints for demo).
+7. Audit trail: every change (create/edit/delete) stored with user, timestamp, diff; ability to revert to previous version.
+8. Seed data and default admin credentials are provided so the app is demoable immediately.
+
+--- TECHNICAL OVERVIEW (recommended stacks)
+Provide both:
+A. **Prototype (Replit-friendly)** — Monorepo:
+  - Frontend: Next.js (React) + TypeScript, TailwindCSS (or Material UI), React Grid Layout / React DnD for drag/drop.
+  - Backend: Node.js + Express (or NestJS) + TypeScript.
+  - DB: SQLite for quick Replit demo (migrations included).
+  - Auth: Local JWT + optional Azure AD integration placeholder.
+  - Extras: Prisma ORM (or TypeORM), API routes for CRUD, sample mock connectors.
+B. **Production-ready** — Extended architecture:
+  - Frontend: Next.js + TypeScript (server-side rendering for public pages).
+  - Backend: Node.js (NestJS recommended) or Go microservices.
+  - DB: PostgreSQL (primary), Redis (cache & short-lived state), Azure Blob Storage for media/assets.
+  - Queue: Azure Service Bus or RabbitMQ.
+  - Search: OpenSearch/Elasticsearch for fast queries and full-text search.
+  - Observability: OpenTelemetry + Prometheus + Grafana; centralized logs (ELK or Azure Monitor).
+  - Secrets: Azure Key Vault.
+  - IaC: Terraform modules to provision Azure resources (AKS, ACR, Azure SQL / PostgreSQL, Key Vault, Service Bus).
+  - CI/CD: GitHub Actions templates for build/test/deploy; support canary and blue/green deploys.
+
+--- FUNCTIONAL REQUIREMENTS (detailed)
+1. **Authentication & Provisioning**
+   - Local accounts for prototype.
+   - Azure AD (OpenID Connect / MSAL) integration with role claims.
+   - SCIM support for automated user provisioning (optional).
+   - MFA support via Azure Conditional Access.
+
+2. **Authorization**
+   - Role-based access control (Admin, Editor, Viewer, Auditor, Integrator).
+   - Fine-grained page & widget permissions (view/edit/publish).
+   - ABAC support: policies based on attributes (department, region, subscription).
+   - Tenant & org scoping (multi-tenant optional).
+
+3. **Page Builder & UI Components**
+   - Canvas with grid layout & snap points (responsive breakpoints: desktop/tablet/mobile).
+   - Widget palette: Text, Heading, Markdown, Button, Link, Image, Iframe, Table, Card, KPI tile, Chart (Line/Bar/Pie), Data Grid (virtualized), Form inputs (text, number, date, select, radio, checkbox), Search, Filter, Tabs, Accordion, HTML block, Code block.
+   - Widget property editor (right panel): label, style, bindings, data transformation, pagination, polling interval, caching.
+   - Drag & drop reorder, resize, copy/paste, alignment guides.
+   - Undo/redo stack.
+   - Publish/Unpublish, Drafts, Preview Mode.
+
+4. **Data Binding & Connectors**
+   - **Tool Manager**: Admin registers tools:
+     - name, logo, description, baseURL, auth type (API key, OAuth2, Bearer token, Basic), rate limit, default headers.
+   - **Connection types**: REST (JSON), GraphQL, SQL (via a secure connector), Webhook.
+   - **Field Mapping UI**: Visual mapper using JSONPath, JMESPath, or JSONata to map response fields to widget properties.
+   - **Transform functions**: provide built-in transforms (date formatting, numeric conversions) + safe expression language (no arbitrary server-side JS unless secured).
+   - **Polling & Push**: Polling scheduler or webhook listener for real-time updates.
+   - **Connector SDK**: simple pattern to add new connectors (adapter manifest + sample transformations). Provide templates for Databricks, ServiceNow, PowerBI, Tableau, Snowflake.
+
+5. **Workflows & Automations (No-Code)**
+   - Trigger types: schedule, webhook, widget event (onClick), connector event (job status change), manual.
+   - Actions: call API, create ServiceNow ticket, post Slack/Teams message, send email, run serverless function, change page state, call other workflows.
+   - Conditional branching, retries, error handling, logging.
+   - Visual flow editor with audit logs for runs.
+   - Task history & retry UI.
+
+6. **Alerts and Notifications**
+   - Define alert rules (metric or event based) with thresholds and frequency (dedupe).
+   - Notification channels: Email (SMTP), Slack, Microsoft Teams, PagerDuty, Webhook, SMS (via Twilio).
+   - Alert suppression windows, escalation chains.
+
+7. **Versioning, Approvals & Audit**
+   - Page versions and widget-level diffs.
+   - Approval workflow: Draft → Request Approval → Publish.
+   - Audit log: immutable record of CRUD operations, config changes, login events, workflow runs.
+
+8. **Security & Compliance**
+   - HTTPS everywhere, JWT + refresh tokens.
+   - Encrypt secrets in DB using Key Vault or local encryption key for prototype.
+   - CSP, XSS protection, input validation & sanitization.
+   - Rate limiting on connector calls, circuit-breaker patterns for flaky integrations.
+   - Least privilege for connector credentials.
+   - Data retention policies and data deletion workflows (support GDPR).
+   - Optional features: data masking, PI/PHI scanning plugin.
+
+9. **Observability & Monitoring**
+   - Export metrics via Prometheus, traces via OpenTelemetry.
+   - Health endpoints for liveness/readiness.
+   - Centralized logs (structured JSON) with retention.
+   - Alert rules and dashboard templates for platform health.
+
+10. **Performance & Scalability**
+    - Server-side pagination and cursor-based paging.
+    - Virtualized data grid for large tables.
+    - Edge caching for static assets (CDN).
+    - Caching connector responses in Redis with TTL.
+    - Horizontal scaling for stateless services.
+
+11. **Testing & QA**
+    - Unit tests for backend & frontend.
+    - Integration tests for API endpoints (with mock connectors).
+    - E2E tests (Playwright or Cypress) that run in CI.
+    - Security scans in CI (Snyk or similar).
+
+12. **Deployment & DevOps**
+    - Dockerfile(s) for frontend & backend.
+    - docker-compose for local dev.
+    - Kubernetes manifests and Helm charts for production deployment.
+    - Terraform scripts for Azure resources.
+    - GitHub Actions templates for CI/CD (build → test → deploy).
+    - Blue/green or canary deployment configuration.
+
+13. **Developer Experience (DX)**
+    - Clean monorepo layout: /apps/frontend, /apps/backend, /packages/ui, /infra/terraform, /docs, /tests.
+    - Component library and Storybook for widgets.
+    - API OpenAPI/Swagger specs.
+    - Migration scripts & seeders.
+    - In-app sample datasets, tutorial wizard, and guided onboarding.
+
+14. **Extensibility / Marketplace**
+    - Plugin system for new widgets & connectors.
+    - Marketplace: add prebuilt templates (Databricks job monitor, ServiceNow queue, PowerBI report gallery, Incident Response dashboard).
+    - Plugin manifest format + install/uninstall UI.
+
+15. **Accessibility & Localization**
+    - WCAG 2.1 AA compliance basics: ARIA roles, keyboard nav, focus management, color contrast.
+    - i18n support for UI strings and date/number formatting.
+
+16. **Backup & Recovery**
+    - DB backups (daily) to Azure Blob with retention policies.
+    - Restore playbook and scripts.
+
+--- DATABASE MODELS (SQL conceptual)
+Provide migration files. Include at minimum:
+- users(id, email, password_hash, role, metadata JSON, created_at, updated_at)
+- organizations(id, name, tenant_id, created_at)
+- pages(id, org_id, name, slug, layout_json, status[draft/published], version, created_by, created_at, updated_at)
+- widgets(id, page_id, type, props_json, position_json, created_at, updated_at)
+- tools(id, org_id, name, type, base_url, auth_type, credential_id, config_json, created_at, updated_at)
+- connections(id, tool_id, name, encrypted_credentials_json, last_tested_at, status)
+- workflows(id, org_id, name, workflow_json, enabled, created_by)
+- alerts(id, org_id, name, rules_json, channels_json)
+- audit_logs(id, actor_id, action, resource_type, resource_id, diff_json, timestamp)
+- versions(id, resource_type, resource_id, version_json, created_by, created_at)
+
+--- SAMPLE JSON LAYOUT (example to seed)
+Provide a sample `layout_json` for a page containing:
+- Row: KPI tiles (Databricks success/failure counts)
+- Row: Table bound to ServiceNow tickets (columns: ID, Priority, State, AssignedTo)
+- Row: Chart bound to Databricks job run times (line chart)
+- Footer: Last updated timestamp and refresh button
+
+--- CONNECTOR TEMPLATES (seed)
+Include built-in connector templates with mocked endpoints:
+- Databricks: /mock/databricks/jobs -> returns job statuses
+- ServiceNow: /mock/servicenow/tickets -> returns ticket list
+- PowerBI: link/embed token demonstration (iframe)
+- Tableau: link + embed demonstration
+- Generic REST: ability to add any REST API
+
+--- SECURITY NOTES (must implement)
+- Never allow direct raw SQL from UI.
+- For custom transforms, provide only a safe expression evaluator (JSONata/JMESPath).
+- If you must allow JS, run it in a strict sandbox (vm2 or WASM) with CPU/time limits and restrict network & filesystem.
+- Store credentials encrypted and rotateable. Use Key Vault in prod.
+
+--- API CONTRACT (examples)
+- `POST /api/auth/login` → returns JWT
+- `GET /api/pages` → list pages (respect permissions)
+- `GET /api/pages/:id/render` → returns server-side rendered JSON for viewer
+- `POST /api/pages` → create page (admin only)
+- `POST /api/tools` → register tool
+- `POST /api/tools/:id/test` → test connector with provided credentials
+- `POST /api/workflows/execute` → run workflow manually
+
+Include OpenAPI 3.0 spec files.
+
+--- CI / Tests to include
+- `npm run lint`, `npm run test:unit`, `npm run test:e2e`, `npm run build`, `npm run docker:build`.
+- GitHub Actions file: run tests, build Docker images, push to registry, run Terraform plan for infra.
+
+--- README (must include)
+- Setup for Replit prototype: environment variables, `npm install`, `npm run dev`, default admin creds (e.g., admin@example.com / Admin123!).
+- How to run migrations and seed data.
+- How to add a new Tool & create a simple page.
+- How to run tests.
+- How to deploy to Azure (high-level steps using Terraform + AKS).
+
+--- INFRA (production hints)
+- Use AKS for runtime, ACR for container images, Azure SQL/Postgres for DB, Azure Cache for Redis, Key Vault for secrets, Application Gateway/WAF + CDN.
+- Terraform modules for repeatable deployments.
+- Helm charts for app deployments, enable HPA (Horizontal Pod Autoscaler).
+
+--- DELIVERABLES (explicit)
+1. Complete monorepo scaffold (working demo on Replit).
+2. Readme and setup guide with env vars and default credentials.
+3. Database migrations & seeders with sample dashboards and connectors.
+4. Frontend: Page builder UI + Viewer pages.
+5. Backend: CRUD APIs, connector framework, mock connectors, workflow execution engine, auth.
+6. OpenAPI spec, architecture diagram (Mermaid or PNG), and developer docs.
+7. Terraform skeleton and Helm charts for production.
+8. CI/CD pipeline config (GitHub Actions).
+9. Tests: unit, integration, e2e samples.
+10. Security & operational playbook (backup/restore, rotate keys, incident response).
+
+--- NON-FUNCTIONAL REQUIREMENTS
+- Accessibility: WCAG 2.1 AA.
+- Performance: sub 300ms average page render for small pages; implement caching.
+- Scalability: Design for horizontal scaling; minimal state in app servers.
+- Maintainability: modular codebase, component library, storybook for widgets.
+- Observability: Prometheus metrics & traces, logging, alerts.
+
+--- EDGE CASES / ERRORS
+- If connector auth fails, show actionable error (token expired → reauthorize).
+- Throttle connectors and show cached stale data with "last updated" timestamp.
+- Graceful degradation in viewer if widget load fails (display friendly error + retry).
+- Safe rollbacks for published pages.
+
+--- DOCUMENT: Developer extension guide
+- How to add a new connector (manifest + sample adapter code).
+- How to write a new widget component and register it in the widget registry.
+- How to add serverless actions for workflows.
+
+--- COMPLIANCE & PRIVACY CHECKS
+- Add data classification labels for each tool (public/internal/confidential).
+- Provide hooks to auto-redact sensitive fields from logs & UI display.
+- Provide a data retention config for each org.
+
+--- UX / Onboarding
+- In-app guided tour for new admins: create first tool → create page → bind widget → publish.
+- Provide sample templates to pick from (Databricks Monitor, Incident Dashboard, BI Gallery).
+
+--- EXTRA (future-ready / optional but high value)
+- AI assistant for layout suggestions (auto-arrange widgets, suggest visualizations).
+- Auto-mapping: detect common fields from API response and suggest mappings.
+- Export/import marketplace package (zip JSON + assets) to share dashboards between orgs.
+- Role-based templates (Platform Ops, SecOps, BI consumer).
+
+--- FINAL INSTRUCTION TO YOU (code generator)
+1. Create a monorepo with the above directory layout and implement both prototype and production artifacts.
+2. Scaffold pages, widgets, and connectors with working demo data. Implement Databricks and ServiceNow mocks.
+3. Add migrations & seeders to create default admin (`admin@example.com` / `Admin123!`) and a viewer (`viewer@example.com` / `Viewer123!`) and sample pages.
+4. Include a README with exact commands to run locally / Replit.
+5. Provide a `demo-checklist.md` which lists the acceptance criteria and how to validate each.
+6. Provide all infrastructure files (Terraform skeleton, Helm charts, Dockerfiles) with clear comments where operator should add real values for production.
+7. Provide unit and e2e tests that validate main flows (login, create tool, create page, bind widget, view page).
+8. Keep code modular and well-commented.
+
+--- IMPORTANT SECURITY REMARKS
+- Do not embed any real credentials in code. Use env variables; provide `.env.example`.
+- For prototype, it is permitted to seed dev creds; clearly mark them as dev only.
+- For production deployment, require Key Vault and managed identities.
+
+--- DELIVERY NOTES
+- The generated repo should be runnable in Replit for demo using SQLite and local file storage.
+- The same repo should include clear production instructions (Terraform + AKS + managed services).
+- Provide a single ZIP artifact with the repo contents if possible and a rendered architecture diagram.
+
+--- End of prompt. Build everything described above and prioritize a fully functioning Replit prototype. Make the UX for the admin so intuitive a non-technical platform manager can create and publish dashboards and connectors in under 15 minutes.
+
+
+
+Below is a **comprehensive, layered wireframe and layout architecture** — including **page structure, component breakdown, navigation flow, and screen blueprints**.
+You can directly give this to your designer, or import it into a design tool like **Figma**, **Draw.io**, or **Whimsical** to visualize.
+
+---
+
+## 🧭 HIGH-LEVEL APP STRUCTURE
+
+```
++---------------------------------------------------------+
+|                🔷 AZURE PLATFORM BUILDER APP             |
++---------------------------------------------------------+
+|  1. Login / Auth Page                                   |
+|  2. Admin Portal                                        |
+|       ├── Dashboard (overview, health, stats)            |
+|       ├── Page Builder (no-code WYSIWYG)                |
+|       ├── Tool / Connector Manager                      |
+|       ├── Workflow & Automation Designer                |
+|       ├── Alerts & Monitoring                           |
+|       ├── User & Role Management                        |
+|       ├── Audit Logs / Version History                  |
+|       └── Settings (Theme, Branding, API Keys)           |
+|  3. Viewer Portal                                       |
+|       ├── Dynamic Dashboards                            |
+|       ├── Search & Filter Panels                        |
+|       ├── KPI, Tables, Charts, Status Boards             |
+|       └── Export / Share                                |
++---------------------------------------------------------+
+```
+
+---
+
+## 🎨 DETAILED WIREFRAMES BY MODULE
+
+---
+
+### 🏁 1. **Login / Auth Page**
+
+```
+ -----------------------------------------------------
+| [Logo] Azure Platform Dashboard                     |
+|------------------------------------------------------|
+|  Username [__________]                               |
+|  Password [__________]                               |
+|  [ Login Button ]  [ Forgot Password? ]              |
+|------------------------------------------------------|
+|  ☐ Remember me                                       |
+|  SSO Login with Azure AD  [Microsoft button]         |
+ -----------------------------------------------------
+```
+
+✅ Features:
+
+* JWT login or SSO with Microsoft Entra (Azure AD)
+* Redirects Admin → Admin Home
+* Redirects Viewer → Viewer Dashboard
+
+---
+
+### 🧩 2. **Admin Home Dashboard (Landing Page)**
+
+```
++--------------------------------------------------------------+
+| 🔷 Top Nav: [Logo] | Pages | Tools | Workflows | Alerts | ⚙️ |
++--------------------------------------------------------------+
+| Left Sidebar | Main Content Area | Right Sidebar (Context)  |
+|--------------------------------------------------------------|
+| + Pages List  | Welcome, Stats, Graphs, Shortcuts           |
+|   - Platform Overview                                       |
+|   - Health Summary (by Tool)                                |
+|   - Quick Actions:                                          |
+|      [Create New Page] [Manage Tools] [Open Workflows]      |
+|                                                              |
+| Right Panel: Notification Stream                            |
++--------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Summary widgets showing Databricks job success rate, ServiceNow ticket counts, etc.
+* Quick navigation to Page Builder, Tool Manager, Alerts.
+
+---
+
+### 🧱 3. **Page Builder (No-Code Drag & Drop Canvas)**
+
+#### Layout
+
+```
++--------------------------------------------------------------------------------------+
+| Top Nav: [Back] [Preview] [Publish] [Undo/Redo] [Save Draft] [Dark/Light Mode]      |
++--------------------------------------------------------------------------------------+
+| Left Sidebar (Widgets Palette) | Center (Canvas) | Right Sidebar (Properties Panel)  |
+|--------------------------------------------------------------------------------------|
+| 🧩 Widgets:                     | [Canvas]                                          |
+|  - Text                         |  +------------------------------------------+     |
+|  - Heading                      |  |   [Drag widgets here or select template] |     |
+|  - Button                       |  +------------------------------------------+     |
+|  - Chart (Line/Bar/Pie)         |                                                  |
+|  - Data Table                   |  ⬜ Grid-based, resizable blocks                 |
+|  - Form (input/select/date)     |  Drag widgets → resize → configure → save        |
+|  - KPI Tile                     |                                                  |
+|  - API Data Widget              |                                                  |
+|  - ServiceNow, Databricks, etc. |                                                  |
+|                                 |                                                  |
+|---------------------------------|--------------------------------------------------|
+| Right Sidebar (Properties):                                                |
+|  - Widget Title, API Source, Binding, Filters, Styles, Refresh Interval     |
+|  - Bind data fields (JSONPath), transform expressions, visibility rules     |
+|  - Preview of bound data                                                  |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Key Functions:
+
+* Real-time preview
+* Drag & drop layout
+* JSON schema saved to DB (`layout_json`)
+* Resizable grid cells (react-grid-layout)
+* Data binding editor using visual JSONPath selector
+* Template chooser for quick dashboards
+
+---
+
+### 🧰 4. **Tool / Connector Manager**
+
+```
++--------------------------------------------------------------------------------------+
+| [Add New Tool] [Search Tools]                                                        |
++--------------------------------------------------------------------------------------+
+| TOOL NAME     | TYPE     | AUTH METHOD | STATUS | LAST UPDATED | ACTIONS             |
+|--------------------------------------------------------------------------------------|
+| Databricks    | REST API | Token       | ✅ OK   | 1 hr ago      | [Edit][Test][Del]  |
+| ServiceNow    | REST API | Basic Auth  | ⚠️ Exp  | 5 hrs ago     | [Edit][Renew]      |
+| Power BI      | Embed    | OAuth2      | ✅ OK   | 1 day ago     | [Edit][View]       |
++--------------------------------------------------------------------------------------+
+| ADD NEW TOOL FORM:                                                                  |
+| Name [______]  Logo [Upload]                                                        |
+| Base URL [https://api.tool.com/]                                                    |
+| Auth Type [API Key | OAuth2 | Basic]                                                |
+| Header / Param config [key=value pairs]                                             |
+| Test Connection [Button]                                                            |
+| On success → Save to DB                                                             |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Dynamic connector registry
+* API URL and credential storage (encrypted)
+* Connection test with response preview
+* Field mapping editor
+
+---
+
+### ⚙️ 5. **Workflow & Automation Designer**
+
+```
++--------------------------------------------------------------------------------------+
+| [Create Workflow] [Run Now] [History]                                                |
++--------------------------------------------------------------------------------------+
+| Flow Diagram Canvas (Drag Nodes & Connectors)                                       |
+|--------------------------------------------------------------------------------------|
+| [Trigger: Databricks job failed] → [Condition: job_name=XYZ] → [Action:             |
+| Create ServiceNow ticket] → [Action: Send Slack Message]                            |
++--------------------------------------------------------------------------------------+
+| Right Sidebar: Node Properties                                                      |
+|  - Trigger config (event source, polling interval)                                  |
+|  - Condition expression                                                             |
+|  - Action target (endpoint, template message)                                       |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Drag nodes to define triggers, conditions, and actions
+* Visual execution flow with audit trail
+* Manual run and schedule options
+
+---
+
+### 🚨 6. **Alerts & Monitoring Dashboard**
+
+```
++--------------------------------------------------------------------------------------+
+| [Create Alert] [Manage Channels]                                                    |
++--------------------------------------------------------------------------------------+
+| Alert Name | Condition | Frequency | Channel | Status | Last Triggered | Actions    |
+|--------------------------------------------------------------------------------------|
+| Job Failures | job_status=failed | 5min | Slack | ✅ | 2h ago | [Edit][Disable]   |
+| API Latency  | latency>5s        | 10min | Email | ✅ | -     | [Edit][Disable]   |
++--------------------------------------------------------------------------------------+
+| Right Side: Metric Graph (job success rate)                                         |
+| Bottom: Alert history log                                                           |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Define rules based on connector data
+* Notification channels (Slack, Teams, Email, SMS)
+* Graphs + logs
+
+---
+
+### 👥 7. **User & Role Management**
+
+```
++--------------------------------------------------------------------------------------+
+| [Add User] [Import from Azure AD]                                                   |
++--------------------------------------------------------------------------------------+
+| USER NAME | ROLE | EMAIL | STATUS | LAST LOGIN | ACTIONS                            |
+|--------------------------------------------------------------------------------------|
+| Alice     | Admin | alice@corp.com | Active | 2h ago | [Edit][Disable]              |
+| Bob       | Viewer| bob@corp.com   | Active | 1d ago | [Edit][Reset PW]             |
++--------------------------------------------------------------------------------------+
+| ROLES: Admin, Editor, Viewer, Auditor, Integrator                                   |
+| Optional: Custom Role Creation w/ granular permissions                              |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* RBAC + fine-grained permission editing
+* SSO user sync (Azure AD)
+
+---
+
+### 🧾 8. **Audit Logs / Version History**
+
+```
++--------------------------------------------------------------------------------------+
+| RESOURCE | ACTION | USER | TIMESTAMP | DIFF VIEW | REVERT                            |
+|--------------------------------------------------------------------------------------|
+| Page: BI Dashboard | Edited | Alice | 2h ago | [View] | [Revert]                    |
+| Tool: Databricks   | Added  | Admin | 5h ago | [View] | -                           |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Diff viewer comparing JSON layout versions
+* Revert function for admins
+
+---
+
+### ⚙️ 9. **Settings / Config Center**
+
+```
++--------------------------------------------------------------------------------------+
+| Sections: Theme | Branding | Integrations | Secrets | Backups | Logs                 |
++--------------------------------------------------------------------------------------+
+| Theme: Light/Dark, Colors, Logo upload                                              |
+| Integrations: SMTP, Slack Webhook, Azure Key Vault config                           |
+| Backups: Download config JSON or schedule backup                                    |
+| Logs: Export full audit trail or download JSON logs                                 |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Full admin control of system setup
+* Backup/export/import JSON layouts
+
+---
+
+### 👀 10. **Viewer Portal (End-User Dashboards)**
+
+```
++--------------------------------------------------------------------------------------+
+| [Header: Logo | Search | Filters | Profile]                                         |
++--------------------------------------------------------------------------------------+
+| Sidebar (Dynamic Page List) | Main Content (Dynamic Components)                     |
+|--------------------------------------------------------------------------------------|
+| 📊 Power BI Reports  | [Embed Iframe]                                              |
+| 💼 Databricks Jobs   | [Table/Chart Status]                                        |
+| 🎫 ServiceNow Tickets | [Table with Filters]                                       |
+| ⚡ Alerts & KPIs      | [KPI Tiles + Trends]                                       |
++--------------------------------------------------------------------------------------+
+| Footer: Last updated 10 mins ago | Refresh | Export to PDF                         |
++--------------------------------------------------------------------------------------+
+```
+
+✅ Features:
+
+* Everything generated dynamically from DB layout JSON
+* Data refresh & caching logic
+* Search, filter, export
+
+---
+
+### 🪶 11. **System Diagram / Flow**
+
+```
+   [Admin UI]
+       │
+       ▼
+  [Page Builder]──▶ [Layout JSON]
+       │
+       ▼
+ [Backend API] ──▶ [Database: Pages, Widgets, Tools]
+       │
+       ├──▶ [External Tool APIs: Databricks, ServiceNow, etc.]
+       │
+       ▼
+   [Viewer UI] → renders from layout JSON + API data
+```
+
+---
+
+## 🧩 COMPONENT CATALOG SUMMARY
+
+| Component Type    | Example Use                 | Config Options                    |
+| ----------------- | --------------------------- | --------------------------------- |
+| Text / Heading    | Titles, notes               | Font, color, alignment            |
+| Button / Link     | Triggers workflow           | Label, icon, target               |
+| Chart             | Metrics (job runs, tickets) | Type, dataset binding             |
+| Table             | Data display                | Columns, sort, pagination         |
+| Form              | Data input                  | Fields, validation, submit action |
+| KPI Tile          | Highlight counts            | Metric source, thresholds         |
+| Iframe            | Embed BI dashboards         | URL, height, fullscreen           |
+| Custom API Widget | Fetch any REST              | Endpoint, mapping                 |
+| Search / Filter   | Filter datasets             | Bound to table/chart              |
+| Tabs / Accordion  | Organize sections           | Tab labels, content blocks        |
+
+---
+
+## 🧱 RESPONSIVE LAYOUT GUIDELINES
+
+* **Grid**: 12-column responsive layout
+* **Breakpoints**:
+
+  * Desktop ≥ 1280px
+  * Tablet: 768–1279px
+  * Mobile ≤ 767px
+* **Widgets**: auto-stack on mobile
+* **Sidebar**: collapsible on mobile
+
+---
+
+## 📘 Bonus: Suggested Page Templates (Prebuilt)
+
+| Template Name            | Use Case                  | Components                  |
+| ------------------------ | ------------------------- | --------------------------- |
+| Databricks Job Monitor   | Track job runs & failures | KPI tiles, Chart, Log Table |
+| ServiceNow Incident View | View open tickets         | Table, Filters, Form        |
+| BI Reports Gallery       | Embed reports             | Iframe grid                 |
+| Platform Health          | KPIs + Alerts             | Status cards + Chart        |
+| Workflow Console         | Show running jobs         | Table + Buttons             |
+
+---
+
+
+Perfect — you’re aiming to make your **Replit-built web app portable and auto-configurable for deployment inside Azure Databricks Streamlit apps**, without any manual dependency installation or environment setup.
+
+Here’s a **fully detailed, future-proof prompt** that includes **Databricks Streamlit compatibility**, **auto environment setup**, **no-code admin builder**, and **dynamic UI generation**.
+You can directly paste this prompt into Replit’s “Generate App” (AI app builder) or use it in your own development workflow.
+
+---
+
+**Prompt:**
+Build a **modular, no-code web application** that allows an Azure platform operations team to manage and monitor multiple enterprise tools (Databricks, Power BI, Tableau, ServiceNow, Teradata, etc.) through a unified dashboard.
+The app should be designed and packaged so that it can **run natively in both Replit and the Databricks Streamlit app environment**, automatically configuring dependencies, environment variables, and runtime settings on deployment.
+
+---
+
+### 🔷 Core Capabilities
+
+1. **Dynamic Admin Portal (No-Code Builder)**
+
+   * Admin can create and modify pages, dashboards, forms, and data widgets using a drag-and-drop interface.
+   * Supports adding components like:
+
+     * Text blocks, buttons, charts, tables, iframes, input fields, dropdowns, radio buttons, checkboxes, and API data widgets.
+   * Admin can visually connect UI components to data sources (REST APIs, Databricks queries, ServiceNow, etc.) using a visual binding panel.
+   * All created pages are stored as JSON in the backend (`layout.json`) for dynamic rendering.
+   * Admin can publish, version, and revert pages without coding.
+
+2. **Viewer Portal**
+
+   * Dynamically renders pages created by Admins.
+   * Supports live refresh, search, filters, and export (PDF, Excel, CSV).
+   * Optimized for Databricks Streamlit rendering (using `st.components.v1.html` for embedded views).
+
+3. **Tool / Connector Manager**
+
+   * Admin can add, edit, test, and delete connectors (Databricks, Power BI, ServiceNow, etc.).
+   * Supports multiple auth types (API Key, OAuth2, Basic).
+   * Automatically validates connections and caches responses.
+   * Securely stores credentials (e.g., Azure Key Vault compatible).
+
+4. **Workflow & Automation Builder**
+
+   * Drag-and-drop flow designer to connect triggers and actions (e.g., *Databricks job failed → create ServiceNow ticket → send Teams alert*).
+   * Supports manual runs, scheduling, and history tracking.
+
+5. **Monitoring & Alerts**
+
+   * Monitors job statuses, tickets, and system health.
+   * Creates alerts for failures or anomalies and routes via email, Teams, or Slack.
+
+6. **User & Role Management**
+
+   * Roles: Admin, Editor, Viewer, Auditor, Integrator.
+   * Integrates with Azure AD for SSO authentication.
+   * Fine-grained permission system for pages, tools, and workflows.
+
+7. **Audit Logs & Versioning**
+
+   * Tracks all changes with timestamps and rollback capability.
+   * JSON diff viewer for comparing versions.
+
+8. **Settings**
+
+   * Manage branding, theme (light/dark), API keys, SMTP, and backup/export of configurations.
+   * Export full system config as portable JSON for Databricks Streamlit import.
+
+---
+
+### 💡 Technical Requirements
+
+#### ✅ Frontend
+
+* React + TypeScript (or Next.js React if possible)
+* Component libraries: `shadcn/ui`, `lucide-react`, `framer-motion`
+* Dashboard grid layout: `react-grid-layout`
+* No-code editor engine: JSON-driven, saved via backend API
+
+#### ✅ Backend
+
+* Python (FastAPI preferred) or Node.js Express (choose based on Replit AI’s best compatibility)
+* REST API endpoints:
+
+  * `/api/pages` (CRUD for dynamic pages)
+  * `/api/tools` (connector management)
+  * `/api/workflows`
+  * `/api/alerts`
+  * `/api/audit`
+* Database: SQLite (default), easy switch to PostgreSQL or Azure SQL
+* Secure storage for secrets (local `.env`, optional Key Vault integration)
+
+#### ✅ Databricks Streamlit Compatibility
+
+* Include a **`requirements.txt`** that lists all dependencies:
+
+  * `streamlit`, `requests`, `pandas`, `sqlalchemy`, `plotly`, `fastapi`, `uvicorn`, `aiohttp`, `jinja2`, `pyjwt`, `cryptography`, `python-dotenv`
+* Include a **`setup.sh`** script that:
+
+  ```bash
+  #!/bin/bash
+  pip install -r requirements.txt
+  export PYTHONPATH=$PWD
+  echo "✅ Environment setup completed for Databricks Streamlit"
+  ```
+* Include a **`main_streamlit.py`** file that:
+
+  ```python
+  import streamlit as st
+  import os, json
+  from app import main as run_app  # assume app/main.py exists
+
+  st.set_page_config(layout="wide", page_title="Azure Platform Builder")
+  st.markdown("# Azure Platform Builder App")
+  st.write("This app is running inside Databricks Streamlit environment.")
+
+  # Run the web app inside an iframe
+  st.components.v1.html(
+      f"""
+      <iframe src="http://localhost:8000" width="100%" height="800px" frameborder="0"></iframe>
+      """,
+      height=800,
+  )
+  ```
+* The Streamlit wrapper should:
+
+  * Auto-detect the environment (Databricks or Replit).
+  * Install missing packages if any (auto installer).
+  * Log setup status in console and on-screen.
+  * Prevent “server not reachable” or “missing config” issues.
+
+#### ✅ Auto Environment Setup
+
+* Include a `bootstrap.py` that:
+
+  ```python
+  import os, subprocess, sys
+  required = ["streamlit", "fastapi", "uvicorn", "pandas", "requests", "plotly"]
+  for pkg in required:
+      try:
+          __import__(pkg)
+      except ImportError:
+          subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+  print("✅ Environment verified & all packages installed")
+  ```
+* Automatically runs when app starts, ensuring a ready-to-use environment in Databricks or Replit.
+
+#### ✅ Deployment Behavior
+
+* On Replit: standard FastAPI or Node.js web app with browser UI.
+* On Databricks: run `main_streamlit.py` to launch inside Streamlit.
+* On startup:
+
+  * Auto-load `.env` for secrets.
+  * Auto-check and install missing dependencies.
+  * Log “Environment validated successfully.”
+
+---
+
+### 🌐 Integration Points
+
+| Tool                  | Data Source           | Purpose                        |
+| --------------------- | --------------------- | ------------------------------ |
+| Databricks            | Jobs API              | Job success/failure monitoring |
+| ServiceNow            | Incident API          | Ticket sync                    |
+| Power BI / Tableau    | Embed URLs            | Dashboard embedding            |
+| Azure DevOps          | REST API              | Build/deployment status        |
+| Email / Teams / Slack | Notification channels | Alerts                         |
+
+---
+
+### ⚙️ Optional Advanced Features
+
+* AI-powered page builder (natural language to layout)
+* Plugin SDK: allow developers to contribute custom widgets
+* Audit dashboard using Streamlit native charts
+* Offline-first JSON backup system
+* Dark mode persistence across users
+* Live logs viewer (tail Databricks job logs)
+
+---
+
+### 🧱 File Structure Example
+
+```
+/app
+ ├── main.py
+ ├── pages/
+ │    └── builder.py
+ ├── components/
+ │    └── widgets/
+ ├── api/
+ │    ├── tools.py
+ │    ├── pages.py
+ │    └── workflows.py
+ ├── static/
+ │    └── themes/
+ ├── templates/
+ │    └── index.html
+ ├── requirements.txt
+ ├── setup.sh
+ ├── bootstrap.py
+ ├── main_streamlit.py
+ └── README.md
+```
+
+---
+
+
+
+
+
+
+
+
+
+---
+
+### 🔷 Core Capabilities
+
+1. **Dynamic Admin Portal (No-Code Builder)**
+
+   * Admin can create and modify pages, dashboards, forms, and data widgets using a drag-and-drop interface.
+   * Supports adding components like:
+
+     * Text blocks, buttons, charts, tables, iframes, input fields, dropdowns, radio buttons, checkboxes, and API data widgets.
+   * Admin can visually connect UI components to data sources (REST APIs, Databricks queries, ServiceNow, etc.) using a visual binding panel.
+   * All created pages are stored as JSON in the backend (`layout.json`) for dynamic rendering.
+   * Admin can publish, version, and revert pages without coding.
+
+2. **Viewer Portal**
+
+   * Dynamically renders pages created by Admins.
+   * Supports live refresh, search, filters, and export (PDF, Excel, CSV).
+   * Optimized for Databricks Streamlit rendering (using `st.components.v1.html` for embedded views).
+
+3. **Tool / Connector Manager**
+
+   * Admin can add, edit, test, and delete connectors (Databricks, Power BI, ServiceNow, etc.).
+   * Supports multiple auth types (API Key, OAuth2, Basic).
+   * Automatically validates connections and caches responses.
+   * Securely stores credentials (e.g., Azure Key Vault compatible).
+
+4. **Workflow & Automation Builder**
+
+   * Drag-and-drop flow designer to connect triggers and actions (e.g., *Databricks job failed → create ServiceNow ticket → send Teams alert*).
+   * Supports manual runs, scheduling, and history tracking.
+
+5. **Monitoring & Alerts**
+
+   * Monitors job statuses, tickets, and system health.
+   * Creates alerts for failures or anomalies and routes via email, Teams, or Slack.
+
+6. **User & Role Management**
+
+   * Roles: Admin, Editor, Viewer, Auditor, Integrator.
+   * Integrates with Azure AD for SSO authentication.
+   * Fine-grained permission system for pages, tools, and workflows.
+
+7. **Audit Logs & Versioning**
+
+   * Tracks all changes with timestamps and rollback capability.
+   * JSON diff viewer for comparing versions.
+
+8. **Settings**
+
+   * Manage branding, theme (light/dark), API keys, SMTP, and backup/export of configurations.
+   * Export full system config as portable JSON for Databricks Streamlit import.
+
+---
+
+### 💡 Technical Requirements
+
+#### ✅ Frontend
+
+* React + TypeScript (or Next.js React if possible)
+* Component libraries: `shadcn/ui`, `lucide-react`, `framer-motion`
+* Dashboard grid layout: `react-grid-layout`
+* No-code editor engine: JSON-driven, saved via backend API
+
+#### ✅ Backend
+
+* Python (FastAPI preferred) or Node.js Express (choose based on Replit AI’s best compatibility)
+* REST API endpoints:
+
+  * `/api/pages` (CRUD for dynamic pages)
+  * `/api/tools` (connector management)
+  * `/api/workflows`
+  * `/api/alerts`
+  * `/api/audit`
+* Database: SQLite (default), easy switch to PostgreSQL or Azure SQL
+* Secure storage for secrets (local `.env`, optional Key Vault integration)
+
+#### ✅ Databricks Streamlit Compatibility
+
+* Include a **`requirements.txt`** that lists all dependencies:
+
+  * `streamlit`, `requests`, `pandas`, `sqlalchemy`, `plotly`, `fastapi`, `uvicorn`, `aiohttp`, `jinja2`, `pyjwt`, `cryptography`, `python-dotenv`
+* Include a **`setup.sh`** script that:
+
+  ```bash
+  #!/bin/bash
+  pip install -r requirements.txt
+  export PYTHONPATH=$PWD
+  echo "✅ Environment setup completed for Databricks Streamlit"
+  ```
+* Include a **`main_streamlit.py`** file that:
+
+  ```python
+  import streamlit as st
+  import os, json
+  from app import main as run_app  # assume app/main.py exists
+
+  st.set_page_config(layout="wide", page_title="Azure Platform Builder")
+  st.markdown("# Azure Platform Builder App")
+  st.write("This app is running inside Databricks Streamlit environment.")
+
+  # Run the web app inside an iframe
+  st.components.v1.html(
+      f"""
+      <iframe src="http://localhost:8000" width="100%" height="800px" frameborder="0"></iframe>
+      """,
+      height=800,
+  )
+  ```
+* The Streamlit wrapper should:
+
+  * Auto-detect the environment (Databricks or Replit).
+  * Install missing packages if any (auto installer).
+  * Log setup status in console and on-screen.
+  * Prevent “server not reachable” or “missing config” issues.
+
+#### ✅ Auto Environment Setup
+
+* Include a `bootstrap.py` that:
+
+  ```python
+  import os, subprocess, sys
+  required = ["streamlit", "fastapi", "uvicorn", "pandas", "requests", "plotly"]
+  for pkg in required:
+      try:
+          __import__(pkg)
+      except ImportError:
+          subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+  print("✅ Environment verified & all packages installed")
+  ```
+* Automatically runs when app starts, ensuring a ready-to-use environment in Databricks or Replit.
+
+#### ✅ Deployment Behavior
+
+* On Replit: standard FastAPI or Node.js web app with browser UI.
+* On Databricks: run `main_streamlit.py` to launch inside Streamlit.
+* On startup:
+
+  * Auto-load `.env` for secrets.
+  * Auto-check and install missing dependencies.
+  * Log “Environment validated successfully.”
+
+---
+
+### 🌐 Integration Points
+
+| Tool                  | Data Source           | Purpose                        |
+| --------------------- | --------------------- | ------------------------------ |
+| Databricks            | Jobs API              | Job success/failure monitoring |
+| ServiceNow            | Incident API          | Ticket sync                    |
+| Power BI / Tableau    | Embed URLs            | Dashboard embedding            |
+| Azure DevOps          | REST API              | Build/deployment status        |
+| Email / Teams / Slack | Notification channels | Alerts                         |
+
+---
+
+### ⚙️ Optional Advanced Features
+
+* AI-powered page builder (natural language to layout)
+* Plugin SDK: allow developers to contribute custom widgets
+* Audit dashboard using Streamlit native charts
+* Offline-first JSON backup system
+* Dark mode persistence across users
+* Live logs viewer (tail Databricks job logs)
+
+---
+
+### 🧱 File Structure Example
+
+```
+/app
+ ├── main.py
+ ├── pages/
+ │    └── builder.py
+ ├── components/
+ │    └── widgets/
+ ├── api/
+ │    ├── tools.py
+ │    ├── pages.py
+ │    └── workflows.py
+ ├── static/
+ │    └── themes/
+ ├── templates/
+ │    └── index.html
+ ├── requirements.txt
+ ├── setup.sh
+ ├── bootstrap.py
+ ├── main_streamlit.py
+ └── README.md
+```
+
+---
+
+### 🚀 Expected Behavior
+
+1. When deployed in Replit — app launches with full dashboard & no-code builder UI.
+
+2. When exported and deployed inside Databricks Streamlit —
+
+   * Automatically sets up Python environment
+   * Installs all dependencies
+   * Loads the same UI inside a Streamlit iframe without manual intervention
+   * No server/config/package errors occur
+
+3. Admins can:
+
+   * Add new tools
+   * Create pages visually
+   * Connect APIs
+   * Monitor status & trigger workflows — all from UI.
+
+4. Users can:
+
+   * View dashboards
+   * Search, filter, and export results
+   * Get real-time data from connected tools.
+
+---
+
+**Goal:**
+A fully modular, portable, no-code web app built in Replit that runs seamlessly inside Azure Databricks Streamlit environments, automatically configuring dependencies, resolving missing packages, and ensuring the same UX without manual setup.
