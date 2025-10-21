@@ -12,6 +12,7 @@ import PageForm from "@/pages/PageForm";
 import PageView from "@/pages/PageView";
 import Incidents from "@/pages/Incidents";
 import Jobs from "@/pages/Jobs";
+import RCA from "@/pages/RCA";
 import Tools from "@/pages/Tools";
 import CostAnalysis from "@/pages/CostAnalysis";
 import Resources from "@/pages/Resources";
@@ -83,6 +84,13 @@ function Router() {
         <ProtectedRoute>
           <ProtectedLayout>
             <Jobs />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/rca">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <RCA />
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>

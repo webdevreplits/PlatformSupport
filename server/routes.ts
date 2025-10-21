@@ -757,6 +757,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get failed jobs for RCA Dashboard
+  app.get("/api/rca/failed-jobs", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
+      const limit = parseInt(req.query.limit as string) || 50;
+      
+      // Query job_run_timeline for recent failed jobs
+      const query = `
+        SELECT 
+          job_id,
+          run_id,
+          run_name,
+          period_start_time,
+          period_end_time,
+          result_state,
+          termination_code,
+          trigger_type,
+          compute_ids
+        FROM system.lakeflow.job_run_timeline
+        WHERE result_state = 'FAILED'
+        ORDER BY period_end_time DESC
+        LIMIT ${limit}
+      `;
+      
+      const failedJobs = await executeSQLQuery(query, sqlConfig);
+      
+      res.json({ jobs: failedJobs });
+    } catch (error) {
+      console.error("Get failed jobs error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get failed jobs" });
+    }
+  });
+
   // RCA correlation route with AI analysis
   app.post("/api/rca/analyze", authenticateToken, async (req: AuthRequest, res) => {
     try {
