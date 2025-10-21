@@ -8,6 +8,7 @@ import { generateChatCompletion, summarizeIncident, generateFixScript, generateD
 import { executeSQLQuery, getFailedJobs, getJobRunDetails, getClusterInfo, getAuditLogs, testSQLConnection } from "./utils/databricks-sql";
 import { encrypt, decrypt } from "./utils/encryption";
 import { runStatusScraper, type StatusPageConfig } from "./utils/status-scraper";
+import { correlateJobFailure } from "./utils/rca-correlator";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -753,6 +754,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get status incidents error:", error);
       res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get status incidents" });
+    }
+  });
+
+  // RCA correlation route
+  app.post("/api/rca/analyze", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const { runId } = req.body;
+      
+      if (!runId) {
+        return res.status(400).json({ error: "runId is required" });
+      }
+      
+      const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
+      const catalogSchema = "uc_dev_edap_platform_01.edap_monitoring_de";
+      
+      const rcaReport = await correlateJobFailure(runId, catalogSchema, sqlConfig);
+      
+      await storage.createAuditLog({
+        actorId: req.user!.id,
+        action: "rca_analysis",
+        resourceType: "job_run",
+        resourceId: 0,
+        details: JSON.stringify({ runId, confidence: rcaReport.confidence }),
+      });
+      
+      res.json(rcaReport);
+    } catch (error) {
+      console.error("RCA analysis error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to analyze job failure" });
     }
   });
 
