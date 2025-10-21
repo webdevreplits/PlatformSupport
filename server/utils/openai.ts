@@ -1,4 +1,76 @@
-import OpenAI from 'openai';
+// Direct HTTP integration with Databricks serving endpoints
+// Databricks endpoints expect POST to {baseUrl}/{endpointName}/invocations
+
+interface DatabricksMessage {
+  role: string;
+  content: string;
+}
+
+interface DatabricksRequest {
+  messages: DatabricksMessage[];
+  temperature?: number;
+  max_tokens?: number;
+}
+
+async function callDatabricksEndpoint(
+  messages: DatabricksMessage[],
+  databricksToken: string,
+  databricksBaseUrl: string,
+  endpointName: string
+): Promise<string> {
+  const url = `${databricksBaseUrl}/${endpointName}/invocations`;
+  
+  console.log(`Calling Databricks endpoint: ${url}`);
+
+  const requestBody: DatabricksRequest = {
+    messages,
+    temperature: 0.7,
+    max_tokens: 1000,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${databricksToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Databricks API Error ${response.status}:`, errorText);
+      throw new Error(`Databricks API returned ${response.status}: ${errorText || response.statusText}`);
+    }
+
+    const data = await response.json();
+    
+    // Databricks Claude endpoint returns OpenAI-compatible format
+    // Response: { choices: [{ message: { content: "..." } }] }
+    if (data.choices && data.choices[0]?.message?.content) {
+      return data.choices[0].message.content;
+    }
+    
+    // Fallback for other response formats
+    if (typeof data === 'string') {
+      return data;
+    }
+    
+    if (data.response) {
+      return data.response;
+    }
+
+    console.warn('Unexpected response format from Databricks:', data);
+    return JSON.stringify(data);
+  } catch (error) {
+    console.error('Databricks endpoint call failed:', error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to call Databricks AI: ${error.message}. Please verify your endpoint configuration in Settings.`);
+    }
+    throw new Error('Failed to connect to Databricks AI. Please check your token and endpoint configuration in Settings.');
+  }
+}
 
 export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,
@@ -6,36 +78,7 @@ export async function generateChatCompletion(
   databricksBaseUrl: string = "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
   endpointName: string = "databricks-claude-sonnet-4-5"
 ) {
-  try {
-    // Databricks serving endpoints support OpenAI-compatible API
-    // The baseURL should be: {baseUrl}/{endpointName}
-    // The OpenAI SDK will append /v1/chat/completions (or similar paths)
-    // But Databricks might expect different paths, so we use the base without /v1
-    const fullBaseUrl = `${databricksBaseUrl}/${endpointName}`;
-
-    console.log(`Calling Databricks endpoint: ${fullBaseUrl}`);
-
-    const client = new OpenAI({
-      apiKey: databricksToken,
-      baseURL: fullBaseUrl,
-    });
-
-    const completion = await client.chat.completions.create({
-      // For Databricks, the model parameter can be any value - the endpoint determines the actual model
-      model: "gpt-3.5-turbo",
-      messages: messages as any,
-      temperature: 0.7,
-      max_tokens: 1000,
-    });
-
-    return completion.choices[0]?.message?.content || "No response generated";
-  } catch (error) {
-    console.error('Databricks AI API Error:', error);
-    if (error instanceof Error) {
-      throw new Error(`Databricks API Error: ${error.message}. Please verify your endpoint configuration in Settings.`);
-    }
-    throw new Error('Failed to connect to Databricks AI. Please check your token and endpoint configuration in Settings.');
-  }
+  return await callDatabricksEndpoint(messages, databricksToken, databricksBaseUrl, endpointName);
 }
 
 export async function summarizeIncident(
@@ -124,6 +167,45 @@ Include:
 
   return await generateChatCompletion([
     { role: 'system', content: 'You are an Azure platform reporting specialist. Create clear, executive-level reports.' },
+    { role: 'user', content: prompt }
+  ], databricksToken, databricksBaseUrl, endpointName);
+}
+
+// New function for RCA analysis
+export async function analyzeJobFailureRCA(
+  jobData: any,
+  systemLogs: string,
+  statusPageIncidents: any[],
+  databricksToken: string,
+  databricksBaseUrl?: string,
+  endpointName?: string
+) {
+  const incidentsText = statusPageIncidents.length > 0
+    ? statusPageIncidents.map(inc => `- ${inc.title} (${inc.status}): ${inc.description}`).join('\n')
+    : 'No active platform incidents found';
+
+  const prompt = `Perform Root Cause Analysis for this Databricks job failure:
+
+JOB DETAILS:
+${JSON.stringify(jobData, null, 2)}
+
+SYSTEM LOGS:
+${systemLogs}
+
+PLATFORM INCIDENTS:
+${incidentsText}
+
+ANALYZE AND PROVIDE:
+1. Root Cause Category: (Platform Error / Permission Issue / Spark Configuration / Resource Constraint / Code Error)
+2. Detailed Analysis: What specifically caused the failure?
+3. Evidence: Which logs/incidents support this conclusion?
+4. Remediation Steps: Specific actions to fix this issue
+5. Prevention: How to avoid this in the future
+
+Be specific and actionable. Reference exact error messages and log entries.`;
+
+  return await generateChatCompletion([
+    { role: 'system', content: 'You are a Databricks platform expert specializing in job failure analysis and root cause determination. Provide detailed, evidence-based analysis.' },
     { role: 'user', content: prompt }
   ], databricksToken, databricksBaseUrl, endpointName);
 }
