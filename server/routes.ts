@@ -4,7 +4,8 @@ import { storage } from "./storage";
 import bcrypt from "bcryptjs";
 import { generateToken, authenticateToken, requireRole, type AuthRequest } from "./middleware/auth";
 import { insertUserSchema, insertOrganizationSchema, insertPageSchema, insertWidgetSchema, insertToolSchema, insertConnectionSchema, insertWorkflowSchema, insertAlertSchema, insertAuditLogSchema } from "@shared/schema";
-import { generateChatCompletion, summarizeIncident, generateFixScript, generateDashboardInsights, generateReport } from "./utils/openai";
+import { generateChatCompletion, summarizeIncident, generateFixScript, generateDashboardInsights, generateReport, analyzeJobFailureRCA } from "./utils/openai";
+import { executeSQLQuery, getFailedJobs, getJobRunDetails, getClusterInfo, getAuditLogs, testSQLConnection } from "./utils/databricks-sql";
 import { encrypt, decrypt } from "./utils/encryption";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -361,6 +362,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     };
   }
 
+  // Helper to get SQL Warehouse config
+  async function getSQLWarehouseConfig(userId: number) {
+    const user = await storage.getUser(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const sqlConnection = await storage.getConnectionByName("SQL Warehouse", null);
+    
+    if (!sqlConnection || !sqlConnection.encryptedCredentials) {
+      throw new Error("SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.");
+    }
+
+    const decrypted = decrypt(sqlConnection.encryptedCredentials);
+    const config = JSON.parse(decrypted);
+    
+    return {
+      token: config.token,
+      workspaceUrl: config.workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+      warehouseId: config.warehouseId
+    };
+  }
+
   // Save/Update Databricks AI configuration
   app.post("/api/ai/config", authenticateToken, async (req: AuthRequest, res) => {
     try {
@@ -608,6 +632,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get SQL Warehouse config error:", error);
       res.status(500).json({ error: "Failed to get configuration" });
+    }
+  });
+
+  // SQL Warehouse query routes
+  app.get("/api/jobs/failed", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const config = await getSQLWarehouseConfig(req.user!.id);
+      const days = parseInt(req.query.days as string) || 7;
+      const jobs = await getFailedJobs(config, days);
+      
+      res.json({ jobs });
+    } catch (error) {
+      console.error("Get failed jobs error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get failed jobs" });
+    }
+  });
+
+  app.get("/api/jobs/:runId", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const config = await getSQLWarehouseConfig(req.user!.id);
+      const runId = req.params.runId;
+      const jobDetails = await getJobRunDetails(config, runId);
+      
+      if (!jobDetails) {
+        return res.status(404).json({ error: "Job run not found" });
+      }
+      
+      res.json({ job: jobDetails });
+    } catch (error) {
+      console.error("Get job details error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get job details" });
+    }
+  });
+
+  app.post("/api/sql-warehouse/test", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const config = await getSQLWarehouseConfig(req.user!.id);
+      const isConnected = await testSQLConnection(config);
+      
+      res.json({ connected: isConnected });
+    } catch (error) {
+      console.error("Test SQL connection error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to test connection" });
     }
   });
 
