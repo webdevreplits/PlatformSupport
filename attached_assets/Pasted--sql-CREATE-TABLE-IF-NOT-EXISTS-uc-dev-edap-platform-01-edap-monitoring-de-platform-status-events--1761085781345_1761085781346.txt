@@ -1,0 +1,42 @@
+%sql
+CREATE TABLE IF NOT EXISTS uc_dev_edap_platform_01.edap_monitoring_de.platform_status_events (
+  event_id STRING NOT NULL COMMENT 'Unique event identifier from status page',
+  source STRING NOT NULL COMMENT 'Source: databricks_azure, databricks_aws, azure_status, aws_status',
+  scrape_timestamp TIMESTAMP NOT NULL COMMENT 'When we scraped this data',
+  event_type STRING COMMENT 'Type: incident, maintenance, advisory, degradation, outage',
+  title STRING COMMENT 'Event title/name',
+  description STRING COMMENT 'Full description of the event',
+  status STRING COMMENT 'Current status: investigating, identified, monitoring, resolved, scheduled, in_progress, completed',
+  severity STRING COMMENT 'Severity: critical, major, minor, maintenance, none',
+  affected_services ARRAY<STRING> COMMENT 'List of affected services/components',
+  affected_regions ARRAY<STRING> COMMENT 'List of affected regions/zones',
+  event_start_time TIMESTAMP COMMENT 'When the event started',
+  event_end_time TIMESTAMP COMMENT 'When the event ended (null for ongoing)',
+  last_updated TIMESTAMP COMMENT 'Last update from status page',
+  scheduled_start TIMESTAMP COMMENT 'Scheduled start for maintenance',
+  scheduled_end TIMESTAMP COMMENT 'Scheduled end for maintenance',
+  updates ARRAY<STRUCT<
+    timestamp: TIMESTAMP,
+    status: STRING,
+    message: STRING
+  >> COMMENT 'Chronological list of status updates',
+  impact_level STRING COMMENT 'User-facing impact description',
+  customer_impact STRING COMMENT 'Detailed customer impact statement',
+  raw_html STRING COMMENT 'Original HTML/JSON for reprocessing',
+  source_url STRING COMMENT 'URL where data was scraped from',
+  parsed_successfully BOOLEAN COMMENT 'Whether parsing succeeded',
+  parse_error STRING COMMENT 'Error message if parsing failed',
+  data_quality_score DOUBLE COMMENT '0-1 score indicating completeness',
+  created_at TIMESTAMP COMMENT 'When record was created in our system',
+  updated_at TIMESTAMP COMMENT 'Last time this record was updated',
+  scrape_date DATE GENERATED ALWAYS AS (CAST(scrape_timestamp AS DATE)) COMMENT 'Partition key'
+)
+USING DELTA
+PARTITIONED BY (scrape_date, source)
+COMMENT 'Stores scraped status page data from Databricks, Azure, and AWS for RCA analysis'
+TBLPROPERTIES (
+  'delta.autoOptimize.optimizeWrite' = 'true',
+  'delta.autoOptimize.autoCompact' = 'true',
+  'delta.enableChangeDataFeed' = 'true',
+  'delta.columnMapping.mode' = 'name'
+);
