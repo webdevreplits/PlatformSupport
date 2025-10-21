@@ -519,6 +519,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // SQL Warehouse configuration routes
+  app.post("/api/sql-warehouse/config", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const { workspaceUrl, warehouseId, token } = req.body;
+      const user = await storage.getUser(req.user!.id);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (!token || !token.trim()) {
+        return res.status(400).json({ error: "Token is required" });
+      }
+
+      if (!warehouseId || !warehouseId.trim()) {
+        return res.status(400).json({ error: "Warehouse ID is required" });
+      }
+
+      // Check if SQL Warehouse connection already exists
+      const existingConnection = await storage.getConnectionByName("SQL Warehouse", null);
+
+      const credentialsData = {
+        token,
+        workspaceUrl: workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+        warehouseId
+      };
+
+      // Encrypt credentials before storing
+      const encryptedCredentials = encrypt(JSON.stringify(credentialsData));
+
+      if (existingConnection) {
+        // Update existing connection
+        await storage.updateConnection(existingConnection.id, {
+          encryptedCredentials,
+          status: "active",
+        });
+        res.json({ message: "SQL Warehouse configuration updated successfully" });
+      } else {
+        // Create new connection (toolId = null for organization-level config)
+        await storage.createConnection({
+          toolId: null,
+          name: "SQL Warehouse",
+          encryptedCredentials,
+          status: "active",
+        });
+        res.json({ message: "SQL Warehouse configuration saved successfully" });
+      }
+
+      await storage.createAuditLog({
+        actorId: req.user!.id,
+        action: "update",
+        resourceType: "connection",
+        resourceId: existingConnection?.id || 0,
+      });
+    } catch (error) {
+      console.error("Save SQL Warehouse config error:", error);
+      res.status(500).json({ error: "Failed to save configuration" });
+    }
+  });
+
+  app.get("/api/sql-warehouse/config", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const user = await storage.getUser(req.user!.id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const sqlConnection = await storage.getConnectionByName("SQL Warehouse", null);
+
+      if (sqlConnection && sqlConnection.encryptedCredentials) {
+        try {
+          const decrypted = decrypt(sqlConnection.encryptedCredentials);
+          const config = JSON.parse(decrypted);
+          res.json({ 
+            configured: true,
+            workspaceUrl: config.workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+            warehouseId: config.warehouseId || "",
+            hasToken: !!config.token
+          });
+        } catch (err) {
+          console.error("Decryption error:", err);
+          res.json({ configured: false });
+        }
+      } else {
+        res.json({ configured: false });
+      }
+    } catch (error) {
+      console.error("Get SQL Warehouse config error:", error);
+      res.status(500).json({ error: "Failed to get configuration" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
