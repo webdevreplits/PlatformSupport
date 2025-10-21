@@ -102,14 +102,15 @@ export default function Settings() {
                   )}
                 </div>
                 <CardDescription>
-                  Configure your Databricks token to enable AI-powered features including chat assistant, 
-                  incident analysis, and automated fix generation.
+                  Configure your Databricks Personal Access Token (PAT) to connect to your Databricks Claude Sonnet 4.5 model. 
+                  This will enable AI-powered features including chat assistant, incident analysis, and automated fix generation 
+                  using YOUR Databricks serving endpoint (not Replit AI).
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="databricks-token">Databricks Token</Label>
+                    <Label htmlFor="databricks-token">Databricks Personal Access Token (PAT)</Label>
                     <Input
                       id="databricks-token"
                       type="password"
@@ -120,7 +121,7 @@ export default function Settings() {
                       className="mt-1"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Get your token from Databricks workspace settings. 
+                      Your Databricks PAT token from workspace User Settings → Developer → Access tokens. 
                       <a href="https://docs.databricks.com/en/dev-tools/auth/pat.html" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">
                         Learn how
                       </a>
@@ -128,7 +129,7 @@ export default function Settings() {
                   </div>
 
                   <div>
-                    <Label htmlFor="base-url">Base URL</Label>
+                    <Label htmlFor="base-url">Databricks Serving Endpoint Base URL</Label>
                     <Input
                       id="base-url"
                       type="text"
@@ -136,9 +137,10 @@ export default function Settings() {
                       onChange={(e) => setBaseUrl(e.target.value)}
                       data-testid="input-base-url"
                       className="mt-1"
+                      placeholder="https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Your Databricks serving endpoint URL
+                      Format: https://&lt;workspace-url&gt;/serving-endpoints (without the endpoint name)
                     </p>
                   </div>
 
@@ -185,10 +187,10 @@ export default function Settings() {
                     <div className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium">Configuration Active</p>
+                        <p className="text-sm font-medium">Connected to Your Databricks Claude Sonnet 4.5</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Your Databricks AI is configured and ready to use. All AI features are now available 
-                          across the platform.
+                          Successfully connected to your Databricks serving endpoint. All AI features now use 
+                          YOUR Databricks Claude model (not Replit AI).
                         </p>
                       </div>
                     </div>

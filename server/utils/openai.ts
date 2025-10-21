@@ -6,13 +6,19 @@ export async function generateChatCompletion(
   databricksBaseUrl: string = "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
 ) {
   try {
+    // For Databricks serving endpoints, we need to format the URL correctly
+    // The baseURL should point to: /serving-endpoints/endpoint-name/invocations
+    const endpointName = "databricks-claude-sonnet-4-5";
+    const fullBaseUrl = `${databricksBaseUrl}/${endpointName}/invocations`;
+
     const client = new OpenAI({
       apiKey: databricksToken,
-      baseURL: databricksBaseUrl,
+      baseURL: fullBaseUrl,
     });
 
     const completion = await client.chat.completions.create({
-      model: "databricks-claude-sonnet-4-5",
+      // For Databricks, the model can be any value as the endpoint determines the actual model
+      model: "gpt-3.5-turbo", // Placeholder - actual model is determined by Databricks endpoint
       messages: messages as any,
       temperature: 0.7,
       max_tokens: 1000,
@@ -21,7 +27,10 @@ export async function generateChatCompletion(
     return completion.choices[0]?.message?.content || "No response generated";
   } catch (error) {
     console.error('Databricks AI API Error:', error);
-    throw new Error('Failed to generate AI response');
+    if (error instanceof Error) {
+      throw new Error(`Databricks API Error: ${error.message}`);
+    }
+    throw new Error('Failed to connect to Databricks AI. Please check your token and endpoint configuration.');
   }
 }
 
