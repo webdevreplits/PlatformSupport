@@ -7,6 +7,7 @@ import { insertUserSchema, insertOrganizationSchema, insertPageSchema, insertWid
 import { generateChatCompletion, summarizeIncident, generateFixScript, generateDashboardInsights, generateReport, analyzeJobFailureRCA } from "./utils/openai";
 import { executeSQLQuery, getFailedJobs, getJobRunDetails, getClusterInfo, getAuditLogs, testSQLConnection } from "./utils/databricks-sql";
 import { encrypt, decrypt } from "./utils/encryption";
+import { runStatusScraper, type StatusPageConfig } from "./utils/status-scraper";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -675,6 +676,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Test SQL connection error:", error);
       res.status(500).json({ error: error instanceof Error ? error.message : "Failed to test connection" });
+    }
+  });
+
+  // Status scraper routes
+  app.post("/api/status-scraper/run", authenticateToken, requireRole(['admin', 'editor']), async (req: AuthRequest, res) => {
+    try {
+      const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
+      
+      // Use hardcoded defaults - do not accept user input to prevent SQL injection
+      // In production, store these in organization configuration
+      const volumePath = "uc_dev_edap_platform_01.edap_monitoring_de.edap_status_monitoring_vol";
+      const catalogSchema = "uc_dev_edap_platform_01.edap_monitoring_de";
+      
+      const statusConfig: StatusPageConfig = {
+        workspaceUrl: sqlConfig.workspaceUrl,
+        warehouseId: sqlConfig.warehouseId,
+        token: sqlConfig.token,
+        volumePath,
+        catalogSchema,
+      };
+      
+      const results = await runStatusScraper(statusConfig);
+      
+      await storage.createAuditLog({
+        actorId: req.user!.id,
+        action: "run_status_scraper",
+        resourceType: "system",
+        resourceId: 0,
+        details: JSON.stringify(results),
+      });
+      
+      res.json({
+        success: true,
+        message: "Status scraper completed successfully",
+        results,
+      });
+    } catch (error) {
+      console.error("Status scraper error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to run status scraper" });
+    }
+  });
+
+  app.get("/api/status-incidents", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
+      // Use hardcoded catalog schema to prevent SQL injection
+      const catalogSchema = "uc_dev_edap_platform_01.edap_monitoring_de";
+      
+      // Query platform_status_events Delta table
+      const query = `
+        SELECT 
+          incident_id,
+          source_system,
+          incident_type,
+          severity,
+          status,
+          title,
+          description,
+          affected_services,
+          affected_regions,
+          start_time,
+          end_time,
+          last_update_time,
+          source_url
+        FROM ${catalogSchema}.platform_status_events
+        WHERE status != 'resolved'
+          OR last_update_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
+        ORDER BY start_time DESC
+        LIMIT 100
+      `;
+      
+      const incidents = await executeSQLQuery(query, sqlConfig);
+      
+      res.json({ incidents });
+    } catch (error) {
+      console.error("Get status incidents error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get status incidents" });
     }
   });
 
