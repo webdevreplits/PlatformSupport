@@ -152,7 +152,7 @@ export async function executeSQLQuery(
         body: JSON.stringify({
           warehouse_id: config.warehouseId,
           statement: query,
-          wait_timeout: '60s',
+          wait_timeout: '50s',
           on_wait_timeout: 'CONTINUE',
         }),
       }
