@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { generateToken, authenticateToken, requireRole, type AuthRequest } from "./middleware/auth";
 import { insertUserSchema, insertOrganizationSchema, insertPageSchema, insertWidgetSchema, insertToolSchema, insertConnectionSchema, insertWorkflowSchema, insertAlertSchema, insertAuditLogSchema } from "@shared/schema";
 import { generateChatCompletion, summarizeIncident, generateFixScript, generateDashboardInsights, generateReport } from "./utils/openai";
+import { encrypt, decrypt } from "./utils/encryption";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -335,11 +336,123 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Helper to get Databricks config for user
+  async function getDatabricksConfig(userId: number) {
+    const user = await storage.getUser(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Get Databricks AI connection by name (organization-level config with toolId = null)
+    const databricksConnection = await storage.getConnectionByName("Databricks AI", null);
+    
+    if (!databricksConnection || !databricksConnection.encryptedCredentials) {
+      throw new Error("Databricks token not configured. Please add your token in Settings.");
+    }
+
+    // Decrypt and parse the credentials
+    const decrypted = decrypt(databricksConnection.encryptedCredentials);
+    const config = JSON.parse(decrypted);
+    
+    return {
+      token: config.token,
+      baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
+    };
+  }
+
+  // Save/Update Databricks AI configuration
+  app.post("/api/ai/config", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const { token, baseUrl } = req.body;
+      const user = await storage.getUser(req.user!.id);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (!token || !token.trim()) {
+        return res.status(400).json({ error: "Token is required" });
+      }
+
+      // Check if Databricks AI connection already exists
+      const existingConnection = await storage.getConnectionByName("Databricks AI", null);
+
+      const credentialsData = {
+        token,
+        baseUrl: baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
+      };
+
+      // Encrypt credentials before storing
+      const encryptedCredentials = encrypt(JSON.stringify(credentialsData));
+
+      if (existingConnection) {
+        // Update existing connection
+        await storage.updateConnection(existingConnection.id, {
+          encryptedCredentials,
+          status: "active",
+        });
+        res.json({ message: "Databricks AI configuration updated successfully" });
+      } else {
+        // Create new connection (toolId = null for organization-level config)
+        await storage.createConnection({
+          toolId: null,
+          name: "Databricks AI",
+          encryptedCredentials,
+          status: "active",
+        });
+        res.json({ message: "Databricks AI configuration saved successfully" });
+      }
+
+      await storage.createAuditLog({
+        actorId: req.user!.id,
+        action: "update",
+        resourceType: "connection",
+        resourceId: existingConnection?.id || 0,
+      });
+    } catch (error) {
+      console.error("Save Databricks config error:", error);
+      res.status(500).json({ error: "Failed to save configuration" });
+    }
+  });
+
+  // Get Databricks AI configuration status
+  app.get("/api/ai/config", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const user = await storage.getUser(req.user!.id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const databricksConnection = await storage.getConnectionByName("Databricks AI", null);
+
+      if (databricksConnection && databricksConnection.encryptedCredentials) {
+        try {
+          const decrypted = decrypt(databricksConnection.encryptedCredentials);
+          const config = JSON.parse(decrypted);
+          res.json({ 
+            configured: true,
+            baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+            hasToken: !!config.token
+          });
+        } catch (err) {
+          console.error("Decryption error:", err);
+          res.json({ configured: false });
+        }
+      } else {
+        res.json({ configured: false });
+      }
+    } catch (error) {
+      console.error("Get Databricks config error:", error);
+      res.status(500).json({ error: "Failed to get configuration" });
+    }
+  });
+
   // AI routes
   app.post("/api/ai/chat", authenticateToken, async (req: AuthRequest, res) => {
     try {
       const { messages } = req.body;
-      const response = await generateChatCompletion(messages);
+      const config = await getDatabricksConfig(req.user!.id);
+      const response = await generateChatCompletion(messages, config.token, config.baseUrl);
       
       await storage.createAuditLog({
         actorId: req.user!.id,
@@ -351,51 +464,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ response });
     } catch (error) {
       console.error("AI chat error:", error);
-      res.status(500).json({ error: "Failed to generate AI response" });
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to generate AI response" });
     }
   });
 
   app.post("/api/ai/summarize-incident", authenticateToken, async (req: AuthRequest, res) => {
     try {
       const incidentData = req.body;
-      const summary = await summarizeIncident(incidentData);
+      const config = await getDatabricksConfig(req.user!.id);
+      const summary = await summarizeIncident(incidentData, config.token, config.baseUrl);
       res.json({ summary });
     } catch (error) {
       console.error("Incident summarization error:", error);
-      res.status(500).json({ error: "Failed to summarize incident" });
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to summarize incident" });
     }
   });
 
   app.post("/api/ai/generate-fix", authenticateToken, async (req: AuthRequest, res) => {
     try {
       const incidentData = req.body;
-      const script = await generateFixScript(incidentData);
+      const config = await getDatabricksConfig(req.user!.id);
+      const script = await generateFixScript(incidentData, config.token, config.baseUrl);
       res.json({ script });
     } catch (error) {
       console.error("Fix script generation error:", error);
-      res.status(500).json({ error: "Failed to generate fix script" });
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to generate fix script" });
     }
   });
 
   app.post("/api/ai/dashboard-insights", authenticateToken, async (req: AuthRequest, res) => {
     try {
       const metrics = req.body;
-      const insights = await generateDashboardInsights(metrics);
+      const config = await getDatabricksConfig(req.user!.id);
+      const insights = await generateDashboardInsights(metrics, config.token, config.baseUrl);
       res.json({ insights });
     } catch (error) {
       console.error("Dashboard insights error:", error);
-      res.status(500).json({ error: "Failed to generate insights" });
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to generate insights" });
     }
   });
 
   app.post("/api/ai/generate-report", authenticateToken, async (req: AuthRequest, res) => {
     try {
       const { reportType, data } = req.body;
-      const report = await generateReport(reportType, data);
+      const config = await getDatabricksConfig(req.user!.id);
+      const report = await generateReport(reportType, data, config.token, config.baseUrl);
       res.json({ report });
     } catch (error) {
       console.error("Report generation error:", error);
-      res.status(500).json({ error: "Failed to generate report" });
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to generate report" });
     }
   });
 

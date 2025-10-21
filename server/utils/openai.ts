@@ -1,13 +1,18 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export async function generateChatCompletion(messages: Array<{ role: string; content: string }>) {
+export async function generateChatCompletion(
+  messages: Array<{ role: string; content: string }>,
+  databricksToken: string,
+  databricksBaseUrl: string = "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
+) {
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const client = new OpenAI({
+      apiKey: databricksToken,
+      baseURL: databricksBaseUrl,
+    });
+
+    const completion = await client.chat.completions.create({
+      model: "databricks-claude-sonnet-4-5",
       messages: messages as any,
       temperature: 0.7,
       max_tokens: 1000,
@@ -15,12 +20,12 @@ export async function generateChatCompletion(messages: Array<{ role: string; con
 
     return completion.choices[0]?.message?.content || "No response generated";
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('Databricks AI API Error:', error);
     throw new Error('Failed to generate AI response');
   }
 }
 
-export async function summarizeIncident(incidentData: any) {
+export async function summarizeIncident(incidentData: any, databricksToken: string, databricksBaseUrl?: string) {
   const prompt = `Analyze this Azure incident and provide a concise summary with key points and suggested next steps:
 
 Incident ID: ${incidentData.id}
@@ -38,10 +43,10 @@ Provide:
   return await generateChatCompletion([
     { role: 'system', content: 'You are an Azure platform support expert. Provide clear, actionable insights.' },
     { role: 'user', content: prompt }
-  ]);
+  ], databricksToken, databricksBaseUrl);
 }
 
-export async function generateFixScript(incidentData: any) {
+export async function generateFixScript(incidentData: any, databricksToken: string, databricksBaseUrl?: string) {
   const prompt = `Generate a PowerShell or Azure CLI script to resolve this incident:
 
 Issue: ${incidentData.description}
@@ -52,10 +57,10 @@ Provide a safe, well-commented script with error handling.`;
   return await generateChatCompletion([
     { role: 'system', content: 'You are an Azure automation expert. Generate safe, production-ready scripts.' },
     { role: 'user', content: prompt }
-  ]);
+  ], databricksToken, databricksBaseUrl);
 }
 
-export async function generateDashboardInsights(metrics: any) {
+export async function generateDashboardInsights(metrics: any, databricksToken: string, databricksBaseUrl?: string) {
   const prompt = `Based on these Azure platform metrics, provide today's operational insights:
 
 Active Incidents: ${metrics.incidents}
@@ -68,10 +73,10 @@ Provide 2-3 actionable insights focusing on areas needing attention.`;
   return await generateChatCompletion([
     { role: 'system', content: 'You are an Azure operations analyst. Provide brief, actionable insights.' },
     { role: 'user', content: prompt }
-  ]);
+  ], databricksToken, databricksBaseUrl);
 }
 
-export async function generateReport(reportType: string, data: any) {
+export async function generateReport(reportType: string, data: any, databricksToken: string, databricksBaseUrl?: string) {
   const prompt = `Generate a ${reportType} report for Azure platform operations:
 
 Data Summary:
@@ -86,5 +91,5 @@ Include:
   return await generateChatCompletion([
     { role: 'system', content: 'You are an Azure platform reporting specialist. Create clear, executive-level reports.' },
     { role: 'user', content: prompt }
-  ]);
+  ], databricksToken, databricksBaseUrl);
 }

@@ -41,7 +41,9 @@ export interface IStorage {
   
   // Connections
   getConnections(toolId: number): Promise<Connection[]>;
+  getConnectionByName(name: string, toolId: number | null): Promise<Connection | undefined>;
   createConnection(connection: InsertConnection): Promise<Connection>;
+  updateConnection(id: number, connection: Partial<InsertConnection>): Promise<Connection>;
   
   // Workflows
   getWorkflows(orgId: number): Promise<Workflow[]>;
@@ -172,8 +174,21 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(connections).where(eq(connections.toolId, toolId));
   }
 
+  async getConnectionByName(name: string, toolId: number | null = null): Promise<Connection | undefined> {
+    const query = toolId !== null 
+      ? db.select().from(connections).where(and(eq(connections.name, name), eq(connections.toolId, toolId)))
+      : db.select().from(connections).where(eq(connections.name, name));
+    const [connection] = await query;
+    return connection || undefined;
+  }
+
   async createConnection(insertConnection: InsertConnection): Promise<Connection> {
     const [connection] = await db.insert(connections).values(insertConnection).returning();
+    return connection;
+  }
+
+  async updateConnection(id: number, updateData: Partial<InsertConnection>): Promise<Connection> {
+    const [connection] = await db.update(connections).set(updateData).where(eq(connections.id, id)).returning();
     return connection;
   }
 
