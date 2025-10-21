@@ -356,14 +356,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     return {
       token: config.token,
-      baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
+      baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+      endpointName: config.endpointName || "databricks-claude-sonnet-4-5"
     };
   }
 
   // Save/Update Databricks AI configuration
   app.post("/api/ai/config", authenticateToken, async (req: AuthRequest, res) => {
     try {
-      const { token, baseUrl } = req.body;
+      const { token, baseUrl, endpointName } = req.body;
       const user = await storage.getUser(req.user!.id);
       
       if (!user) {
@@ -379,7 +380,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const credentialsData = {
         token,
-        baseUrl: baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
+        baseUrl: baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+        endpointName: endpointName || "databricks-claude-sonnet-4-5"
       };
 
       // Encrypt credentials before storing
@@ -432,6 +434,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.json({ 
             configured: true,
             baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+            endpointName: config.endpointName || "databricks-claude-sonnet-4-5",
             hasToken: !!config.token
           });
         } catch (err) {
@@ -452,7 +455,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { messages } = req.body;
       const config = await getDatabricksConfig(req.user!.id);
-      const response = await generateChatCompletion(messages, config.token, config.baseUrl);
+      const response = await generateChatCompletion(messages, config.token, config.baseUrl, config.endpointName);
       
       await storage.createAuditLog({
         actorId: req.user!.id,
@@ -472,7 +475,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const incidentData = req.body;
       const config = await getDatabricksConfig(req.user!.id);
-      const summary = await summarizeIncident(incidentData, config.token, config.baseUrl);
+      const summary = await summarizeIncident(incidentData, config.token, config.baseUrl, config.endpointName);
       res.json({ summary });
     } catch (error) {
       console.error("Incident summarization error:", error);
@@ -484,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const incidentData = req.body;
       const config = await getDatabricksConfig(req.user!.id);
-      const script = await generateFixScript(incidentData, config.token, config.baseUrl);
+      const script = await generateFixScript(incidentData, config.token, config.baseUrl, config.endpointName);
       res.json({ script });
     } catch (error) {
       console.error("Fix script generation error:", error);
@@ -496,7 +499,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const metrics = req.body;
       const config = await getDatabricksConfig(req.user!.id);
-      const insights = await generateDashboardInsights(metrics, config.token, config.baseUrl);
+      const insights = await generateDashboardInsights(metrics, config.token, config.baseUrl, config.endpointName);
       res.json({ insights });
     } catch (error) {
       console.error("Dashboard insights error:", error);
@@ -508,7 +511,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { reportType, data } = req.body;
       const config = await getDatabricksConfig(req.user!.id);
-      const report = await generateReport(reportType, data, config.token, config.baseUrl);
+      const report = await generateReport(reportType, data, config.token, config.baseUrl, config.endpointName);
       res.json({ report });
     } catch (error) {
       console.error("Report generation error:", error);

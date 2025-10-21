@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function Settings() {
   const [token, setToken] = useState("");
   const [baseUrl, setBaseUrl] = useState("https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints");
+  const [endpointName, setEndpointName] = useState("databricks-claude-sonnet-4-5");
   const { toast } = useToast();
 
   // Get current configuration
@@ -23,15 +24,16 @@ export default function Settings() {
   useEffect(() => {
     if (configQuery.data) {
       const data = configQuery.data as any;
-      if (data.configured && data.baseUrl) {
-        setBaseUrl(data.baseUrl);
+      if (data.configured) {
+        if (data.baseUrl) setBaseUrl(data.baseUrl);
+        if (data.endpointName) setEndpointName(data.endpointName);
       }
     }
   }, [configQuery.data]);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/ai/config", { token, baseUrl });
+      const response = await apiRequest("POST", "/api/ai/config", { token, baseUrl, endpointName });
       return response.json();
     },
     onSuccess: () => {
@@ -129,7 +131,7 @@ export default function Settings() {
                   </div>
 
                   <div>
-                    <Label htmlFor="base-url">Databricks Serving Endpoint Base URL</Label>
+                    <Label htmlFor="base-url">Databricks Workspace Base URL</Label>
                     <Input
                       id="base-url"
                       type="text"
@@ -140,7 +142,23 @@ export default function Settings() {
                       placeholder="https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Format: https://&lt;workspace-url&gt;/serving-endpoints (without the endpoint name)
+                      Format: https://&lt;workspace-url&gt;/serving-endpoints
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="endpoint-name">Serving Endpoint Name</Label>
+                    <Input
+                      id="endpoint-name"
+                      type="text"
+                      value={endpointName}
+                      onChange={(e) => setEndpointName(e.target.value)}
+                      data-testid="input-endpoint-name"
+                      className="mt-1"
+                      placeholder="databricks-claude-sonnet-4-5"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      The name of your Claude Sonnet serving endpoint in Databricks
                     </p>
                   </div>
 

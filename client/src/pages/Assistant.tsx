@@ -91,7 +91,7 @@ export default function Assistant() {
                   <CardTitle>Chat</CardTitle>
                   <Badge variant="default" className="gap-1">
                     <Sparkles className="h-3 w-3" />
-                    GPT-4o-mini
+                    Databricks Claude Sonnet 4.5
                   </Badge>
                 </div>
               </CardHeader>
