@@ -757,10 +757,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // RCA correlation route
+  // RCA correlation route with AI analysis
   app.post("/api/rca/analyze", authenticateToken, async (req: AuthRequest, res) => {
     try {
-      const { runId } = req.body;
+      const { runId, includeAiAnalysis = true } = req.body;
       
       if (!runId) {
         return res.status(400).json({ error: "runId is required" });
@@ -769,7 +769,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
       const catalogSchema = "uc_dev_edap_platform_01.edap_monitoring_de";
       
+      // Get correlation report
       const rcaReport = await correlateJobFailure(runId, catalogSchema, sqlConfig);
+      
+      // Add AI-powered analysis if requested
+      let aiAnalysis = null;
+      let aiError = null;
+      if (includeAiAnalysis) {
+        try {
+          const aiConfig = await getDatabricksConfig(req.user!.id);
+          
+          // Prepare system logs summary
+          const systemLogs = `
+Termination Code: ${rcaReport.job_failure.termination_code || 'Unknown'}
+Result State: ${rcaReport.job_failure.result_state}
+Run Duration: ${rcaReport.job_failure.period_start_time} to ${rcaReport.job_failure.period_end_time}
+Trigger Type: ${rcaReport.job_failure.trigger_type}
+${rcaReport.audit_logs && rcaReport.audit_logs.length > 0 ? `\nAudit Errors:\n${rcaReport.audit_logs.map(log => `- ${log.action_name}: ${log.error_message || log.status_code}`).join('\n')}` : ''}
+          `.trim();
+          
+          // Get top correlated incidents
+          const topIncidents = rcaReport.correlated_incidents.slice(0, 3).map(c => ({
+            title: c.incident.title,
+            status: c.incident.status,
+            description: c.incident.description,
+            correlation_score: c.correlation_score,
+            reasons: c.correlation_reasons,
+          }));
+          
+          aiAnalysis = await analyzeJobFailureRCA(
+            rcaReport.job_failure,
+            systemLogs,
+            topIncidents,
+            aiConfig.token,
+            aiConfig.baseUrl,
+            aiConfig.endpointName
+          );
+        } catch (err) {
+          console.error("AI analysis failed:", err);
+          aiError = err instanceof Error ? err.message : "AI analysis unavailable";
+          aiAnalysis = null; // Continue without AI analysis if it fails
+        }
+      }
       
       await storage.createAuditLog({
         actorId: req.user!.id,
@@ -779,7 +820,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         details: JSON.stringify({ runId, confidence: rcaReport.confidence }),
       });
       
-      res.json(rcaReport);
+      res.json({
+        ...rcaReport,
+        ai_analysis: aiAnalysis,
+        ai_error: aiError,
+      });
     } catch (error) {
       console.error("RCA analysis error:", error);
       res.status(500).json({ error: error instanceof Error ? error.message : "Failed to analyze job failure" });
