@@ -76,6 +76,14 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 - **Wouter**: Lightweight client-side router.
 
+## Recent Changes
+
+### January 22, 2025 - RCA & Dashboard Enhancements
+
+- **Spark Log Analysis**: Implemented comprehensive Spark log parser (`server/utils/spark-log-parser.ts`) that extracts errors, exceptions, and stack traces from Databricks `event_details` logs. Integrated into AI RCA workflow for actual job failure analysis.
+- **Real Dashboard Metrics**: Replaced mock dashboard data with live Databricks system catalog queries. New `/api/dashboard/metrics` endpoint queries `system.lakeflow.job_run_timeline` and `system.compute.clusters` for real-time job statistics, success rates, cluster counts, and recent activity.
+- **Enhanced RCA**: AI-powered RCA now combines Spark log errors with internet research to provide verified platform outage analysis with multiple source validation.
+
 ### Seed Data
 
 The platform includes seed data for a demo organization with various user roles, a main dashboard page, and integrations for tools like Databricks, ServiceNow, Power BI, and Azure DevOps.

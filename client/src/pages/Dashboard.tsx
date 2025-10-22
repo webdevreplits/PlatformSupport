@@ -119,10 +119,9 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {shouldShowWidget(['security']) && (
-            <Card className="shadow-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
-                <CardTitle className="text-sm font-medium">Active Incidents</CardTitle>
+          <Card className="shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
+              <CardTitle className="text-sm font-medium">Active Incidents</CardTitle>
                 <AlertCircle className="h-4 w-4 text-chart-3" />
               </CardHeader>
               <CardContent>
@@ -135,9 +134,9 @@ export default function Dashboard() {
                 </div>
               </CardContent>
             </Card>
-          )}
+          
 
-          {shouldShowWidget(['compute', 'database']) && (
+          
             <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
               <CardTitle className="text-sm font-medium">Databricks Jobs</CardTitle>
@@ -160,9 +159,9 @@ export default function Dashboard() {
               )}
             </CardContent>
             </Card>
-          )}
+          
 
-          {shouldShowWidget(['compute']) && (
+          
             <Card className="shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
                 <CardTitle className="text-sm font-medium">Active Workflows</CardTitle>
@@ -184,9 +183,9 @@ export default function Dashboard() {
               )}
             </CardContent>
             </Card>
-          )}
+          
 
-          {shouldShowWidget(['compute']) && (
+          
             <Card className="shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
                 <CardTitle className="text-sm font-medium">System Health</CardTitle>
@@ -203,11 +202,11 @@ export default function Dashboard() {
               </div>
             </CardContent>
             </Card>
-          )}
+          
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {shouldShowWidget(['security']) && (
+          
             <Card className="shadow-sm p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
@@ -219,9 +218,9 @@ export default function Dashboard() {
             <div className="text-xs text-muted-foreground mb-2">Average Resolution Time</div>
             <Badge variant="default">Within SLA</Badge>
             </Card>
-          )}
+          
 
-          {shouldShowWidget(['compute', 'analytics']) && (
+          
             <Card className="shadow-sm p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
@@ -237,9 +236,9 @@ export default function Dashboard() {
               )}
             </div>
             </Card>
-          )}
+          
 
-          {shouldShowWidget(['compute']) && (
+          
             <Card className="shadow-sm p-6">
               <div className="flex items-start justify-between mb-3">
               <div>
@@ -257,11 +256,11 @@ export default function Dashboard() {
               <Badge variant="destructive">{metrics.jobs.failed} Failures</Badge>
             )}
             </Card>
-          )}
+          
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {shouldShowWidget(['compute', 'analytics']) && (
+          
             <Card className="shadow-sm p-6">
             <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
             <div className="space-y-3">
@@ -293,9 +292,9 @@ export default function Dashboard() {
               )}
             </div>
             </Card>
-          )}
+          
 
-          {shouldShowWidget(['analytics']) && (
+          
             <Card className="shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -326,7 +325,7 @@ export default function Dashboard() {
               </div>
             )}
             </Card>
-          )}
+          
 
           <Card className="shadow-sm p-6">
             <h3 className="text-lg font-semibold mb-4">Connected Services</h3>
