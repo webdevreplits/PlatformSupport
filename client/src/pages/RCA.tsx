@@ -79,19 +79,21 @@ export default function RCA() {
     return new Date(dateTime).toLocaleString();
   };
 
-  const getConfidenceBadge = (confidence: string) => {
+  const getConfidenceBadge = (confidence: string | undefined | null) => {
+    const safeConfidence = (confidence || 'unknown').toLowerCase();
     const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline", icon: any }> = {
       high: { variant: "default", icon: CheckCircle2 },
       medium: { variant: "secondary", icon: AlertCircle },
       low: { variant: "outline", icon: AlertCircle },
       none: { variant: "destructive", icon: XCircle },
+      unknown: { variant: "destructive", icon: XCircle },
     };
-    const config = variants[confidence] || variants.none;
+    const config = variants[safeConfidence] || variants.unknown;
     const Icon = config.icon;
     return (
-      <Badge variant={config.variant} className="gap-1" data-testid={`badge-confidence-${confidence}`}>
+      <Badge variant={config.variant} className="gap-1" data-testid={`badge-confidence-${safeConfidence}`}>
         <Icon className="h-3 w-3" />
-        {confidence.toUpperCase()}
+        {safeConfidence.toUpperCase()}
       </Badge>
     );
   };
@@ -193,7 +195,7 @@ export default function RCA() {
           <DialogHeader>
             <DialogTitle data-testid="text-dialog-title">Root Cause Analysis Results</DialogTitle>
             <DialogDescription data-testid="text-dialog-description">
-              {rcaReport?.job_failure.run_name || rcaReport?.job_failure.job_id}
+              {rcaReport?.job_failure?.run_name || rcaReport?.job_failure?.job_id || 'Job analysis results'}
             </DialogDescription>
           </DialogHeader>
           
@@ -210,16 +212,18 @@ export default function RCA() {
                       <span className="text-sm font-medium">Confidence:</span>
                       {getConfidenceBadge(rcaReport.confidence)}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Category:</span>
-                      <Badge variant="outline" data-testid="badge-category">
-                        {rcaReport.rca_analysis.root_cause_category}
-                      </Badge>
-                    </div>
+                    {rcaReport.rca_analysis?.root_cause_category && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Category:</span>
+                        <Badge variant="outline" data-testid="badge-category">
+                          {rcaReport.rca_analysis.root_cause_category}
+                        </Badge>
+                      </div>
+                    )}
                     <div>
                       <span className="text-sm font-medium">Likely Root Cause:</span>
                       <p className="text-sm text-muted-foreground mt-1" data-testid="text-root-cause">
-                        {rcaReport.likely_root_cause}
+                        {rcaReport.likely_root_cause || 'Analysis in progress...'}
                       </p>
                     </div>
                   </CardContent>
@@ -238,10 +242,10 @@ export default function RCA() {
                     <div>
                       <span className="text-sm font-medium">Findings:</span>
                       <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap" data-testid="text-outages-found">
-                        {rcaReport.rca_analysis.platform_outages_found}
+                        {rcaReport.rca_analysis?.platform_outages_found || 'No platform outages detected'}
                       </p>
                     </div>
-                    {rcaReport.rca_analysis.sources_verified.length > 0 && (
+                    {rcaReport.rca_analysis?.sources_verified && rcaReport.rca_analysis.sources_verified.length > 0 && (
                       <div>
                         <span className="text-sm font-medium">Sources Verified:</span>
                         <ul className="text-sm text-muted-foreground mt-1 list-disc list-inside">
@@ -261,7 +265,7 @@ export default function RCA() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm whitespace-pre-wrap" data-testid="text-ai-analysis">
-                      {rcaReport.rca_analysis.analysis}
+                      {rcaReport.rca_analysis?.analysis || 'No detailed analysis available'}
                     </p>
                   </CardContent>
                 </Card>
@@ -273,7 +277,7 @@ export default function RCA() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap" data-testid="text-evidence">
-                      {rcaReport.rca_analysis.evidence}
+                      {rcaReport.rca_analysis?.evidence || 'No evidence collected'}
                     </p>
                   </CardContent>
                 </Card>
@@ -286,13 +290,17 @@ export default function RCA() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ol className="text-sm space-y-2 list-decimal list-inside">
-                      {rcaReport.rca_analysis.remediation_steps.map((step, idx) => (
-                        <li key={idx} className="text-muted-foreground" data-testid={`text-step-${idx}`}>
-                          {step}
-                        </li>
-                      ))}
-                    </ol>
+                    {rcaReport.rca_analysis?.remediation_steps && rcaReport.rca_analysis.remediation_steps.length > 0 ? (
+                      <ol className="text-sm space-y-2 list-decimal list-inside">
+                        {rcaReport.rca_analysis.remediation_steps.map((step, idx) => (
+                          <li key={idx} className="text-muted-foreground" data-testid={`text-step-${idx}`}>
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No remediation steps available</p>
+                    )}
                   </CardContent>
                 </Card>
 
@@ -304,13 +312,17 @@ export default function RCA() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm space-y-2 list-disc list-inside">
-                      {rcaReport.rca_analysis.prevention_recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-muted-foreground" data-testid={`text-prevention-${idx}`}>
-                          {rec}
-                        </li>
-                      ))}
-                    </ul>
+                    {rcaReport.rca_analysis?.prevention_recommendations && rcaReport.rca_analysis.prevention_recommendations.length > 0 ? (
+                      <ul className="text-sm space-y-2 list-disc list-inside">
+                        {rcaReport.rca_analysis.prevention_recommendations.map((rec, idx) => (
+                          <li key={idx} className="text-muted-foreground" data-testid={`text-prevention-${idx}`}>
+                            {rec}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No prevention recommendations available</p>
+                    )}
                   </CardContent>
                 </Card>
 

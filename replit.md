@@ -34,6 +34,7 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 - **AI Assistant Page**: A chat interface for Azure support, ARM/Bicep template generation, cost optimization, and troubleshooting, maintaining conversation context.
 - **Dashboard AI Insights**: Automated operational insights and recommendations based on real-time platform metrics.
+- **AI-Powered Root Cause Analysis (RCA)**: Comprehensive job failure analysis combining Databricks system tables with real-time internet research. The AI searches for platform outages (Databricks, Azure) on the failure date, verifies multiple sources, and combines internet findings with job logs, cluster configuration, and audit logs to provide structured analysis including root cause category, confidence level, verified sources, evidence, remediation steps, and prevention recommendations.
 - **Incident AI Analysis**: AI-powered incident summarization, root cause analysis, and automated fix script generation (PowerShell/Azure CLI).
 - **AI-powered Reporting**: Generation of operational reports.
 - **Databricks Configuration**: Settings page allows users to enter and update their Databricks serving endpoint token. Tokens are encrypted at rest using AES-256-GCM encryption.

@@ -838,12 +838,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           SELECT 
             cluster_id,
             cluster_name,
-            state,
             owned_by,
-            change_time,
-            driver_node_type_id,
-            node_type_id,
-            num_workers
+            change_time
           FROM system.compute.clusters
           WHERE cluster_id = '${jobFailure.compute_ids[0].replace(/'/g, "''")}'
           ORDER BY change_time DESC

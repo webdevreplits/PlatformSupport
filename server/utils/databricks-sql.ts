@@ -227,16 +227,10 @@ export async function getClusterInfo(
     SELECT 
       cluster_id,
       cluster_name,
-      state,
       owned_by,
       creator_user_name,
       cluster_source,
-      change_time,
-      driver_node_type_id,
-      node_type_id,
-      num_workers,
-      spark_version,
-      data_security_mode
+      change_time
     FROM system.compute.clusters
     WHERE change_time >= CURRENT_TIMESTAMP() - INTERVAL ${parseInt(String(limitDays))} DAYS
   `;
