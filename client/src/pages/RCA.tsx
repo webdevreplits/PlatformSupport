@@ -23,37 +23,25 @@ interface FailedJob {
   compute_ids: string[];
 }
 
-interface CorrelatedIncident {
-  incident: {
-    incident_id: string;
-    source_system: string;
-    incident_type: string;
-    severity: string;
-    status: string;
-    title: string;
-    description: string;
-    affected_services: string[];
-    affected_regions: string[];
-    start_time: string;
-    end_time?: string;
-    source_url: string;
-  };
-  correlation_score: number;
-  correlation_reasons: string[];
-  time_overlap: boolean;
-  region_match: boolean;
-  service_match: boolean;
+interface AIRCAResult {
+  root_cause_category: string;
+  likely_root_cause: string;
+  confidence: 'high' | 'medium' | 'low' | 'none';
+  analysis: string;
+  platform_outages_found: string;
+  sources_verified: string[];
+  evidence: string;
+  remediation_steps: string[];
+  prevention_recommendations: string[];
 }
 
 interface RCAReport {
   job_failure: FailedJob;
-  correlated_incidents: CorrelatedIncident[];
   cluster_info?: any;
   audit_logs?: any[];
+  rca_analysis: AIRCAResult;
   likely_root_cause: string;
   confidence: 'high' | 'medium' | 'low' | 'none';
-  ai_analysis?: string;
-  ai_error?: string;
 }
 
 export default function RCA() {
@@ -108,19 +96,12 @@ export default function RCA() {
     );
   };
 
-  const getSeverityBadge = (severity: string) => {
-    const severityLower = severity.toLowerCase();
-    if (severityLower === 'critical') return <Badge variant="destructive" data-testid={`badge-severity-${severity}`}>{severity}</Badge>;
-    if (severityLower === 'major') return <Badge variant="secondary" data-testid={`badge-severity-${severity}`}>{severity}</Badge>;
-    return <Badge variant="outline" data-testid={`badge-severity-${severity}`}>{severity}</Badge>;
-  };
-
   return (
     <div className="container mx-auto p-6 space-y-6" data-testid="page-rca">
       <div>
         <h1 className="text-3xl font-bold" data-testid="text-page-title">Root Cause Analysis</h1>
         <p className="text-muted-foreground" data-testid="text-page-description">
-          Analyze Databricks job failures with AI-powered incident correlation
+          AI-powered root cause analysis with internet research for platform outages and comprehensive diagnostics
         </p>
       </div>
 
@@ -224,10 +205,16 @@ export default function RCA() {
                   <CardHeader>
                     <CardTitle className="text-lg" data-testid="text-summary-title">Summary</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2">
+                  <CardContent className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Confidence:</span>
                       {getConfidenceBadge(rcaReport.confidence)}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Category:</span>
+                      <Badge variant="outline" data-testid="badge-category">
+                        {rcaReport.rca_analysis.root_cause_category}
+                      </Badge>
                     </div>
                     <div>
                       <span className="text-sm font-medium">Likely Root Cause:</span>
@@ -238,77 +225,94 @@ export default function RCA() {
                   </CardContent>
                 </Card>
 
-                {/* AI Analysis */}
-                {rcaReport.ai_analysis && (
-                  <Card data-testid="card-ai-analysis">
-                    <CardHeader>
-                      <CardTitle className="text-lg" data-testid="text-ai-title">AI-Powered Analysis</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="prose prose-sm max-w-none" data-testid="text-ai-analysis">
-                        <pre className="whitespace-pre-wrap text-sm">{rcaReport.ai_analysis}</pre>
+                {/* Platform Outages Research */}
+                <Card data-testid="card-outages">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2" data-testid="text-outages-title">
+                      <Search className="h-5 w-5" />
+                      Platform Outages Research
+                    </CardTitle>
+                    <CardDescription>AI verified multiple sources for platform issues</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <span className="text-sm font-medium">Findings:</span>
+                      <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap" data-testid="text-outages-found">
+                        {rcaReport.rca_analysis.platform_outages_found}
+                      </p>
+                    </div>
+                    {rcaReport.rca_analysis.sources_verified.length > 0 && (
+                      <div>
+                        <span className="text-sm font-medium">Sources Verified:</span>
+                        <ul className="text-sm text-muted-foreground mt-1 list-disc list-inside">
+                          {rcaReport.rca_analysis.sources_verified.map((source, idx) => (
+                            <li key={idx} data-testid={`text-source-${idx}`}>{source}</li>
+                          ))}
+                        </ul>
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
+                    )}
+                  </CardContent>
+                </Card>
 
-                {rcaReport.ai_error && (
-                  <Alert data-testid="alert-ai-error">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription data-testid="text-ai-error">
-                      AI Analysis unavailable: {rcaReport.ai_error}
-                    </AlertDescription>
-                  </Alert>
-                )}
+                {/* AI Analysis */}
+                <Card data-testid="card-ai-analysis">
+                  <CardHeader>
+                    <CardTitle className="text-lg" data-testid="text-ai-title">Detailed Analysis</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm whitespace-pre-wrap" data-testid="text-ai-analysis">
+                      {rcaReport.rca_analysis.analysis}
+                    </p>
+                  </CardContent>
+                </Card>
 
-                {/* Correlated Incidents */}
-                {rcaReport.correlated_incidents.length > 0 && (
-                  <Card data-testid="card-incidents">
-                    <CardHeader>
-                      <CardTitle className="text-lg" data-testid="text-incidents-title">
-                        Correlated Platform Incidents ({rcaReport.correlated_incidents.length})
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {rcaReport.correlated_incidents.map((correlation, idx) => (
-                        <div key={correlation.incident.incident_id} className="border rounded-md p-4 space-y-2" data-testid={`card-incident-${idx}`}>
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <h4 className="font-medium" data-testid={`text-incident-title-${idx}`}>
-                                {correlation.incident.title}
-                              </h4>
-                              <p className="text-sm text-muted-foreground mt-1" data-testid={`text-incident-description-${idx}`}>
-                                {correlation.incident.description}
-                              </p>
-                            </div>
-                            <div className="flex flex-col gap-2 items-end">
-                              {getSeverityBadge(correlation.incident.severity)}
-                              <Badge variant="secondary" data-testid={`badge-score-${idx}`}>
-                                Score: {correlation.correlation_score}
-                              </Badge>
-                            </div>
-                          </div>
-                          <Separator />
-                          <div className="space-y-1">
-                            <p className="text-sm font-medium">Correlation Reasons:</p>
-                            <ul className="text-sm text-muted-foreground list-disc list-inside">
-                              {correlation.correlation_reasons.map((reason, ridx) => (
-                                <li key={ridx} data-testid={`text-reason-${idx}-${ridx}`}>{reason}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="flex gap-2 text-xs text-muted-foreground">
-                            <span data-testid={`text-source-${idx}`}>{correlation.incident.source_system}</span>
-                            <span>•</span>
-                            <span data-testid={`text-status-${idx}`}>{correlation.incident.status}</span>
-                            <span>•</span>
-                            <span data-testid={`text-start-time-${idx}`}>{formatDateTime(correlation.incident.start_time)}</span>
-                          </div>
-                        </div>
+                {/* Evidence */}
+                <Card data-testid="card-evidence">
+                  <CardHeader>
+                    <CardTitle className="text-lg" data-testid="text-evidence-title">Evidence</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap" data-testid="text-evidence">
+                      {rcaReport.rca_analysis.evidence}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Remediation Steps */}
+                <Card data-testid="card-remediation">
+                  <CardHeader>
+                    <CardTitle className="text-lg" data-testid="text-remediation-title">
+                      Remediation Steps
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ol className="text-sm space-y-2 list-decimal list-inside">
+                      {rcaReport.rca_analysis.remediation_steps.map((step, idx) => (
+                        <li key={idx} className="text-muted-foreground" data-testid={`text-step-${idx}`}>
+                          {step}
+                        </li>
                       ))}
-                    </CardContent>
-                  </Card>
-                )}
+                    </ol>
+                  </CardContent>
+                </Card>
+
+                {/* Prevention Recommendations */}
+                <Card data-testid="card-prevention">
+                  <CardHeader>
+                    <CardTitle className="text-lg" data-testid="text-prevention-title">
+                      Prevention Recommendations
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="text-sm space-y-2 list-disc list-inside">
+                      {rcaReport.rca_analysis.prevention_recommendations.map((rec, idx) => (
+                        <li key={idx} className="text-muted-foreground" data-testid={`text-prevention-${idx}`}>
+                          {rec}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
 
                 {/* Audit Logs */}
                 {rcaReport.audit_logs && rcaReport.audit_logs.length > 0 && (

@@ -8,7 +8,7 @@ import { relations } from "drizzle-orm";
 export const roleEnum = pgEnum('role', ['admin', 'editor', 'viewer', 'auditor', 'integrator']);
 export const pageStatusEnum = pgEnum('page_status', ['draft', 'published', 'archived']);
 export const authTypeEnum = pgEnum('auth_type', ['api_key', 'oauth2', 'bearer', 'basic', 'none']);
-export const actionTypeEnum = pgEnum('action_type', ['create', 'update', 'delete', 'publish', 'login', 'workflow_run', 'tool_test']);
+export const actionTypeEnum = pgEnum('action_type', ['create', 'update', 'delete', 'publish', 'login', 'workflow_run', 'tool_test', 'rca_analysis', 'run_status_scraper']);
 
 // Organizations
 export const organizations = pgTable("organizations", {
@@ -277,7 +277,7 @@ export const insertAlertSchema = z.object({
 
 export const insertAuditLogSchema = z.object({
   actorId: z.number().optional().nullable(),
-  action: z.enum(['create', 'update', 'delete', 'publish', 'login', 'workflow_run', 'tool_test']),
+  action: z.enum(['create', 'update', 'delete', 'publish', 'login', 'workflow_run', 'tool_test', 'rca_analysis', 'run_status_scraper']),
   resourceType: z.string().min(1),
   resourceId: z.number().optional().nullable(),
   diffJson: z.any().optional().nullable(),

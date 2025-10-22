@@ -681,7 +681,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Status scraper routes
-  app.post("/api/status-scraper/run", authenticateToken, requireRole(['admin', 'editor']), async (req: AuthRequest, res) => {
+  app.post("/api/status-scraper/run", authenticateToken, requireRole('admin', 'editor'), async (req: AuthRequest, res) => {
     try {
       const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
       
@@ -705,7 +705,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         action: "run_status_scraper",
         resourceType: "system",
         resourceId: 0,
-        details: JSON.stringify(results),
+        diffJson: results,
       });
       
       res.json({
@@ -790,73 +790,114 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // RCA correlation route with AI analysis
+  // AI-Powered RCA route with internet research
   app.post("/api/rca/analyze", authenticateToken, async (req: AuthRequest, res) => {
     try {
-      const { runId, includeAiAnalysis = true } = req.body;
+      const { runId } = req.body;
       
       if (!runId) {
         return res.status(400).json({ error: "runId is required" });
       }
       
       const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
-      const catalogSchema = "uc_dev_edap_platform_01.edap_monitoring_de";
+      const aiConfig = await getDatabricksConfig(req.user!.id);
       
-      // Get correlation report
-      const rcaReport = await correlateJobFailure(runId, catalogSchema, sqlConfig);
+      console.log(`Starting AI-powered RCA for job run ${runId}...`);
       
-      // Add AI-powered analysis if requested
-      let aiAnalysis = null;
-      let aiError = null;
-      if (includeAiAnalysis) {
-        try {
-          const aiConfig = await getDatabricksConfig(req.user!.id);
-          
-          // Prepare system logs summary
-          const systemLogs = `
-Termination Code: ${rcaReport.job_failure.termination_code || 'Unknown'}
-Result State: ${rcaReport.job_failure.result_state}
-Run Duration: ${rcaReport.job_failure.period_start_time} to ${rcaReport.job_failure.period_end_time}
-Trigger Type: ${rcaReport.job_failure.trigger_type}
-${rcaReport.audit_logs && rcaReport.audit_logs.length > 0 ? `\nAudit Errors:\n${rcaReport.audit_logs.map(log => `- ${log.action_name}: ${log.error_message || log.status_code}`).join('\n')}` : ''}
-          `.trim();
-          
-          // Get top correlated incidents
-          const topIncidents = rcaReport.correlated_incidents.slice(0, 3).map(c => ({
-            title: c.incident.title,
-            status: c.incident.status,
-            description: c.incident.description,
-            correlation_score: c.correlation_score,
-            reasons: c.correlation_reasons,
-          }));
-          
-          aiAnalysis = await analyzeJobFailureRCA(
-            rcaReport.job_failure,
-            systemLogs,
-            topIncidents,
-            aiConfig.token,
-            aiConfig.baseUrl,
-            aiConfig.endpointName
-          );
-        } catch (err) {
-          console.error("AI analysis failed:", err);
-          aiError = err instanceof Error ? err.message : "AI analysis unavailable";
-          aiAnalysis = null; // Continue without AI analysis if it fails
-        }
+      // 1. Get job failure details
+      const jobQuery = `
+        SELECT 
+          job_id,
+          run_id,
+          run_name,
+          period_start_time,
+          period_end_time,
+          result_state,
+          termination_code,
+          trigger_type,
+          compute_ids
+        FROM system.lakeflow.job_run_timeline
+        WHERE run_id = '${runId.replace(/'/g, "''")}'
+          AND result_state = 'FAILED'
+        LIMIT 1
+      `;
+      
+      const jobResults = await executeSQLQuery(jobQuery, sqlConfig);
+      
+      if (jobResults.length === 0) {
+        return res.status(404).json({ error: `Job run ${runId} not found or did not fail` });
       }
+      
+      const jobFailure = jobResults[0];
+      console.log(`Found failed job: ${jobFailure.job_id} - ${jobFailure.run_name}`);
+      
+      // 2. Get cluster information
+      let clusterInfo = null;
+      if (jobFailure.compute_ids && jobFailure.compute_ids.length > 0) {
+        const clusterQuery = `
+          SELECT 
+            cluster_id,
+            cluster_name,
+            state,
+            owned_by,
+            change_time,
+            driver_node_type_id,
+            node_type_id,
+            num_workers
+          FROM system.compute.clusters
+          WHERE cluster_id = '${jobFailure.compute_ids[0].replace(/'/g, "''")}'
+          ORDER BY change_time DESC
+          LIMIT 1
+        `;
+        const clusterResults = await executeSQLQuery(clusterQuery, sqlConfig);
+        clusterInfo = clusterResults[0] || null;
+      }
+      
+      // 3. Get audit logs for errors
+      const auditQuery = `
+        SELECT 
+          event_time,
+          user_identity.email as user_email,
+          service_name,
+          action_name,
+          request_id,
+          response.status_code as status_code,
+          response.error_message as error_message
+        FROM system.access.audit
+        WHERE event_time >= TIMESTAMP '${jobFailure.period_start_time}' - INTERVAL 5 MINUTES
+          AND event_time <= TIMESTAMP '${jobFailure.period_end_time}' + INTERVAL 5 MINUTES
+          AND response.status_code >= 400
+        ORDER BY event_time DESC
+        LIMIT 20
+      `;
+      const auditLogs = await executeSQLQuery(auditQuery, sqlConfig);
+      
+      // 4. Perform AI-powered RCA with internet research
+      const { performAIRootCauseAnalysis } = await import('./utils/ai-rca');
+      const rcaResult = await performAIRootCauseAnalysis(
+        jobFailure,
+        clusterInfo,
+        auditLogs,
+        aiConfig.token,
+        aiConfig.baseUrl,
+        aiConfig.endpointName
+      );
       
       await storage.createAuditLog({
         actorId: req.user!.id,
         action: "rca_analysis",
         resourceType: "job_run",
         resourceId: 0,
-        details: JSON.stringify({ runId, confidence: rcaReport.confidence }),
+        diffJson: { runId, confidence: rcaResult.confidence },
       });
       
       res.json({
-        ...rcaReport,
-        ai_analysis: aiAnalysis,
-        ai_error: aiError,
+        job_failure: jobFailure,
+        cluster_info: clusterInfo,
+        audit_logs: auditLogs,
+        rca_analysis: rcaResult,
+        likely_root_cause: rcaResult.likely_root_cause,
+        confidence: rcaResult.confidence,
       });
     } catch (error) {
       console.error("RCA analysis error:", error);
