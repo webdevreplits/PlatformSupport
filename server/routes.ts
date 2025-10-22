@@ -757,6 +757,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get dashboard metrics from Databricks system catalog
+  app.get("/api/dashboard/metrics", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
+      
+      // Get job statistics (last 7 days)
+      const jobStatsQuery = `
+        SELECT 
+          COUNT(DISTINCT run_id) as total_runs,
+          COUNT(DISTINCT CASE WHEN result_state = 'SUCCESS' THEN run_id END) as successful_runs,
+          COUNT(DISTINCT CASE WHEN result_state = 'FAILED' THEN run_id END) as failed_runs,
+          COUNT(DISTINCT CASE WHEN result_state IN ('RUNNING', 'PENDING') THEN run_id END) as running_runs,
+          COUNT(DISTINCT job_id) as total_jobs
+        FROM system.lakeflow.job_run_timeline
+        WHERE period_start_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
+      `;
+      
+      const jobStats = await executeSQLQuery(jobStatsQuery, sqlConfig);
+      const stats = jobStats[0] || {};
+      
+      // Calculate success rate
+      const totalCompleted = (stats.successful_runs || 0) + (stats.failed_runs || 0);
+      const successRate = totalCompleted > 0 
+        ? Math.round((stats.successful_runs / totalCompleted) * 100) 
+        : 0;
+      
+      // Get cluster count
+      const clusterQuery = `
+        SELECT COUNT(DISTINCT cluster_id) as total_clusters
+        FROM system.compute.clusters
+        WHERE change_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
+      `;
+      const clusterStats = await executeSQLQuery(clusterQuery, sqlConfig);
+      
+      // Get workflow count (jobs with triggers)
+      const workflowQuery = `
+        SELECT COUNT(DISTINCT job_id) as workflow_count
+        FROM system.lakeflow.job_run_timeline
+        WHERE trigger_type IN ('PERIODIC', 'CONTINUOUS', 'FILE_ARRIVAL')
+          AND period_start_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
+      `;
+      const workflowStats = await executeSQLQuery(workflowQuery, sqlConfig);
+      
+      // Get recent activity (last 10 job runs)
+      const recentActivityQuery = `
+        SELECT 
+          job_id,
+          run_id,
+          run_name,
+          result_state,
+          period_end_time,
+          termination_code
+        FROM system.lakeflow.job_run_timeline
+        WHERE period_end_time >= CURRENT_TIMESTAMP() - INTERVAL 1 DAY
+          AND result_state IN ('SUCCESS', 'FAILED')
+        ORDER BY period_end_time DESC
+        LIMIT 10
+      `;
+      const recentActivity = await executeSQLQuery(recentActivityQuery, sqlConfig);
+      
+      res.json({
+        jobs: {
+          total: stats.total_jobs || 0,
+          running: stats.running_runs || 0,
+          failed: stats.failed_runs || 0,
+          success_rate: successRate,
+        },
+        clusters: {
+          total: clusterStats[0]?.total_clusters || 0,
+        },
+        workflows: {
+          count: workflowStats[0]?.workflow_count || 0,
+        },
+        recent_activity: recentActivity,
+      });
+    } catch (error) {
+      console.error("Get dashboard metrics error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get dashboard metrics" });
+    }
+  });
+
   // Get failed jobs for RCA Dashboard
   app.get("/api/rca/failed-jobs", authenticateToken, async (req: AuthRequest, res) => {
     try {
@@ -868,12 +949,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       `;
       const auditLogs = await executeSQLQuery(auditQuery, sqlConfig);
       
-      // 4. Perform AI-powered RCA with internet research
+      // 4. Get task run logs with Spark errors
+      const { getTaskRunLogs } = await import('./utils/databricks-sql');
+      const { parseSparkErrors, formatSparkErrorsForAI } = await import('./utils/spark-log-parser');
+      
+      let sparkErrors: any[] = [];
+      let formattedSparkErrors = '';
+      try {
+        const taskLogs = await getTaskRunLogs(sqlConfig, runId);
+        sparkErrors = parseSparkErrors(taskLogs);
+        formattedSparkErrors = formatSparkErrorsForAI(sparkErrors);
+        console.log(`Parsed ${sparkErrors.length} Spark errors from task logs`);
+      } catch (error) {
+        console.warn('Failed to fetch/parse Spark logs:', error);
+        formattedSparkErrors = 'Unable to retrieve Spark error logs';
+      }
+      
+      // 5. Perform AI-powered RCA with internet research
       const { performAIRootCauseAnalysis } = await import('./utils/ai-rca');
       const rcaResult = await performAIRootCauseAnalysis(
         jobFailure,
         clusterInfo,
         auditLogs,
+        formattedSparkErrors,
         aiConfig.token,
         aiConfig.baseUrl,
         aiConfig.endpointName

@@ -30,13 +30,15 @@ export interface AIRCAResult {
 /**
  * Performs AI-powered RCA by:
  * 1. Researching internet for platform outages (Databricks, Azure)
- * 2. Analyzing job logs and termination codes
- * 3. Combining findings for comprehensive root cause analysis
+ * 2. Analyzing Spark errors from task logs
+ * 3. Analyzing job logs and termination codes
+ * 4. Combining findings for comprehensive root cause analysis
  */
 export async function performAIRootCauseAnalysis(
   jobFailure: JobFailure,
   clusterInfo: any,
   auditLogs: any[],
+  sparkErrors: string,
   databricksToken: string,
   databricksBaseUrl?: string,
   endpointName?: string
@@ -57,6 +59,8 @@ JOB FAILURE DETAILS:
 - Termination Code: ${jobFailure.termination_code || 'Unknown'}
 - Result State: ${jobFailure.result_state}
 - Trigger Type: ${jobFailure.trigger_type}
+${sparkErrors ? `\nSPARK ERROR LOGS:
+${sparkErrors}` : ''}
 ${clusterInfo ? `\nCLUSTER INFO:
 - Cluster ID: ${clusterInfo.cluster_id || 'N/A'}
 - Cluster Name: ${clusterInfo.cluster_name || 'N/A'}
@@ -81,18 +85,25 @@ TASK: Perform comprehensive RCA analysis with the following steps:
    - Search for known issues with the termination code: ${jobFailure.termination_code || 'Unknown'}
    - Verify information from multiple reliable sources
 
-2. **ANALYZE JOB LOGS** and identify error patterns:
+2. **ANALYZE SPARK ERROR LOGS** provided above:
+   - Identify the specific Spark exception or error type
+   - Examine error messages and stack traces for root cause clues
+   - Determine if the error is related to code, data, or infrastructure
+   - Look for patterns indicating resource issues, data quality problems, or code bugs
+
+3. **ANALYZE JOB METADATA** and identify error patterns:
    - Examine the termination code and what it typically indicates
    - Review audit logs for permission or access issues
    - Check cluster configuration for resource constraints
    - Identify any code or configuration errors
 
-3. **CORRELATE FINDINGS**:
+4. **CORRELATE FINDINGS**:
    - Determine if platform outages contributed to the failure
    - Assess whether this is a platform issue vs. job-specific issue
-   - Identify the most likely root cause based on all evidence
+   - Cross-reference Spark errors with platform status
+   - Identify the most likely root cause based on all evidence (prioritize Spark error logs)
 
-4. **PROVIDE DETAILED ANALYSIS** in this exact JSON format:
+5. **PROVIDE DETAILED ANALYSIS** in this exact JSON format:
 {
   "root_cause_category": "<Platform Outage|Permission Issue|Cluster Configuration|Resource Constraint|Code Error|Network Issue|Storage Issue>",
   "likely_root_cause": "<One sentence summary of the most likely cause>",

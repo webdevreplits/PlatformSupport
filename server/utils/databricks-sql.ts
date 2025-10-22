@@ -317,6 +317,32 @@ export async function getJobRunDetails(
   };
 }
 
+// Get task run timeline with event details (contains Spark errors)
+export async function getTaskRunLogs(
+  config: SQLConfig,
+  runId: string
+): Promise<any[]> {
+  const escapedRunId = escapeSQLString(runId);
+  
+  const query = `
+    SELECT 
+      task_run_id,
+      task_key,
+      period_start_time,
+      period_end_time,
+      result_state,
+      termination_code,
+      event_details
+    FROM system.lakeflow.job_task_run_timeline
+    WHERE run_id = '${escapedRunId}'
+      AND result_state = 'FAILED'
+    ORDER BY period_start_time DESC
+    LIMIT 50
+  `;
+
+  return await executeSQLQuery(query, config);
+}
+
 // Test connection
 export async function testSQLConnection(config: SQLConfig): Promise<boolean> {
   try {
