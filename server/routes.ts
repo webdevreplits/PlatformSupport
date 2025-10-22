@@ -798,15 +798,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clusterStats = await executeSQLQuery(clusterQuery, sqlConfig);
       const totalClusters = parseInt(clusterStats[0]?.total_clusters) || 0;
       
-      // Get workflow count (jobs with triggers)
-      const workflowQuery = `
-        SELECT COUNT(DISTINCT job_id) as workflow_count
-        FROM system.lakeflow.job_run_timeline
-        WHERE trigger_type IN ('PERIODIC', 'CONTINUOUS', 'FILE_ARRIVAL')
-          AND period_start_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
+      // Get active pipelines count from system.lakeflow.pipelines
+      // Count all pipelines modified/active in the last 30 days
+      const pipelinesQuery = `
+        SELECT COUNT(DISTINCT pipeline_id) as pipeline_count
+        FROM system.lakeflow.pipelines
+        WHERE change_time >= CURRENT_TIMESTAMP() - INTERVAL 30 DAYS
+          AND delete_time IS NULL
       `;
-      const workflowStats = await executeSQLQuery(workflowQuery, sqlConfig);
-      const workflowCount = parseInt(workflowStats[0]?.workflow_count) || 0;
+      const pipelinesStats = await executeSQLQuery(pipelinesQuery, sqlConfig);
+      const pipelinesCount = parseInt(pipelinesStats[0]?.pipeline_count) || 0;
       
       // Get recent activity (last 10 job runs)
       const recentActivityQuery = `
@@ -825,6 +826,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       `;
       const recentActivity = await executeSQLQuery(recentActivityQuery, sqlConfig);
       
+      // Calculate system health (30 days)
+      // Based on job success rate - percentage of successful vs non-successful job runs
+      const healthQuery = `
+        SELECT 
+          COUNT(DISTINCT CASE WHEN result_state = 'SUCCESS' THEN run_id END) as successful_runs_30d,
+          COUNT(DISTINCT CASE WHEN result_state IN ('SUCCESS', 'FAILED', 'CANCELED', 'TIMEDOUT') THEN run_id END) as total_terminal_30d
+        FROM system.lakeflow.job_run_timeline
+        WHERE period_start_time >= CURRENT_TIMESTAMP() - INTERVAL 30 DAYS
+      `;
+      const healthStats = await executeSQLQuery(healthQuery, sqlConfig);
+      const successful30d = parseInt(healthStats[0]?.successful_runs_30d) || 0;
+      const totalTerminal30d = parseInt(healthStats[0]?.total_terminal_30d) || 0;
+      
+      // Calculate system health as job success rate over 30 days
+      const systemHealth = totalTerminal30d > 0 
+        ? parseFloat(((successful30d / totalTerminal30d) * 100).toFixed(1))
+        : 0;
+      
       res.json({
         jobs: {
           total: totalJobs,
@@ -836,8 +855,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           total: totalClusters,
         },
         workflows: {
-          count: workflowCount,
+          count: pipelinesCount,
         },
+        system_health: systemHealth,
         recent_activity: recentActivity,
       });
     } catch (error) {

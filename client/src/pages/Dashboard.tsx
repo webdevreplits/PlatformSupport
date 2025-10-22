@@ -24,6 +24,7 @@ interface DashboardMetrics {
   workflows: {
     count: number;
   };
+  system_health: number;
   recent_activity: Array<{
     job_id: string;
     run_id: string;
@@ -71,7 +72,7 @@ export default function Dashboard() {
       const metricsData = {
         incidents: 23,
         jobs: metrics?.jobs?.total || 0,
-        health: 99.8,
+        health: metrics?.system_health || 0,
         costTrend: "stable"
       };
       
@@ -192,14 +193,20 @@ export default function Dashboard() {
                 <Server className="h-4 w-4 text-chart-4" />
               </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold font-mono">99.8%</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Uptime (30 days)
-              </p>
-              <div className="flex items-center gap-1 text-xs mt-2 text-green-500">
-                <CheckCircle2 className="h-3 w-3" />
-                <span>Healthy</span>
-              </div>
+              {metricsLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              ) : (
+                <>
+                  <div className="text-2xl font-bold font-mono" data-testid="text-system-health">{metrics?.system_health || 0}%</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Uptime (30 days)
+                  </p>
+                  <div className="flex items-center gap-1 text-xs mt-2 text-green-500">
+                    <CheckCircle2 className="h-3 w-3" />
+                    <span>Healthy</span>
+                  </div>
+                </>
+              )}
             </CardContent>
             </Card>
           
