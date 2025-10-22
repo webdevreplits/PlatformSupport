@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,9 +44,18 @@ interface RCAReport {
   confidence: 'high' | 'medium' | 'low' | 'none';
 }
 
+interface AnalysisProgress {
+  status: string;
+  step: number;
+  totalSteps: number;
+  message: string;
+}
+
 export default function RCA() {
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   const [rcaReport, setRcaReport] = useState<RCAReport | null>(null);
+  const [progress, setProgress] = useState<AnalysisProgress | null>(null);
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Fetch failed jobs
   const { data: failedJobsData, isLoading: isLoadingJobs, error: jobsError } = useQuery<{ jobs: FailedJob[] }>({
@@ -54,6 +63,53 @@ export default function RCA() {
   });
 
   const failedJobs = failedJobsData?.jobs || [];
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+    };
+  }, [pollingInterval]);
+
+  // Poll for progress
+  const pollProgress = async (runId: string) => {
+    try {
+      const response = await fetch(`/api/rca/analyze/progress/${runId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      
+      // Handle auth/session issues
+      if (!response.ok) {
+        console.error(`Progress fetch failed: ${response.status}`);
+        if (pollingInterval) {
+          clearInterval(pollingInterval);
+          setPollingInterval(null);
+        }
+        return;
+      }
+      
+      const progressData = await response.json();
+      setProgress(progressData);
+      
+      // Stop polling if complete or error
+      if (progressData.status === 'completed' || progressData.status === 'error') {
+        if (pollingInterval) {
+          clearInterval(pollingInterval);
+          setPollingInterval(null);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch progress:', error);
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        setPollingInterval(null);
+      }
+    }
+  };
 
   // RCA analysis mutation
   const analyzeMutation = useMutation({
@@ -66,12 +122,30 @@ export default function RCA() {
     },
     onSuccess: (data) => {
       setRcaReport(data);
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        setPollingInterval(null);
+      }
+      setProgress(null);
+    },
+    onError: () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        setPollingInterval(null);
+      }
+      setProgress(null);
     },
   });
 
   const handleAnalyze = (runId: string) => {
     setSelectedRunId(runId);
     setRcaReport(null);
+    setProgress({ status: 'starting', step: 0, totalSteps: 6, message: 'Starting analysis...' });
+    
+    // Start polling for progress
+    const interval = setInterval(() => pollProgress(runId), 1000);
+    setPollingInterval(interval);
+    
     analyzeMutation.mutate(runId);
   };
 
@@ -171,7 +245,7 @@ export default function RCA() {
                         {analyzeMutation.isPending && selectedRunId === job.run_id ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Analyzing...
+                            {progress ? `Step ${progress.step}/${progress.totalSteps}` : 'Analyzing...'}
                           </>
                         ) : (
                           <>
@@ -223,8 +297,14 @@ export default function RCA() {
                     <div>
                       <span className="text-sm font-medium">Likely Root Cause:</span>
                       <p className="text-sm text-muted-foreground mt-1" data-testid="text-root-cause">
-                        {rcaReport.likely_root_cause || 'Analysis in progress...'}
+                        {rcaReport.likely_root_cause || (progress ? progress.message : 'Analysis in progress...')}
                       </p>
+                      {progress && progress.status === 'in_progress' && (
+                        <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <span>Step {progress.step} of {progress.totalSteps}</span>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

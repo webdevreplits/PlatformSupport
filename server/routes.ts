@@ -777,10 +777,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const jobStats = await executeSQLQuery(jobStatsQuery, sqlConfig);
       const stats = jobStats[0] || {};
       
+      // Parse string values to numbers (Databricks returns strings)
+      const totalJobs = parseInt(stats.total_jobs) || 0;
+      const runningJobs = parseInt(stats.running_runs) || 0;
+      const failedJobs = parseInt(stats.failed_runs) || 0;
+      const successfulRuns = parseInt(stats.successful_runs) || 0;
+      
       // Calculate success rate
-      const totalCompleted = (stats.successful_runs || 0) + (stats.failed_runs || 0);
+      const totalCompleted = successfulRuns + failedJobs;
       const successRate = totalCompleted > 0 
-        ? Math.round((stats.successful_runs / totalCompleted) * 100) 
+        ? Math.round((successfulRuns / totalCompleted) * 100) 
         : 0;
       
       // Get cluster count
@@ -790,6 +796,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         WHERE change_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
       `;
       const clusterStats = await executeSQLQuery(clusterQuery, sqlConfig);
+      const totalClusters = parseInt(clusterStats[0]?.total_clusters) || 0;
       
       // Get workflow count (jobs with triggers)
       const workflowQuery = `
@@ -799,6 +806,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           AND period_start_time >= CURRENT_TIMESTAMP() - INTERVAL 7 DAYS
       `;
       const workflowStats = await executeSQLQuery(workflowQuery, sqlConfig);
+      const workflowCount = parseInt(workflowStats[0]?.workflow_count) || 0;
       
       // Get recent activity (last 10 job runs)
       const recentActivityQuery = `
@@ -819,16 +827,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json({
         jobs: {
-          total: stats.total_jobs || 0,
-          running: stats.running_runs || 0,
-          failed: stats.failed_runs || 0,
+          total: totalJobs,
+          running: runningJobs,
+          failed: failedJobs,
           success_rate: successRate,
         },
         clusters: {
-          total: clusterStats[0]?.total_clusters || 0,
+          total: totalClusters,
         },
         workflows: {
-          count: workflowStats[0]?.workflow_count || 0,
+          count: workflowCount,
         },
         recent_activity: recentActivity,
       });
@@ -868,6 +876,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get failed jobs error:", error);
       res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get failed jobs" });
+    }
+  });
+
+  // Get RCA analysis progress
+  app.get("/api/rca/analyze/progress/:runId", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const { runId } = req.params;
+      const { getAnalysisProgress } = await import("./utils/ai-rca");
+      const progress = getAnalysisProgress(runId);
+      res.json(progress);
+    } catch (error) {
+      console.error("Get RCA progress error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get progress" });
     }
   });
 

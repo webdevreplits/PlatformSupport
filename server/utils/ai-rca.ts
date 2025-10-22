@@ -3,6 +3,31 @@
 
 import { generateChatCompletion } from './openai';
 
+// In-memory progress tracking
+const analysisProgress = new Map<string, {
+  status: string;
+  step: number;
+  totalSteps: number;
+  message: string;
+}>();
+
+export function getAnalysisProgress(runId: string) {
+  return analysisProgress.get(runId) || {
+    status: 'not_started',
+    step: 0,
+    totalSteps: 6,
+    message: 'Analysis not started'
+  };
+}
+
+export function updateAnalysisProgress(runId: string, step: number, totalSteps: number, message: string, status: string = 'in_progress') {
+  analysisProgress.set(runId, { status, step, totalSteps, message });
+}
+
+export function clearAnalysisProgress(runId: string) {
+  analysisProgress.delete(runId);
+}
+
 export interface JobFailure {
   job_id: string;
   run_id: string;
@@ -44,10 +69,18 @@ export async function performAIRootCauseAnalysis(
   endpointName?: string
 ): Promise<AIRCAResult> {
   
+  const runId = jobFailure.run_id;
+  
+  // Step 1: Initialize analysis
+  updateAnalysisProgress(runId, 1, 6, 'Analyzing job failure details...');
+  
   // Prepare failure context
   const failureTime = new Date(jobFailure.period_end_time);
   const formattedDate = failureTime.toISOString().split('T')[0]; // YYYY-MM-DD
   const formattedDateTime = failureTime.toISOString();
+  
+  // Step 2: Building context
+  updateAnalysisProgress(runId, 2, 6, 'Processing Spark error logs and cluster information...');
   
   // Build comprehensive context for AI
   const jobContext = `
@@ -126,7 +159,13 @@ IMPORTANT GUIDELINES:
 
 Respond ONLY with the JSON object, no other text.`;
 
+  // Step 3: Searching for platform outages
+  updateAnalysisProgress(runId, 3, 6, 'Searching for platform outages and known issues...');
+  
   console.log('Calling AI for comprehensive RCA with internet research...');
+  
+  // Step 4: Generating AI analysis
+  updateAnalysisProgress(runId, 4, 6, 'Generating AI-powered root cause analysis...');
   
   const response = await generateChatCompletion(
     [
@@ -144,6 +183,9 @@ Respond ONLY with the JSON object, no other text.`;
     endpointName
   );
 
+  // Step 5: Parsing results
+  updateAnalysisProgress(runId, 5, 6, 'Finalizing analysis results...');
+
   // Parse AI response
   try {
     // Extract JSON from response (handle markdown code blocks)
@@ -159,10 +201,22 @@ Respond ONLY with the JSON object, no other text.`;
       throw new Error('AI response missing required fields');
     }
     
+    // Step 6: Complete
+    updateAnalysisProgress(runId, 6, 6, 'Analysis complete', 'completed');
+    
+    // Clear progress after a delay to allow client to fetch final status
+    setTimeout(() => clearAnalysisProgress(runId), 30000); // 30 seconds
+    
     return result;
   } catch (parseError) {
     console.error('Failed to parse AI RCA response:', parseError);
     console.error('Raw AI response:', response);
+    
+    // Mark as error
+    updateAnalysisProgress(runId, 6, 6, 'Analysis failed - parsing error', 'error');
+    
+    // Clear progress after a delay
+    setTimeout(() => clearAnalysisProgress(runId), 30000);
     
     // Return fallback result
     return {
