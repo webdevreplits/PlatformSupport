@@ -78,6 +78,14 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 ## Recent Changes
 
+### October 31, 2025 - PepsiCo Branding & Professional Theme
+
+- **Professional Blue/Purple Color Scheme**: Implemented professional color palette inspired by PepsiCo branding with deep blue (230 80% 50%) primary colors in light mode and rich deep blue background (230 45% 12%) in dark mode. All colors are WCAG compliant with contrast ratios of 14-16:1.
+- **PepsiCo Logo Integration**: Added PepsiCo logo to DashboardHeader component, displayed prominently alongside platform name.
+- **Platform Rebranding**: Renamed from "Azure Platform Support" to "Enterprise Data Analytics Platform Support" across all pages, documentation, and meta tags.
+- **Enhanced Routing**: Added explicit `/dashboard` route for better accessibility while maintaining root path `/` as primary entry point.
+- **Light/Dark Mode Excellence**: Both themes provide exceptional readability with proper contrast, professional appearance, and seamless transitions.
+
 ### October 31, 2025 - Production Readiness & Stability
 
 - **Database Connection Stability**: Configured Neon connection pool with proper timeouts (max: 10, idle: 30s, connection: 10s) and error handling to prevent application crashes from unexpected database disconnections.
