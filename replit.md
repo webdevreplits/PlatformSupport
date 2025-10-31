@@ -78,6 +78,14 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 ## Recent Changes
 
+### October 31, 2025 - Production Readiness & Stability
+
+- **Database Connection Stability**: Configured Neon connection pool with proper timeouts (max: 10, idle: 30s, connection: 10s) and error handling to prevent application crashes from unexpected database disconnections.
+- **Consistent Theming**: Applied unified `bg-background` styling across all pages (Dashboard, Jobs, Pages, Monitoring, Help, PageView, PageForm, Tools, RCA) for seamless light/dark mode support.
+- **Dashboard Optimization**: Removed non-functional filter tabs, reduced grid from 4-column to 3-column layout, tightened spacing (py-8 → py-6, gap-6 → gap-4), and reduced text sizes for more efficient information density.
+- **Databricks Apps Compatibility**: Replaced all hardcoded Databricks workspace URLs with `process.env.DATABRICKS_HOST` environment variable fallbacks while maintaining user configuration overrides via Settings UI. Application now deploys seamlessly to Databricks Apps without code modifications.
+- **JWT Session Persistence**: Confirmed JWT tokens set to 7-day expiration for extended user sessions without re-authentication.
+
 ### October 31, 2025 - Dashboard UI Cleanup & Notifications
 
 - **Dashboard Header Cleanup**: Removed duplicate filter tabs and logo from DashboardHeader component. Filters now appear only once in main Dashboard page. Header simplified to show only "Azure Platform Support" text, search bar, and utility buttons.
