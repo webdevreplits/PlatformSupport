@@ -10,19 +10,45 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
+### Dual-Mode Architecture (Database Mode & Streamlit Mode)
+
+The application supports TWO deployment modes based on `DATABASE_URL` environment variable presence:
+
+**Database Mode (Full Features):**
+- PostgreSQL required via DATABASE_URL
+- Full authentication with JWT tokens
+- User management, page builder, audit logs
+- Multi-tenant with organization support
+- Persistent configuration in database
+
+**Streamlit Mode (No Database Required):**
+- No PostgreSQL dependency
+- Auto-authentication (single admin user)
+- RCA, Jobs, Analytics, AI features fully functional
+- Configuration via environment variables only
+- Perfect for Databricks Apps deployment
+
 ### Frontend Architecture
 
 The frontend is built with React and TypeScript, using Vite. It features `shadcn/ui` components based on Radix UI, styled with TailwindCSS for a professional corporate design. State management is handled by TanStack React Query, and routing by Wouter. The design system emphasizes a clean, light theme with system fonts, subtle shadows, and a responsive grid.
 
+**Auth Context**: Automatically detects deployment mode - attempts token-based auth first, falls back to streamlit mode if no token and `/api/auth/me` succeeds without authentication.
+
 ### Backend Architecture
 
-The backend uses Express.js with TypeScript and Node.js. It integrates Drizzle ORM with Neon Serverless (PostgreSQL) for type-safe database operations. Authentication is JWT-based with bcrypt hashing and role-based access control. AI integration uses the Databricks Claude Sonnet 4.5 endpoint via the OpenAI SDK with custom baseURL. User-provided Databricks tokens are encrypted with AES-256-GCM and stored in the database. The API follows a RESTful structure with middleware for authentication, authorization, and error handling, implementing a repository pattern for data access.
+The backend uses Express.js with TypeScript and Node.js. It integrates Drizzle ORM with Neon Serverless (PostgreSQL) for type-safe database operations (when DATABASE_URL is set). Authentication is JWT-based with bcrypt hashing and role-based access control in database mode, or auto-authenticated mock user in streamlit mode. AI integration uses the Databricks Claude Sonnet 4.5 endpoint via the OpenAI SDK with custom baseURL. The API follows a RESTful structure with middleware for authentication, authorization, and error handling, implementing a repository pattern for data access.
+
+**Storage Layer**: Dual implementation - `DatabaseStorage` (uses Drizzle ORM) or `StreamlitStorage` (in-memory mock data) selected automatically based on `DB_ENABLED` flag.
+
+**Authentication Middleware**: Checks `DB_ENABLED` flag - bypasses token verification and creates mock admin user in streamlit mode.
 
 ### Data Storage & Schema
 
-The primary database is PostgreSQL (Neon Serverless), managed with Drizzle Kit. The schema includes tables for organizations, users, dynamic pages, configurable widgets, external tool integrations, connection credentials, workflows, alerts, and audit logs. All resources are scoped to organization IDs for multi-tenancy, and a versioning system is in place for pages and widgets.
+**Database Mode**: PostgreSQL (Neon Serverless), managed with Drizzle Kit. The schema includes tables for organizations, users, dynamic pages, configurable widgets, external tool integrations, connection credentials, workflows, alerts, and audit logs. All resources are scoped to organization IDs for multi-tenancy, and a versioning system is in place for pages and widgets.
 
-**Databricks Token Storage**: Organization-level Databricks tokens are stored in the `connections` table with `toolId = null` and `name = "Databricks AI"`. The `encryptedCredentials` field contains AES-256-GCM encrypted JSON with `token` and `baseUrl` properties.
+**Streamlit Mode**: In-memory mock data for users and organizations. No persistent storage. Configuration comes from environment variables (`DATABRICKS_HOST`, `DATABRICKS_TOKEN`, `OPENAI_API_KEY`).
+
+**Databricks Token Storage** (Database Mode Only): Organization-level Databricks tokens are stored in the `connections` table with `toolId = null` and `name = "Databricks AI"`. The `encryptedCredentials` field contains AES-256-GCM encrypted JSON with `token` and `baseUrl` properties.
 
 ### Authentication & Authorization
 
@@ -76,7 +102,40 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 - **Wouter**: Lightweight client-side router.
 
+## Deployment Options
+
+### Option 1: Databricks Apps (Streamlit Mode - Recommended)
+- **No database required** - Perfect for quick deployment
+- **Setup time**: 2-5 minutes
+- **See**: DATABRICKS_APPS_STREAMLIT.md for complete instructions
+- **Environment variables needed**:
+  - `DATABRICKS_HOST`
+  - `DATABRICKS_TOKEN`
+  - `OPENAI_API_KEY` (optional)
+
+### Option 2: Full Database Mode
+- **PostgreSQL required** - For full features including auth, page builder, audit logs
+- **Setup time**: 15-30 minutes  
+- **See**: DATABRICKS_DEPLOYMENT.md for complete instructions
+- **Environment variables needed**:
+  - `DATABASE_URL` (PostgreSQL connection string)
+  - `DATABRICKS_HOST`
+  - `DATABRICKS_TOKEN` or `OPENAI_API_KEY`
+  - `SESSION_SECRET`
+
 ## Recent Changes
+
+### October 31, 2025 - Dual-Mode Architecture for Databricks Apps Compatibility
+
+- **Streamlit Mode Support**: Application now runs WITHOUT PostgreSQL when `DATABASE_URL` is not set
+- **server/db.ts**: Made database connection optional with `DB_ENABLED` flag
+- **server/middleware/auth.ts**: Authentication bypasses in streamlit mode, creates mock admin user  
+- **server/storage.ts**: Created `StreamlitStorage` class for in-memory mock data (no database required)
+- **client/src/contexts/AuthContext.tsx**: Auto-authenticate in streamlit mode by calling `/api/auth/me` without token
+- **Dual Storage Implementation**: Automatically selects `DatabaseStorage` or `StreamlitStorage` based on `DB_ENABLED` flag
+- **No Database Crashes**: All database operations guarded, seed.ts skips when no database, app boots successfully without DATABASE_URL
+- **Documentation**: Created DATABRICKS_APPS_STREAMLIT.md with complete deployment guide for no-database mode
+- **Use Case**: Perfect for deploying to Databricks Apps where PostgreSQL is not available or needed
 
 ### October 31, 2025 - Complete PepsiCo Professional Theme Redesign
 

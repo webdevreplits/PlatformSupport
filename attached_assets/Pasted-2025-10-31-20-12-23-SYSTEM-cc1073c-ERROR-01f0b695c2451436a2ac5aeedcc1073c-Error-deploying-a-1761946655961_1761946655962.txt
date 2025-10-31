@@ -1,0 +1,1060 @@
+2025-10-31 20:12:23	SYSTEM	...cc1073c	
+[ERROR] [01f0b695c2451436a2ac5aeedcc1073c] Error deploying app: error starting app: app crashed unexpectedly
+2025-10-31 20:12:23	SYSTEM	...cc1073c	
+[INFO] Deployment 01f0b695c2451436a2ac5aeedcc1073c ended in 24.941012881s
+2025-10-31 20:12:23	SYSTEM	...cc1073c	
+[ERROR] Could not start app. app crashed unexpectedly.
+2025-10-31 20:12:23	APP	...cc1073c	
+file:///app/python/source_code/dist/index.js:1018
+  throw new Error(
+        ^
+
+Error: DATABASE_URL must be set. Please configure it in Databricks Apps Environment settings.
+    at file:///app/python/source_code/dist/index.js:1018:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.16.0
+2025-10-31 20:12:23	APP	...cc1073c	
+=================================================================
+2025-10-31 20:12:23	APP	...cc1073c	
+- Azure Database for PostgreSQL
+2025-10-31 20:12:23	APP	...cc1073c	
+- Amazon RDS
+2025-10-31 20:12:23	APP	...cc1073c	
+- Supabase (https://supabase.com)
+2025-10-31 20:12:23	APP	...cc1073c	
+- Neon (https://neon.tech)
+2025-10-31 20:12:23	APP	...cc1073c	
+You can use any PostgreSQL provider:
+2025-10-31 20:12:23	APP	...cc1073c	
+2025-10-31 20:12:23	APP	...cc1073c	
+postgresql://user:password@host:5432/database?sslmode=require
+2025-10-31 20:12:23	APP	...cc1073c	
+Example PostgreSQL connection string:
+2025-10-31 20:12:23	APP	...cc1073c	
+2025-10-31 20:12:23	APP	...cc1073c	
+   Value: Your PostgreSQL connection string
+2025-10-31 20:12:23	APP	...cc1073c	
+   Name: DATABASE_URL
+2025-10-31 20:12:23	APP	...cc1073c	
+3. Add a new environment variable:
+2025-10-31 20:12:23	APP	...cc1073c	
+2. Navigate to the "Environment" tab
+2025-10-31 20:12:23	APP	...cc1073c	
+1. Go to your Databricks App settings
+2025-10-31 20:12:23	APP	...cc1073c	
+To fix this in Databricks Apps:
+2025-10-31 20:12:23	APP	...cc1073c	
+2025-10-31 20:12:23	APP	...cc1073c	
+ERROR: DATABASE_URL environment variable is not set!
+2025-10-31 20:12:23	APP	...cc1073c	
+=================================================================
+2025-10-31 20:12:23	APP	...cc1073c	
+> rest-express@1.0.0 start > NODE_ENV=production node dist/index.js
+2025-10-31 20:12:22	SYSTEM	...cc1073c	
+[INFO] Starting app with command: [npm run start]
+2025-10-31 20:12:22	SYSTEM	...e402450	
+[INFO] Build completed successfully.
+2025-10-31 20:12:22	SYSTEM	...e402450	
+dist/index.js 96.0kb ⚡ Done in 8ms
+2025-10-31 20:12:22	SYSTEM	...e402450	
+✓ built in 4.48s
+2025-10-31 20:12:22	SYSTEM	...e402450	
+../dist/public/assets/index-B6VPk4Nt.js                 465.80 kB │ gzip: 137.07 kB
+2025-10-31 20:12:22	SYSTEM	...e402450	
+../dist/public/assets/index-DIlao88Q.css                 84.91 kB │ gzip:  13.80 kB
+2025-10-31 20:12:22	SYSTEM	...e402450	
+../dist/public/assets/image_1761935104305-BbXMcOMO.png  190.05 kB
+2025-10-31 20:12:22	SYSTEM	...e402450	
+../dist/public/assets/image_1761936894947-2MYBWPxc.png   36.93 kB
+2025-10-31 20:12:22	SYSTEM	...e402450	
+../dist/public/assets/image_1761935092920-C0-CohC2.png    9.47 kB
+2025-10-31 20:12:22	SYSTEM	...e402450	
+../dist/public/index.html                                 0.88 kB │ gzip:   0.48 kB
+2025-10-31 20:12:22	SYSTEM	...e402450	
+computing gzip size...
+2025-10-31 20:12:22	SYSTEM	...e402450	
+rendering chunks...
+2025-10-31 20:12:22	SYSTEM	...e402450	
+✓ 1750 modules transformed.
+2025-10-31 20:12:19	SYSTEM	...e402450	
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+2025-10-31 20:12:18	SYSTEM	...e402450	
+Browserslist: browsers data (caniuse-lite) is 12 months old. Please run: npx update-browserslist-db@latest Why you should do it regularly: https://github.com/browserslist/update-db#readme
+2025-10-31 20:12:17	SYSTEM	...e402450	
+transforming...
+2025-10-31 20:12:17	SYSTEM	...e402450	
+vite v5.4.20 building for production...
+2025-10-31 20:12:17	SYSTEM	...e402450	
+> rest-express@1.0.0 build > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2025-10-31 20:12:17	SYSTEM	...e402450	
+[INFO] Running build script vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2025-10-31 20:12:17	SYSTEM	...e402450	
+[INFO] Dependencies installed successfully.
+2025-10-31 20:12:17	SYSTEM	...e402450	
+8 vulnerabilities (3 low, 5 moderate) To address issues that do not require attention, run: npm audit fix To address all issues (including breaking changes), run: npm audit fix --force Run `npm audit` for details.
+2025-10-31 20:12:17	SYSTEM	...e402450	
+  run `npm fund` for details
+2025-10-31 20:12:17	SYSTEM	...e402450	
+64 packages are looking for funding
+2025-10-31 20:12:17	SYSTEM	...e402450	
+2025-10-31 20:12:17	SYSTEM	...e402450	
+up to date, audited 496 packages in 1s
+2025-10-31 20:12:15	SYSTEM	...e402450	
+[INFO] Installing dependencies...
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/widgets/ButtonWidget.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/widgets/MetricWidget.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/widgets/TextWidget.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/widgets/HeadingWidget.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/widgets/WidgetRegistry.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/alert.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/slider.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/table.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/avatar.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/radio-group.tsx
+2025-10-31 20:12:15	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/form.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/input-otp.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/input.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/checkbox.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/collapsible.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/breadcrumb.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/chart.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/alert-dialog.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/switch.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/tabs.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/dialog.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/toast.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/badge.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/resizable.tsx
+2025-10-31 20:12:14	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/calendar.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/button.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/toggle-group.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/navigation-menu.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/card.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/drawer.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/menubar.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/dropdown-menu.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/sheet.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/tooltip.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/command.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/progress.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/textarea.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/scroll-area.tsx
+2025-10-31 20:12:13	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/hover-card.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/context-menu.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/separator.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/skeleton.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/toaster.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/sidebar.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/select.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/accordion.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/label.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/popover.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/toggle.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/carousel.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/aspect-ratio.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ui/pagination.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/StatusToggle.tsx
+2025-10-31 20:12:12	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/MetricCard.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/AppSidebar.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/GlassmorphicCard.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/MiniAreaChart.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/DashboardHeader.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/PhoneMockup.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/Dashboard.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/examples/CircularProgress.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Assistant.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Login.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/not-found.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Resources.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Settings.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Monitoring.tsx
+2025-10-31 20:12:11	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/CostAnalysis.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/RCA.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Pages.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Tools.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Dashboard.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Dashboard-simple.txt
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Analytics.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Help.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Incidents.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/PageView.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Jobs.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/PageForm.tsx
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/pages/Dashboard.tsx.backup
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/lib/utils.ts
+2025-10-31 20:12:10	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/lib/queryClient.ts
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/hooks/use-mobile.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/hooks/use-toast.ts
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/contexts/AuthContext.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/StatusToggle.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/Footer.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/CardPattern.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/BackgroundDecor.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/GlassmorphicCard.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/MetricCard.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/PageViewer.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/DashboardHeader.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/MiniAreaChart.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/ProtectedRoute.tsx
+2025-10-31 20:12:09	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/CircularProgress.tsx
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/PhoneMockup.tsx
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/components/AppSidebar.tsx
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/databricks-sql.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/spark-log-parser.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/openai.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/rca-correlator.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/encryption.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/status-scraper.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/utils/ai-rca.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/middleware/auth.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/main.tsx
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/index.css
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/src/App.tsx
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/shared/schema.ts
+2025-10-31 20:12:08	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/routes.ts
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/db.ts
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/vite.ts
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/storage.ts
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/index.ts
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/server/seed.ts
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/client/index.html
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/Pasted-2025-10-31-20-00-34-SYSTEM-e402450-ERROR-01f0b69416d21e51aa57ae3ace402450-Error-deploying-a-1761941202836_1761941202837.txt
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761941070645.png
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761941125227.png
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/IMG_8147_1761881950858.jpeg
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938470457.png
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935104305.png
+2025-10-31 20:12:07	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939203332.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937373901.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933460320.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939719087.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759902516620.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759898378219.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933369586.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933414000.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939951959.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759897644888.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759902309172.png
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/Pasted-You-are-a-senior-full-stack-systems-architect-and-lead-engineer-Build-a-complete-production-grade--1759898647630_1759898647631.txt
+2025-10-31 20:12:06	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761089374382.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937928165.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761096774917.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761940253913.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938546102.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759901293152.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933599690.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938529404.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761936894947.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759901588659.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759897679645.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938603067.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935383033.png
+2025-10-31 20:12:05	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933636076.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/IMG_8148_1761882884483.jpeg
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761927213534.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937413522.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938505091.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939863538.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939132476.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939914989.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935187263.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/Pasted-You-are-extending-an-existing-repository-named-PlatformSupport-main-to-build-a-next-generation--1759905083039_1759905083039.txt
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759897633075.png
+2025-10-31 20:12:04	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761928274926.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939067390.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/Pasted--Core-Capabilities-1-Dynamic-Admin-Portal-No-Code-Builder-Admin-can-create-a-1759900728620_1759900728621.txt
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759898292971.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761927291913.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/Pasted--sql-CREATE-TABLE-IF-NOT-EXISTS-uc-dev-edap-platform-01-edap-monitoring-de-platform-status-events--1761085781345_1761085781346.txt
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939096746.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937229144.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933556308.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761928432947.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759900586164.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1759900401679.png
+2025-10-31 20:12:03	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761096896661.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937095684.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937744451.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761095197716.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937829861.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937823085.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761928197669.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935092920.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939610038.png
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/QUICK_START_DATABRICKS.md
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/DATABRICKS_DEPLOYMENT.md
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/tailwind.config.ts
+2025-10-31 20:12:02	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/design_guidelines.md
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/requirements-streamlit.txt
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/streamlit_app.py
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/vite.config.ts
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/replit.md
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/.gitignore
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/package-lock.json
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/.replit
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/tsconfig.json
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/drizzle.config.ts
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/postcss.config.js
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/package.json
+2025-10-31 20:12:01	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/README-DATABRICKS.md
+2025-10-31 20:12:00	SYSTEM	...cc1073c	
+[INFO] Updated file: python/source_code/components.json
+2025-10-31 20:11:59	SYSTEM	...cc1073c	
+[INFO] Downloading source code from /Workspace/Users/12bc3ecf-ece3-4c68-b111-d75b2bb0b82a/src/01f0b695c2451436a2ac5aeedcc1073c
+2025-10-31 20:11:59	SYSTEM	...cc1073c	
+[INFO] Starting deployment 01f0b695c2451436a2ac5aeedcc1073c...
+2025-10-31 20:00:34	SYSTEM	...e402450	
+[ERROR] [01f0b69416d21e51aa57ae3ace402450] Error deploying app: error starting app: app crashed unexpectedly
+2025-10-31 20:00:34	SYSTEM	...e402450	
+[INFO] Deployment 01f0b69416d21e51aa57ae3ace402450 ended in 33.717194754s
+2025-10-31 20:00:34	SYSTEM	...e402450	
+[ERROR] Could not start app. app crashed unexpectedly.
+2025-10-31 20:00:34	APP	...e402450	
+file:///app/python/source_code/dist/index.js:999 throw new Error( ^ Error: DATABASE_URL must be set. Did you forget to provision a database? at file:///app/python/source_code/dist/index.js:999:9 at ModuleJob.run (node:internal/modules/esm/module_job:274:25) at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26) at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) Node.js v22.16.0
+2025-10-31 20:00:33	APP	...e402450	
+> rest-express@1.0.0 start > NODE_ENV=production node dist/index.js
+2025-10-31 20:00:32	SYSTEM	...e402450	
+[INFO] Starting app with command: [npm run start]
+2025-10-31 20:00:32	SYSTEM	...e402450	
+[INFO] Build completed successfully.
+2025-10-31 20:00:32	SYSTEM	...e402450	
+dist/index.js 95.0kb ⚡ Done in 8ms
+2025-10-31 20:00:32	SYSTEM	...e402450	
+✓ built in 4.27s
+2025-10-31 20:00:32	SYSTEM	...e402450	
+../dist/public/assets/index-B6VPk4Nt.js                 465.80 kB │ gzip: 137.07 kB
+2025-10-31 20:00:32	SYSTEM	...e402450	
+../dist/public/assets/index-DIlao88Q.css                 84.91 kB │ gzip:  13.80 kB
+2025-10-31 20:00:32	SYSTEM	...e402450	
+../dist/public/assets/image_1761935104305-BbXMcOMO.png  190.05 kB
+2025-10-31 20:00:32	SYSTEM	...e402450	
+../dist/public/assets/image_1761936894947-2MYBWPxc.png   36.93 kB
+2025-10-31 20:00:32	SYSTEM	...e402450	
+../dist/public/assets/image_1761935092920-C0-CohC2.png    9.47 kB
+2025-10-31 20:00:32	SYSTEM	...e402450	
+../dist/public/index.html                                 0.88 kB │ gzip:   0.48 kB
+2025-10-31 20:00:32	SYSTEM	...e402450	
+computing gzip size...
+2025-10-31 20:00:32	SYSTEM	...e402450	
+rendering chunks...
+2025-10-31 20:00:32	SYSTEM	...e402450	
+✓ 1750 modules transformed.
+2025-10-31 20:00:29	SYSTEM	...e402450	
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+2025-10-31 20:00:28	SYSTEM	...e402450	
+Browserslist: browsers data (caniuse-lite) is 12 months old. Please run: npx update-browserslist-db@latest Why you should do it regularly: https://github.com/browserslist/update-db#readme
+2025-10-31 20:00:28	SYSTEM	...e402450	
+transforming...
+2025-10-31 20:00:28	SYSTEM	...e402450	
+vite v5.4.20 building for production...
+2025-10-31 20:00:28	SYSTEM	...e402450	
+> rest-express@1.0.0 build > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2025-10-31 20:00:28	SYSTEM	...e402450	
+[INFO] Running build script vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2025-10-31 20:00:27	SYSTEM	...e402450	
+[INFO] Dependencies installed successfully.
+2025-10-31 20:00:27	SYSTEM	...e402450	
+npm notice npm notice New major version of npm available! 10.9.2 -> 11.6.2 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2 npm notice To update run: npm install -g npm@11.6.2 npm notice
+2025-10-31 20:00:27	SYSTEM	...e402450	
+8 vulnerabilities (3 low, 5 moderate) To address issues that do not require attention, run: npm audit fix To address all issues (including breaking changes), run: npm audit fix --force Run `npm audit` for details.
+2025-10-31 20:00:27	SYSTEM	...e402450	
+  run `npm fund` for details
+2025-10-31 20:00:27	SYSTEM	...e402450	
+64 packages are looking for funding
+2025-10-31 20:00:27	SYSTEM	...e402450	
+2025-10-31 20:00:27	SYSTEM	...e402450	
+added 495 packages, and audited 496 packages in 9s
+2025-10-31 20:00:22	SYSTEM	...e402450	
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+2025-10-31 20:00:22	SYSTEM	...e402450	
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Installing dependencies...
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/widgets/ButtonWidget.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/widgets/MetricWidget.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/widgets/TextWidget.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/widgets/HeadingWidget.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/widgets/WidgetRegistry.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/alert.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/slider.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/table.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/avatar.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/radio-group.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/form.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/input-otp.tsx
+2025-10-31 20:00:18	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/input.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/checkbox.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/collapsible.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/breadcrumb.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/chart.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/alert-dialog.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/switch.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/tabs.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/dialog.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/toast.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/badge.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/resizable.tsx
+2025-10-31 20:00:17	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/calendar.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/button.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/toggle-group.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/navigation-menu.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/card.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/drawer.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/menubar.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/dropdown-menu.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/sheet.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/tooltip.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/command.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/progress.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/textarea.tsx
+2025-10-31 20:00:16	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/scroll-area.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/hover-card.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/context-menu.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/separator.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/skeleton.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/toaster.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/sidebar.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/select.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/accordion.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/label.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/popover.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/toggle.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/carousel.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/aspect-ratio.tsx
+2025-10-31 20:00:15	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ui/pagination.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/StatusToggle.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/MetricCard.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/AppSidebar.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/GlassmorphicCard.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/MiniAreaChart.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/DashboardHeader.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/PhoneMockup.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/Dashboard.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/examples/CircularProgress.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Assistant.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Login.tsx
+2025-10-31 20:00:14	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/not-found.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Resources.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Settings.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Monitoring.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/CostAnalysis.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/RCA.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Pages.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Tools.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Dashboard.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Dashboard-simple.txt
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Analytics.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Help.tsx
+2025-10-31 20:00:13	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Incidents.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/PageView.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Jobs.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/PageForm.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/pages/Dashboard.tsx.backup
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/lib/utils.ts
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/lib/queryClient.ts
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/hooks/use-mobile.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/hooks/use-toast.ts
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/contexts/AuthContext.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/StatusToggle.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/Footer.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/CardPattern.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/BackgroundDecor.tsx
+2025-10-31 20:00:12	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/GlassmorphicCard.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/MetricCard.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/PageViewer.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/DashboardHeader.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/MiniAreaChart.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/ProtectedRoute.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/CircularProgress.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/PhoneMockup.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/components/AppSidebar.tsx
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/databricks-sql.ts
+2025-10-31 20:00:11	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/spark-log-parser.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/openai.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/rca-correlator.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/encryption.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/status-scraper.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/utils/ai-rca.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/middleware/auth.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/main.tsx
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/index.css
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/src/App.tsx
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/shared/schema.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/routes.ts
+2025-10-31 20:00:10	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/db.ts
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/vite.ts
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/storage.ts
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/index.ts
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/server/seed.ts
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/client/index.html
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/IMG_8147_1761881950858.jpeg
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938470457.png
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935104305.png
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939203332.png
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937373901.png
+2025-10-31 20:00:09	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933460320.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939719087.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759902516620.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759898378219.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933369586.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933414000.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939951959.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759897644888.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759902309172.png
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/Pasted-You-are-a-senior-full-stack-systems-architect-and-lead-engineer-Build-a-complete-production-grade--1759898647630_1759898647631.txt
+2025-10-31 20:00:08	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761089374382.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937928165.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761096774917.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761940253913.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938546102.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759901293152.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933599690.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938529404.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761936894947.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759901588659.png
+2025-10-31 20:00:07	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759897679645.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938603067.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935383033.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933636076.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/IMG_8148_1761882884483.jpeg
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761927213534.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937413522.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761938505091.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939863538.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939132476.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939914989.png
+2025-10-31 20:00:06	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935187263.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/Pasted-You-are-extending-an-existing-repository-named-PlatformSupport-main-to-build-a-next-generation--1759905083039_1759905083039.txt
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759897633075.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761928274926.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939067390.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/Pasted--Core-Capabilities-1-Dynamic-Admin-Portal-No-Code-Builder-Admin-can-create-a-1759900728620_1759900728621.txt
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759898292971.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761927291913.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/Pasted--sql-CREATE-TABLE-IF-NOT-EXISTS-uc-dev-edap-platform-01-edap-monitoring-de-platform-status-events--1761085781345_1761085781346.txt
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939096746.png
+2025-10-31 20:00:05	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937229144.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761933556308.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761928432947.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759900586164.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1759900401679.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761096896661.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937095684.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937744451.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761095197716.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937829861.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761937823085.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761928197669.png
+2025-10-31 20:00:04	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761935092920.png
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/attached_assets/image_1761939610038.png
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/tailwind.config.ts
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/design_guidelines.md
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/requirements-streamlit.txt
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/streamlit_app.py
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/vite.config.ts
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/replit.md
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/.gitignore
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/package-lock.json
+2025-10-31 20:00:03	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/.replit
+2025-10-31 20:00:02	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/tsconfig.json
+2025-10-31 20:00:02	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/drizzle.config.ts
+2025-10-31 20:00:02	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/postcss.config.js
+2025-10-31 20:00:02	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/package.json
+2025-10-31 20:00:02	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/README-DATABRICKS.md
+2025-10-31 20:00:02	SYSTEM	...e402450	
+[INFO] Updated file: python/source_code/components.json
+2025-10-31 20:00:00	SYSTEM	...e402450	
+[INFO] Downloading source code from /Workspace/Users/12bc3ecf-ece3-4c68-b111-d75b2bb0b82a/src/01f0b69416d21e51aa57ae3ace402450
+2025-10-31 20:00:00	APP	...31e98f2	
+  Stopping...
+2025-10-31 20:00:00	SYSTEM	...e402450	
+[INFO] Starting deployment 01f0b69416d21e51aa57ae3ace402450...
+2025-10-31 19:56:25	SYSTEM	...31e98f2	
+[INFO] [01f0b693aabb12d095b715d7931e98f2] Deployment successful
+2025-10-31 19:56:25	SYSTEM	...31e98f2	
+[INFO] Deployment 01f0b693aabb12d095b715d7931e98f2 ended in 4.023365685s
+2025-10-31 19:56:24	APP	...31e98f2	
+2025-10-31 19:56:24	APP	...31e98f2	
+You can now view your Streamlit app in your browser. URL: http://0.0.0.0:8000
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+[INFO] Starting app with command: [streamlit run app.py]
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+[INFO] Requirements installed successfully.
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+[notice] A new release of pip is available: 25.2 -> 25.3 [notice] To update, run: /app/python/source_code/.venv/bin/python3_apps -m pip install --upgrade pip
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.11/site-packages (from python-dateutil>=2.8.2->pandas<3,>=1.3.0->streamlit==1.38.0->-r requirements.txt (line 1)) (1.17.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.11/site-packages (from markdown-it-py>=2.2.0->rich<14,>=10.14.0->streamlit==1.38.0->-r requirements.txt (line 1)) (0.1.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.11/site-packages (from jinja2->altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2.1.5) Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.11/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (25.4.0) Requirement already satisfied: jsonschema-specifications>=2023.03.6 in ./.venv/lib/python3.11/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2025.9.1) Requirement already satisfied: referencing>=0.28.4 in ./.venv/lib/python3.11/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (0.36.2) Requirement already satisfied: rpds-py>=0.7.1 in ./.venv/lib/python3.11/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (0.27.1)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.venv/lib/python3.11/site-packages (from rich<14,>=10.14.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2.19.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: markdown-it-py>=2.2.0 in ./.venv/lib/python3.11/site-packages (from rich<14,>=10.14.0->streamlit==1.38.0->-r requirements.txt (line 1)) (4.0.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.11/site-packages (from requests<3,>=2.27->streamlit==1.38.0->-r requirements.txt (line 1)) (2025.10.5)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.11/site-packages (from requests<3,>=2.27->streamlit==1.38.0->-r requirements.txt (line 1)) (2.5.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: idna<4,>=2.5 in ./.venv/lib/python3.11/site-packages (from requests<3,>=2.27->streamlit==1.38.0->-r requirements.txt (line 1)) (3.10)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.11/site-packages (from requests<3,>=2.27->streamlit==1.38.0->-r requirements.txt (line 1)) (3.4.3)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.11/site-packages (from pandas<3,>=1.3.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2025.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.11/site-packages (from pandas<3,>=1.3.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2025.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: python-dateutil>=2.8.2 in ./.venv/lib/python3.11/site-packages (from pandas<3,>=1.3.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2.9.0.post0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: smmap<6,>=3.0.1 in ./.venv/lib/python3.11/site-packages (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit==1.38.0->-r requirements.txt (line 1)) (5.0.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: gitdb<5,>=4.0.1 in ./.venv/lib/python3.11/site-packages (from gitpython!=3.1.19,<4,>=3.0.7->streamlit==1.38.0->-r requirements.txt (line 1)) (4.0.12)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: narwhals>=1.14.2 in ./.venv/lib/python3.11/site-packages (from altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (2.7.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: jsonschema>=3.0 in ./.venv/lib/python3.11/site-packages (from altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (4.25.1)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.11/site-packages (from altair<6,>=4.0->streamlit==1.38.0->-r requirements.txt (line 1)) (3.1.6)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: watchdog<5,>=2.1.5 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (4.0.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: tornado<7,>=6.0.3 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (6.5.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: pydeck<1,>=0.8.0b4 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (0.9.1)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: gitpython!=3.1.19,<4,>=3.0.7 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (3.1.45)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: typing-extensions<5,>=4.3.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (4.15.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: toml<2,>=0.10.1 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (0.10.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: tenacity<9,>=8.1.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (8.5.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: rich<14,>=10.14.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (13.9.4)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: requests<3,>=2.27 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (2.32.5)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: pyarrow>=7.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (16.1.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: protobuf<6,>=3.20 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (5.29.5)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: pillow<11,>=7.1.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (10.4.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: pandas<3,>=1.3.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (2.2.3)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: packaging<25,>=20 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (24.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: numpy<3,>=1.20 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (1.26.4)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: click<9,>=7.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (8.3.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: cachetools<6,>=4.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (5.5.2)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: blinker<2,>=1.0.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (1.9.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: altair<6,>=4.0 in ./.venv/lib/python3.11/site-packages (from streamlit==1.38.0->-r requirements.txt (line 1)) (5.5.0)
+2025-10-31 19:56:23	SYSTEM	...31e98f2	
+Requirement already satisfied: streamlit==1.38.0 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (1.38.0)
+2025-10-31 19:56:22	SYSTEM	...31e98f2	
+[INFO] Updated file: python/source_code/app.py
+2025-10-31 19:56:22	SYSTEM	...31e98f2	
+[INFO] Updated file: python/source_code/requirements.txt
+2025-10-31 19:56:22	SYSTEM	...31e98f2	
+[INFO] Updated file: python/source_code/app.yaml
+2025-10-31 19:56:21	SYSTEM	...31e98f2	
+[INFO] Downloading source code from /Workspace/Users/12bc3ecf-ece3-4c68-b111-d75b2bb0b82a/src/01f0b693aabb12d095b715d7931e98f2
+2025-10-31 19:56:21	SYSTEM	...31e98f2	
+[INFO] Starting deployment 01f0b693aabb12d095b715d7931e98f2...
+2025-10-31 19:55:52	SYSTEM		
+[INFO] Starting Databricks Apps runtime...

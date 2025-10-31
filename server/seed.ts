@@ -1,8 +1,18 @@
-import { db } from "./db";
+import { db, DB_ENABLED } from "./db";
 import { organizations, users, pages, widgets, tools } from "@shared/schema";
 import bcrypt from "bcryptjs";
 
 async function seed() {
+  if (!DB_ENABLED) {
+    console.log("Skipping database seed (running in Streamlit mode - no database)");
+    return;
+  }
+
+  if (!db) {
+    console.log("Skipping database seed (database not initialized)");
+    return;
+  }
+
   console.log("Starting database seed...");
 
   try {

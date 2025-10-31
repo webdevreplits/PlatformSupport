@@ -62,6 +62,7 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // Users
   async getUser(id: number): Promise<User | undefined> {
+    if (!db) return undefined;
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
@@ -238,4 +239,113 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Streamlit mode storage (no database, minimal features)
+class StreamlitStorage implements IStorage {
+  // Users - Not supported in streamlit mode
+  async getUser(id: number): Promise<User | undefined> {
+    return {
+      id: 1,
+      email: "databricks-user@streamlit.app",
+      passwordHash: "",
+      role: "admin",
+      orgId: 1,
+      metadata: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as User;
+  }
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return this.getUser(1);
+  }
+  async createUser(user: InsertUser): Promise<User> {
+    throw new Error("User management not available in Streamlit mode");
+  }
+  
+  // Organizations
+  async getOrganization(id: number): Promise<Organization | undefined> {
+    return {
+      id: 1,
+      name: "Databricks Organization",
+      createdAt: new Date(),
+    } as Organization;
+  }
+  async createOrganization(org: InsertOrganization): Promise<Organization> {
+    throw new Error("Organization management not available in Streamlit mode");
+  }
+  
+  // Pages - Not supported
+  async getPages(orgId: number): Promise<Page[]> { return []; }
+  async getPage(id: number): Promise<Page | undefined> { return undefined; }
+  async getPageBySlug(slug: string, orgId: number): Promise<Page | undefined> { return undefined; }
+  async createPage(page: InsertPage): Promise<Page> {
+    throw new Error("Page builder not available in Streamlit mode");
+  }
+  async updatePage(id: number, page: Partial<InsertPage>): Promise<Page> {
+    throw new Error("Page builder not available in Streamlit mode");
+  }
+  async deletePage(id: number): Promise<void> {
+    throw new Error("Page builder not available in Streamlit mode");
+  }
+  
+  // Widgets - Not supported
+  async getWidgetsByPage(pageId: number): Promise<Widget[]> { return []; }
+  async createWidget(widget: InsertWidget): Promise<Widget> {
+    throw new Error("Widgets not available in Streamlit mode");
+  }
+  async updateWidget(id: number, widget: Partial<InsertWidget>): Promise<Widget> {
+    throw new Error("Widgets not available in Streamlit mode");
+  }
+  async deleteWidget(id: number): Promise<void> {
+    throw new Error("Widgets not available in Streamlit mode");
+  }
+  
+  // Tools - Return empty list
+  async getTools(orgId: number): Promise<Tool[]> { return []; }
+  async getTool(id: number): Promise<Tool | undefined> { return undefined; }
+  async createTool(tool: InsertTool): Promise<Tool> {
+    throw new Error("Tool management not available in Streamlit mode");
+  }
+  async updateTool(id: number, tool: Partial<InsertTool>): Promise<Tool> {
+    throw new Error("Tool management not available in Streamlit mode");
+  }
+  async deleteTool(id: number): Promise<void> {
+    throw new Error("Tool management not available in Streamlit mode");
+  }
+  
+  // Connections - Not supported
+  async getConnections(toolId: number): Promise<Connection[]> { return []; }
+  async getConnectionByName(name: string, toolId: number | null): Promise<Connection | undefined> {
+    return undefined;
+  }
+  async createConnection(connection: InsertConnection): Promise<Connection> {
+    throw new Error("Connections not available in Streamlit mode");
+  }
+  async updateConnection(id: number, connection: Partial<InsertConnection>): Promise<Connection> {
+    throw new Error("Connections not available in Streamlit mode");
+  }
+  
+  // Workflows - Not supported
+  async getWorkflows(orgId: number): Promise<Workflow[]> { return []; }
+  async createWorkflow(workflow: InsertWorkflow): Promise<Workflow> {
+    throw new Error("Workflows not available in Streamlit mode");
+  }
+  async updateWorkflow(id: number, workflow: Partial<InsertWorkflow>): Promise<Workflow> {
+    throw new Error("Workflows not available in Streamlit mode");
+  }
+  
+  // Audit Logs - Not supported
+  async createAuditLog(log: InsertAuditLog): Promise<AuditLog> {
+    // Silently ignore audit logs in streamlit mode
+    return { id: 1, ...log, timestamp: new Date() } as AuditLog;
+  }
+  async getAuditLogs(resourceType: string, resourceId: number): Promise<AuditLog[]> { return []; }
+  
+  // Versions - Not supported
+  async createVersion(version: InsertVersion): Promise<Version> {
+    throw new Error("Versioning not available in Streamlit mode");
+  }
+  async getVersions(resourceType: string, resourceId: number): Promise<Version[]> { return []; }
+}
+
+import { DB_ENABLED } from "./db";
+export const storage: IStorage = DB_ENABLED ? new DatabaseStorage() : new StreamlitStorage();

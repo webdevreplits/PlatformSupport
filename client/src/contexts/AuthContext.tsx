@@ -29,9 +29,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       fetchCurrentUser(token);
     } else {
-      setIsLoading(false);
+      // Try streamlit mode (no authentication required)
+      tryStreamlitAuth();
     }
   }, [token]);
+
+  const tryStreamlitAuth = async () => {
+    try {
+      // Try calling /api/auth/me without a token
+      // In streamlit mode, this will succeed with a mock user
+      const response = await fetch("/api/auth/me");
+      
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+        console.log("🚀 Running in Streamlit mode (no authentication required)");
+      }
+    } catch (error) {
+      console.log("Database mode - authentication required");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchCurrentUser = async (authToken: string) => {
     try {
@@ -47,11 +66,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         localStorage.removeItem("token");
         setToken(null);
+        // Try streamlit mode as fallback
+        await tryStreamlitAuth();
       }
     } catch (error) {
       console.error("Failed to fetch current user:", error);
       localStorage.removeItem("token");
       setToken(null);
+      // Try streamlit mode as fallback
+      await tryStreamlitAuth();
     } finally {
       setIsLoading(false);
     }

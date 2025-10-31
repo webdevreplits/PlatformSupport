@@ -5,42 +5,50 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  console.error('\n=================================================================');
-  console.error('ERROR: DATABASE_URL environment variable is not set!');
-  console.error('');
-  console.error('To fix this in Databricks Apps:');
-  console.error('1. Go to your Databricks App settings');
-  console.error('2. Navigate to the "Environment" tab');
-  console.error('3. Add a new environment variable:');
-  console.error('   Name: DATABASE_URL');
-  console.error('   Value: Your PostgreSQL connection string');
-  console.error('');
-  console.error('Example PostgreSQL connection string:');
-  console.error('postgresql://user:password@host:5432/database?sslmode=require');
-  console.error('');
-  console.error('You can use any PostgreSQL provider:');
-  console.error('- Neon (https://neon.tech)');
-  console.error('- Supabase (https://supabase.com)');
-  console.error('- Amazon RDS');
-  console.error('- Azure Database for PostgreSQL');
-  console.error('=================================================================\n');
-  
-  throw new Error(
-    "DATABASE_URL must be set. Please configure it in Databricks Apps Environment settings.",
-  );
+// Check if running in database mode or streamlit mode
+export const DB_ENABLED = !!process.env.DATABASE_URL;
+
+if (!DB_ENABLED) {
+  console.log('\n=================================================================');
+  console.log('🚀 Running in STREAMLIT MODE (No Database)');
+  console.log('');
+  console.log('Features available:');
+  console.log('  ✓ AI-powered Root Cause Analysis (RCA)');
+  console.log('  ✓ Databricks Job Monitoring');
+  console.log('  ✓ AI Assistant for Databricks');
+  console.log('  ✓ Cost Analysis');
+  console.log('');
+  console.log('Features disabled (require database):');
+  console.log('  ✗ User Authentication');
+  console.log('  ✗ Page Builder');
+  console.log('  ✗ Audit Logs');
+  console.log('  ✗ Persistent Settings');
+  console.log('');
+  console.log('Configuration: Use environment variables');
+  console.log('  - DATABRICKS_HOST');
+  console.log('  - DATABRICKS_TOKEN');
+  console.log('  - OPENAI_API_KEY (optional, for AI features)');
+  console.log('=================================================================\n');
 }
 
-export const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
-});
+let pool: Pool | null = null;
+let db: any = null;
 
-// Handle pool errors to prevent crashes
-pool.on('error', (err) => {
-  console.error('Unexpected database pool error:', err);
-});
+if (DB_ENABLED) {
+  pool = new Pool({ 
+    connectionString: process.env.DATABASE_URL!,
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+  });
 
-export const db = drizzle({ client: pool, schema });
+  // Handle pool errors to prevent crashes
+  pool.on('error', (err) => {
+    console.error('Unexpected database pool error:', err);
+  });
+
+  db = drizzle({ client: pool, schema });
+  console.log('✓ Database connection established');
+}
+
+export { pool, db };
