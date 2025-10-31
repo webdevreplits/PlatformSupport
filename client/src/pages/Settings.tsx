@@ -140,9 +140,11 @@ export default function Settings() {
 
   const configData = configQuery.data as any;
   const isConfigured = configData?.configured;
+  const isStreamlitMode = configData?.streamlitMode || false;
   
   const sqlConfigData = sqlConfigQuery.data as any;
   const isSqlConfigured = sqlConfigData?.configured;
+  const isSqlStreamlitMode = sqlConfigData?.streamlitMode || false;
 
   return (
     <div className="min-h-screen relative">
@@ -190,73 +192,96 @@ export default function Settings() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="databricks-token">Databricks Personal Access Token (PAT)</Label>
-                    <Input
-                      id="databricks-token"
-                      type="password"
-                      placeholder="dapi..."
-                      value={token}
-                      onChange={(e) => setToken(e.target.value)}
-                      data-testid="input-databricks-token"
-                      className="mt-1"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Your Databricks PAT token from workspace User Settings → Developer → Access tokens. 
-                      <a href="https://docs.databricks.com/en/dev-tools/auth/pat.html" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">
-                        Learn how
-                      </a>
+                {isStreamlitMode ? (
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">
+                      Environment Variable Configuration (Databricks Apps Mode)
+                    </h3>
+                    <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
+                      This app is running in Databricks Apps mode. Configuration is managed via environment variables instead of this UI.
+                    </p>
+                    <div className="bg-white dark:bg-slate-900 rounded-md p-4 font-mono text-xs space-y-2">
+                      <p className="text-muted-foreground">Set these in Databricks Apps → Environment:</p>
+                      <div className="mt-2 space-y-1">
+                        <p><span className="text-green-600 dark:text-green-400">DATABRICKS_TOKEN</span>=your-databricks-pat-token</p>
+                        <p><span className="text-green-600 dark:text-green-400">DATABRICKS_HOST</span>=https://your-workspace.cloud.databricks.com</p>
+                        <p className="text-muted-foreground text-xs mt-2"># Optional for OpenAI features:</p>
+                        <p><span className="text-green-600 dark:text-green-400">OPENAI_API_KEY</span>=sk-your-openai-key</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-3">
+                      After setting environment variables, restart the app for changes to take effect.
                     </p>
                   </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="databricks-token">Databricks Personal Access Token (PAT)</Label>
+                      <Input
+                        id="databricks-token"
+                        type="password"
+                        placeholder="dapi..."
+                        value={token}
+                        onChange={(e) => setToken(e.target.value)}
+                        data-testid="input-databricks-token"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Your Databricks PAT token from workspace User Settings → Developer → Access tokens. 
+                        <a href="https://docs.databricks.com/en/dev-tools/auth/pat.html" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">
+                          Learn how
+                        </a>
+                      </p>
+                    </div>
 
-                  <div>
-                    <Label htmlFor="base-url">Databricks Workspace Base URL</Label>
-                    <Input
-                      id="base-url"
-                      type="text"
-                      value={baseUrl}
-                      onChange={(e) => setBaseUrl(e.target.value)}
-                      data-testid="input-base-url"
-                      className="mt-1"
-                      placeholder="https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Format: https://&lt;workspace-url&gt;/serving-endpoints
-                    </p>
+                    <div>
+                      <Label htmlFor="base-url">Databricks Workspace Base URL</Label>
+                      <Input
+                        id="base-url"
+                        type="text"
+                        value={baseUrl}
+                        onChange={(e) => setBaseUrl(e.target.value)}
+                        data-testid="input-base-url"
+                        className="mt-1"
+                        placeholder="https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Format: https://&lt;workspace-url&gt;/serving-endpoints
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="endpoint-name">Serving Endpoint Name</Label>
+                      <Input
+                        id="endpoint-name"
+                        type="text"
+                        value={endpointName}
+                        onChange={(e) => setEndpointName(e.target.value)}
+                        data-testid="input-endpoint-name"
+                        className="mt-1"
+                        placeholder="databricks-claude-sonnet-4-5"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        The name of your Claude Sonnet serving endpoint in Databricks
+                      </p>
+                    </div>
+
+                    <Button 
+                      onClick={handleSave}
+                      disabled={saveMutation.isPending}
+                      data-testid="button-save-ai-config"
+                    >
+                      {saveMutation.isPending ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save Configuration"
+                      )}
+                    </Button>
                   </div>
-
-                  <div>
-                    <Label htmlFor="endpoint-name">Serving Endpoint Name</Label>
-                    <Input
-                      id="endpoint-name"
-                      type="text"
-                      value={endpointName}
-                      onChange={(e) => setEndpointName(e.target.value)}
-                      data-testid="input-endpoint-name"
-                      className="mt-1"
-                      placeholder="databricks-claude-sonnet-4-5"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      The name of your Claude Sonnet serving endpoint in Databricks
-                    </p>
-                  </div>
-
-                  <Button 
-                    onClick={handleSave}
-                    disabled={saveMutation.isPending}
-                    data-testid="button-save-ai-config"
-                  >
-                    {saveMutation.isPending ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save Configuration"
-                    )}
-                  </Button>
-                </div>
+                )}
 
                 <div className="border-t pt-4">
                   <h3 className="text-sm font-medium mb-2">AI Features Enabled:</h3>
@@ -324,70 +349,100 @@ export default function Settings() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="sql-workspace-url">Databricks Workspace URL</Label>
-                    <Input
-                      id="sql-workspace-url"
-                      type="text"
-                      placeholder="https://adb-7901759384367063.3.azuredatabricks.net"
-                      value={sqlWorkspaceUrl}
-                      onChange={(e) => setSqlWorkspaceUrl(e.target.value)}
-                      data-testid="input-sql-workspace-url"
-                      className="mt-1"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Your Databricks workspace URL (without /serving-endpoints or /sql paths)
+                {isSqlStreamlitMode ? (
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">
+                      Environment Variable Configuration (Databricks Apps Mode)
+                    </h3>
+                    <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
+                      This app is running in Databricks Apps mode. Configuration is managed via environment variables instead of this UI.
+                    </p>
+                    <div className="bg-white dark:bg-slate-900 rounded-md p-4 font-mono text-xs space-y-2">
+                      <p className="text-muted-foreground">Set these in Databricks Apps → Environment:</p>
+                      <div className="mt-2 space-y-1">
+                        <p><span className="text-green-600 dark:text-green-400">DATABRICKS_TOKEN</span>=your-databricks-pat-token</p>
+                        <p><span className="text-green-600 dark:text-green-400">DATABRICKS_HOST</span>=https://your-workspace.cloud.databricks.com</p>
+                        <p><span className="text-green-600 dark:text-green-400">DATABRICKS_WAREHOUSE_ID</span>=your-warehouse-id</p>
+                      </div>
+                      <div className="mt-4 bg-slate-100 dark:bg-slate-800 rounded p-3">
+                        <p className="text-muted-foreground mb-2">How to find your Warehouse ID:</p>
+                        <ol className="text-muted-foreground space-y-1 list-decimal list-inside">
+                          <li>Go to Databricks → SQL Warehouses</li>
+                          <li>Click on your warehouse</li>
+                          <li>Copy ID from URL: /sql/warehouses/<span className="text-green-600 dark:text-green-400">{"{warehouse-id}"}</span></li>
+                        </ol>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-3">
+                      After setting environment variables, restart the app for changes to take effect.
                     </p>
                   </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="sql-workspace-url">Databricks Workspace URL</Label>
+                      <Input
+                        id="sql-workspace-url"
+                        type="text"
+                        placeholder="https://adb-7901759384367063.3.azuredatabricks.net"
+                        value={sqlWorkspaceUrl}
+                        onChange={(e) => setSqlWorkspaceUrl(e.target.value)}
+                        data-testid="input-sql-workspace-url"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Your Databricks workspace URL (without /serving-endpoints or /sql paths)
+                      </p>
+                    </div>
 
-                  <div>
-                    <Label htmlFor="sql-warehouse-id">SQL Warehouse ID</Label>
-                    <Input
-                      id="sql-warehouse-id"
-                      type="text"
-                      placeholder="e.g., abc123def456"
-                      value={sqlWarehouseId}
-                      onChange={(e) => setSqlWarehouseId(e.target.value)}
-                      data-testid="input-sql-warehouse-id"
-                      className="mt-1"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Find this in your SQL Warehouse Connection Details tab
-                    </p>
+                    <div>
+                      <Label htmlFor="sql-warehouse-id">SQL Warehouse ID</Label>
+                      <Input
+                        id="sql-warehouse-id"
+                        type="text"
+                        placeholder="e.g., abc123def456"
+                        value={sqlWarehouseId}
+                        onChange={(e) => setSqlWarehouseId(e.target.value)}
+                        data-testid="input-sql-warehouse-id"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Find this in your SQL Warehouse Connection Details tab
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="sql-token">SQL Warehouse PAT Token</Label>
+                      <Input
+                        id="sql-token"
+                        type="password"
+                        placeholder="dapi..."
+                        value={sqlToken}
+                        onChange={(e) => setSqlToken(e.target.value)}
+                        data-testid="input-sql-token"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Personal Access Token with access to SQL Warehouse and System Tables
+                      </p>
+                    </div>
+
+                    <Button 
+                      onClick={handleSqlSave}
+                      disabled={saveSqlMutation.isPending}
+                      data-testid="button-save-sql-config"
+                    >
+                      {saveSqlMutation.isPending ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save Configuration"
+                      )}
+                    </Button>
                   </div>
-
-                  <div>
-                    <Label htmlFor="sql-token">SQL Warehouse PAT Token</Label>
-                    <Input
-                      id="sql-token"
-                      type="password"
-                      placeholder="dapi..."
-                      value={sqlToken}
-                      onChange={(e) => setSqlToken(e.target.value)}
-                      data-testid="input-sql-token"
-                      className="mt-1"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Personal Access Token with access to SQL Warehouse and System Tables
-                    </p>
-                  </div>
-
-                  <Button 
-                    onClick={handleSqlSave}
-                    disabled={saveSqlMutation.isPending}
-                    data-testid="button-save-sql-config"
-                  >
-                    {saveSqlMutation.isPending ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save Configuration"
-                    )}
-                  </Button>
-                </div>
+                )}
 
                 <div className="border-t pt-4">
                   <h3 className="text-sm font-medium mb-2">Enabled Features:</h3>

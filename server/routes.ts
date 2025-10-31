@@ -500,6 +500,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "User not found" });
       }
 
+      // In streamlit mode, check environment variables
+      if (!DB_ENABLED) {
+        const token = process.env.DATABRICKS_TOKEN || process.env.OPENAI_API_KEY;
+        const defaultBaseUrl = process.env.DATABRICKS_HOST 
+          ? `${process.env.DATABRICKS_HOST}/serving-endpoints`
+          : "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints";
+
+        return res.json({
+          configured: !!token,
+          streamlitMode: true,
+          baseUrl: defaultBaseUrl,
+          endpointName: "databricks-claude-sonnet-4-5",
+          hasToken: !!token
+        });
+      }
+
       const databricksConnection = await storage.getConnectionByName("Databricks AI", null);
 
       if (databricksConnection && databricksConnection.encryptedCredentials) {
@@ -513,16 +529,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           res.json({ 
             configured: true,
+            streamlitMode: false,
             baseUrl: config.baseUrl || defaultBaseUrl,
             endpointName: config.endpointName || "databricks-claude-sonnet-4-5",
             hasToken: !!config.token
           });
         } catch (err) {
           console.error("Decryption error:", err);
-          res.json({ configured: false });
+          res.json({ configured: false, streamlitMode: false });
         }
       } else {
-        res.json({ configured: false });
+        res.json({ configured: false, streamlitMode: false });
       }
     } catch (error) {
       console.error("Get Databricks config error:", error);
@@ -669,6 +686,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "User not found" });
       }
 
+      // In streamlit mode, check environment variables
+      if (!DB_ENABLED) {
+        const token = process.env.DATABRICKS_TOKEN;
+        const workspaceUrl = process.env.DATABRICKS_HOST;
+        const warehouseId = process.env.DATABRICKS_WAREHOUSE_ID;
+
+        return res.json({
+          configured: !!(token && workspaceUrl && warehouseId),
+          streamlitMode: true,
+          workspaceUrl: workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+          warehouseId: warehouseId || "",
+          hasToken: !!token
+        });
+      }
+
       const sqlConnection = await storage.getConnectionByName("SQL Warehouse", null);
 
       if (sqlConnection && sqlConnection.encryptedCredentials) {
@@ -680,16 +712,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           res.json({ 
             configured: true,
+            streamlitMode: false,
             workspaceUrl: config.workspaceUrl || defaultWorkspaceUrl,
             warehouseId: config.warehouseId || "",
             hasToken: !!config.token
           });
         } catch (err) {
           console.error("Decryption error:", err);
-          res.json({ configured: false });
+          res.json({ configured: false, streamlitMode: false });
         }
       } else {
-        res.json({ configured: false });
+        res.json({ configured: false, streamlitMode: false });
       }
     } catch (error) {
       console.error("Get SQL Warehouse config error:", error);

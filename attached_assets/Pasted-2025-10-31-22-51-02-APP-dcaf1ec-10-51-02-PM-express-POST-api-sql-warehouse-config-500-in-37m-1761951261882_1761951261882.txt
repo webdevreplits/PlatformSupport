@@ -1,0 +1,48 @@
+2025-10-31 22:51:02	APP	...dcaf1ec	
+10:51:02 PM [express] POST /api/sql-warehouse/config 500 in 37ms :: {"error":"Failed to save configur…
+2025-10-31 22:51:02	APP	...dcaf1ec	
+Save SQL Warehouse config error: Error: Connections not available in Streamlit mode
+    at StreamlitStorage.createConnection (file:///app/python/source_code/dist/index.js:1274:11)
+    at file:///app/python/source_code/dist/index.js:2236:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-31 22:50:10	APP	...dcaf1ec	
+10:50:10 PM [express] POST /api/ai/config 500 in 40ms :: {"error":"Failed to save configuration"}
+2025-10-31 22:50:10	APP	...dcaf1ec	
+Save Databricks config error: Error: Connections not available in Streamlit mode
+    at StreamlitStorage.createConnection (file:///app/python/source_code/dist/index.js:1274:11)
+    at file:///app/python/source_code/dist/index.js:2098:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-31 22:50:05	APP	...dcaf1ec	
+10:50:05 PM [express] GET /api/sql-warehouse/config 304 in 1ms :: {"configured":false}
+2025-10-31 22:50:05	APP	...dcaf1ec	
+10:50:05 PM [express] GET /api/ai/config 304 in 0ms :: {"configured":false}
+2025-10-31 22:50:05	APP	...dcaf1ec	
+10:50:05 PM [express] GET /api/notifications 500 in 1ms :: {"error":"SQL Warehouse not configured. Pl…
+2025-10-31 22:50:05	APP	...dcaf1ec	
+Get notifications error: Error: SQL Warehouse not configured. Please set environment variables: DATABRICKS_TOKEN, DATABRICKS_HOST, DATABRICKS_WAREHOUSE_ID
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2052:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2467:25
+2025-10-31 22:50:03	APP	...dcaf1ec	
+10:50:03 PM [express] GET /api/dashboard/metrics 500 in 0ms :: {"error":"SQL Warehouse not configured…
+2025-10-31 22:50:03	APP	...dcaf1ec	
+Get dashboard metrics error: Error: SQL Warehouse not configured. Please set environment variables: DATABRICKS_TOKEN, DATABRICKS_HOST, DATABRICKS_WAREHOUSE_ID
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2052:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2384:25
+2025-10-31 22:50:03	APP	...dcaf1ec	
+10:50:03 PM [express] GET /api/notifications 500 in 1ms :: {"error":"SQL Warehouse not configured. Pl…
+2025-10-31 22:50:03	APP	...dcaf1ec	
+Get notifications error: Error: SQL Warehouse not configured. Please set environment variables: DATABRICKS_TOKEN, DATABRICKS_HOST, DATABRICKS_WAREHOUSE_ID
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2052:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2467:25
+2025-10-31 22:50:03	APP	...dcaf1ec	
+10:50:03 PM [express] GET /api/auth/me 304 in 1ms :: {"id":1,"email":"databricks-user@streamlit.app",…
+2025-10-31 22:49:23	APP	...dcaf1ec	
+10:49:23 PM [express] POST /api/ai/config 500 in 43ms :: {"error":"Failed to save configuration"}
+2025-10-31 22:49:23	APP	...dcaf1ec	
+Save Databricks config error: Error: Connections not available in Streamlit mode
+    at StreamlitStorage.createConnection (file:///app/python/source_code/dist/index.js:1274:11)
+    at file:///app/python/source_code/dist/index.js:2098:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
