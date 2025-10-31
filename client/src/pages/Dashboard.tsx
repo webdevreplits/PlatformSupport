@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { GlassmorphicCard } from "@/components/GlassmorphicCard";
 import { MiniAreaChart } from "@/components/MiniAreaChart";
 import { StatusToggle } from "@/components/StatusToggle";
@@ -71,14 +72,15 @@ export default function Dashboard() {
   }, [metrics]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
 
-      <main className="container mx-auto px-4 lg:px-8 py-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-1">Enterprise Data Analytics Platform Support</h1>
-          <p className="text-sm text-muted-foreground">Monitor and manage your data analytics infrastructure and services</p>
-        </div>
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-6">
+            <p className="text-sm text-white/70">Monitor and manage your data analytics infrastructure and services</p>
+          </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <Card className="shadow-sm">
@@ -323,6 +325,7 @@ export default function Dashboard() {
           </Card>
         </div>
       </main>
+      </div>
     </div>
   );
 }

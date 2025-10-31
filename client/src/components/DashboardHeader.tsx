@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import pepsicoLogo from "@assets/image_1761928274926.png";
+import platformLogo from "@assets/image_1761933414000.png";
 
 interface DashboardHeaderProps {
   onThemeToggle?: () => void;
@@ -42,12 +42,12 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
   const notifications = notificationData?.notifications || [];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#1e3a8a] shadow-lg">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src={pepsicoLogo} alt="PepsiCo" className="h-8 w-auto" />
-            <span className="font-semibold text-lg">Enterprise Data Analytics Platform Support</span>
+            <img src={platformLogo} alt="Platform" className="h-10 w-10 rounded-lg shadow-md" />
+            <span className="font-semibold text-lg text-white">Enterprise Data Analytics Platform Support</span>
           </div>
 
           <div className="flex-1 max-w-xl hidden md:block">
