@@ -32,8 +32,11 @@ export function AppSidebar() {
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-16 border-r border-white/10 bg-background/80 backdrop-blur-xl flex flex-col items-center py-4 gap-6 z-40">
-      <div className="mb-4">
-        <img src={pepsicoP} alt="PepsiCo" className="w-12 h-12 object-contain" />
+      <div className="mb-4 relative group">
+        <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-blue-600/20 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
+        <div className="relative bg-white/95 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-white/20">
+          <img src={pepsicoP} alt="PepsiCo" className="w-8 h-8 object-contain" />
+        </div>
       </div>
 
       <nav className="flex-1 flex flex-col gap-2">
