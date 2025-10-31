@@ -48,8 +48,8 @@ export function BackgroundDecor() {
         </div>
       </div>
 
-      {/* Strategy Badge */}
-      <div className="absolute top-10 left-10 flex items-center gap-2 opacity-60">
+      {/* Strategy Badge - Moved right to avoid sidebar overlap */}
+      <div className="absolute top-10 left-32 flex items-center gap-2 opacity-60">
         <div className="w-16 h-16 rounded-full border-2 border-white/40 flex items-center justify-center">
           <div className="text-white text-[8px] text-center leading-tight font-semibold">
             STRATEGY +<br/>TRANSFORMATION
@@ -57,8 +57,8 @@ export function BackgroundDecor() {
         </div>
       </div>
 
-      {/* DATA, ANALYTICS & AI Label */}
-      <div className="absolute bottom-10 left-10 text-white/50 text-xs font-semibold tracking-wider opacity-70">
+      {/* DATA, ANALYTICS & AI Label - Moved right to avoid sidebar overlap */}
+      <div className="absolute bottom-10 left-32 text-white/50 text-xs font-semibold tracking-wider opacity-70">
         DATA, ANALYTICS & AI
       </div>
     </div>
