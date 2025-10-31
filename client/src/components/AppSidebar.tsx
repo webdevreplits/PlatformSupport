@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import pepsicoLogo from "@assets/image_1761935104305.png";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/" },
@@ -31,8 +32,8 @@ export function AppSidebar() {
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-16 border-r border-white/10 bg-background/80 backdrop-blur-xl flex flex-col items-center py-4 gap-6 z-40">
-      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-chart-1 to-chart-4 flex items-center justify-center mb-4">
-        <div className="w-5 h-5 bg-white rounded-sm" />
+      <div className="mb-4 p-2">
+        <img src={pepsicoLogo} alt="PepsiCo" className="w-10 h-10 object-contain" />
       </div>
 
       <nav className="flex-1 flex flex-col gap-2">
