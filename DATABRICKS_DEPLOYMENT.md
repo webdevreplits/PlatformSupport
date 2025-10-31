@@ -33,40 +33,21 @@ The application requires a PostgreSQL database. You can use any of these provide
 2. Configure security groups
 3. Get the connection string
 
-## Step 2: Deploy Without Environment Variables
+## Step 2: Configure Environment Variables in Databricks Apps
 
-1. Deploy the application to Databricks Apps **without any environment variables**
-2. The app will start and show a Setup Wizard
-3. Complete the Setup Wizard in the UI
-4. **IMPORTANT**: After completing setup, you'll receive an encryption passphrase
-5. Add the passphrase as an environment variable and restart the app
-
-## Step 3: Configure Environment Variables (After Setup)
-
-After completing the Setup Wizard, you need to add ONE required environment variable:
-
-### Required Environment Variable:
-
-**Encryption Passphrase** (provided by Setup Wizard):
-```
-ENCRYPTION_PASSPHRASE=your-passphrase-from-setup-wizard
-```
-
-To add this:
 1. Go to your Databricks workspace
-2. Navigate to **Apps** → Your app
-3. Click the **Environment** tab
-4. Add: `ENCRYPTION_PASSPHRASE` with the value from the Setup Wizard
-5. Click **Restart** to apply changes
+2. Navigate to **Apps** in the sidebar
+3. Click on your deployed app (or deploy it first)
+4. Go to the **Environment** tab
+5. Add the following environment variables:
 
-### Optional Environment Variables (Backward Compatibility):
-
-If you prefer to use environment variables instead of the Setup Wizard:
+### Required Environment Variables:
 
 **Database Connection:**
 ```
 DATABASE_URL=postgresql://user:password@host:5432/database?sslmode=require
 ```
+Replace with your actual PostgreSQL connection string from Step 1.
 
 **AI Integration (for RCA and Assistant features):**
 
@@ -117,9 +98,9 @@ If using a managed PostgreSQL service (Neon, Supabase, Azure, AWS RDS), you need
    psql "postgresql://user:password@host:5432/database?sslmode=require"
    ```
 
-## Step 4: Initialize the Database
+## Step 3: Initialize the Database
 
-Before deploying, you need to initialize the database schema:
+After setting the `DATABASE_URL`, the application will automatically connect to your database. However, you need to initialize the database schema:
 
 ### ⚠️ IMPORTANT: Database Initialization Required
 
@@ -166,7 +147,7 @@ You can verify using:
 psql $DATABASE_URL -c "\dt"
 ```
 
-## Step 5: Seed Initial Data (Optional - Skip if using Setup Wizard)
+## Step 4: Seed Initial Data (Optional)
 
 To create the initial admin user and demo data:
 
@@ -179,20 +160,7 @@ This creates:
 - Admin user (email: admin@demo.com, password: admin123)
 - Sample pages and configurations
 
-## Step 6: Complete Setup Wizard
-
-1. Access the app via Databricks Apps URL
-2. You'll see the Setup Wizard automatically
-3. Follow the 4-step process:
-   - **Step 1**: Enter your PostgreSQL database URL and test connection
-   - **Step 2**: Create admin account
-   - **Step 3**: Configure AI (Databricks/OpenAI) - Optional
-   - **Step 4**: Set encryption passphrase and generate session secret
-4. Complete the setup
-5. **CRITICAL**: Copy the encryption passphrase and add it to Databricks Apps Environment as `ENCRYPTION_PASSPHRASE`
-6. Restart the app
-
-## Step 7: Restart with Encryption Passphrase
+## Step 5: Deploy or Restart the App
 
 1. In Databricks Apps, click **Deploy** or **Restart**
 2. Monitor the deployment logs for any errors

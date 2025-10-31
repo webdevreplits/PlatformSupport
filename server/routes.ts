@@ -9,15 +9,8 @@ import { executeSQLQuery, getFailedJobs, getJobRunDetails, getClusterInfo, getAu
 import { encrypt, decrypt } from "./utils/encryption";
 import { runStatusScraper, type StatusPageConfig } from "./utils/status-scraper";
 import { correlateJobFailure } from "./utils/rca-correlator";
-import { setupMiddleware } from "./middleware/setupMiddleware";
-import bootstrapRoutes from "./routes/bootstrap";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Bootstrap routes (always accessible)
-  app.use("/api/bootstrap", bootstrapRoutes);
-  
-  // Setup middleware (gates API routes only, not static/HTML files)
-  app.use("/api", setupMiddleware);
   // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
     try {

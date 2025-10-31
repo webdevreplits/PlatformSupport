@@ -2,81 +2,45 @@ import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
 import * as schema from "@shared/schema";
-import { configService } from './config/ConfigService';
 
 neonConfig.webSocketConstructor = ws;
 
-let pool: Pool | null = null;
-let db: ReturnType<typeof drizzle> | null = null;
-
-function initializeDatabase(): void {
-  const databaseUrl = configService.getDatabaseUrl();
+if (!process.env.DATABASE_URL) {
+  console.error('\n=================================================================');
+  console.error('ERROR: DATABASE_URL environment variable is not set!');
+  console.error('');
+  console.error('To fix this in Databricks Apps:');
+  console.error('1. Go to your Databricks App settings');
+  console.error('2. Navigate to the "Environment" tab');
+  console.error('3. Add a new environment variable:');
+  console.error('   Name: DATABASE_URL');
+  console.error('   Value: Your PostgreSQL connection string');
+  console.error('');
+  console.error('Example PostgreSQL connection string:');
+  console.error('postgresql://user:password@host:5432/database?sslmode=require');
+  console.error('');
+  console.error('You can use any PostgreSQL provider:');
+  console.error('- Neon (https://neon.tech)');
+  console.error('- Supabase (https://supabase.com)');
+  console.error('- Amazon RDS');
+  console.error('- Azure Database for PostgreSQL');
+  console.error('=================================================================\n');
   
-  if (!databaseUrl) {
-    console.log('[Database] No DATABASE_URL configured - running in setup mode');
-    return;
-  }
-
-  try {
-    pool = new Pool({ 
-      connectionString: databaseUrl,
-      max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000,
-    });
-
-    // Handle pool errors to prevent crashes
-    pool.on('error', (err) => {
-      console.error('Unexpected database pool error:', err);
-    });
-
-    db = drizzle({ client: pool, schema });
-    console.log('[Database] Successfully connected to PostgreSQL');
-  } catch (error) {
-    console.error('[Database] Error initializing database:', error);
-    throw error;
-  }
+  throw new Error(
+    "DATABASE_URL must be set. Please configure it in Databricks Apps Environment settings.",
+  );
 }
 
-export function getDb() {
-  if (!db) {
-    initializeDatabase();
-  }
-  
-  if (!db) {
-    throw new Error('Database not configured. Please complete the setup wizard.');
-  }
-  
-  return db;
-}
+export const pool = new Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+});
 
-export function getPool() {
-  if (!pool) {
-    initializeDatabase();
-  }
-  
-  return pool;
-}
+// Handle pool errors to prevent crashes
+pool.on('error', (err) => {
+  console.error('Unexpected database pool error:', err);
+});
 
-export function isDatabaseConfigured(): boolean {
-  return configService.getDatabaseUrl() !== null;
-}
-
-export function reinitializeDatabase(): void {
-  // Close existing pool if any
-  if (pool) {
-    pool.end().catch(err => console.error('Error closing pool:', err));
-    pool = null;
-    db = null;
-  }
-  
-  // Reinitialize with new config
-  initializeDatabase();
-}
-
-// Try to initialize on startup (non-blocking)
-try {
-  initializeDatabase();
-} catch (error) {
-  console.log('[Database] Startup initialization skipped - will initialize after configuration');
-}
+export const db = drizzle({ client: pool, schema });
