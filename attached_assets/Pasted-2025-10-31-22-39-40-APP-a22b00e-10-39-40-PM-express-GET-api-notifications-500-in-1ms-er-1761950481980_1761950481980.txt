@@ -1,0 +1,65 @@
+2025-10-31 22:39:40	APP	...a22b00e	
+10:39:40 PM [express] GET /api/notifications 500 in 1ms :: {"error":"SQL Warehouse not configured. Pl…
+2025-10-31 22:39:40	APP	...a22b00e	
+Get notifications error: Error: SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2036:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2441:25
+2025-10-31 22:39:17	APP	...a22b00e	
+10:39:17 PM [express] POST /api/ai/config 500 in 37ms :: {"error":"Failed to save configuration"}
+2025-10-31 22:39:17	APP	...a22b00e	
+Save Databricks config error: Error: Connections not available in Streamlit mode
+    at StreamlitStorage.createConnection (file:///app/python/source_code/dist/index.js:1273:11)
+    at file:///app/python/source_code/dist/index.js:2072:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-31 22:38:33	APP	...a22b00e	
+10:38:33 PM [express] POST /api/ai/config 500 in 39ms :: {"error":"Failed to save configuration"}
+2025-10-31 22:38:33	APP	...a22b00e	
+Save Databricks config error: Error: Connections not available in Streamlit mode
+    at StreamlitStorage.createConnection (file:///app/python/source_code/dist/index.js:1273:11)
+    at file:///app/python/source_code/dist/index.js:2072:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-31 22:38:23	APP	...a22b00e	
+10:38:23 PM [express] POST /api/sql-warehouse/config 500 in 42ms :: {"error":"Failed to save configur…
+2025-10-31 22:38:23	APP	...a22b00e	
+Save SQL Warehouse config error: Error: Connections not available in Streamlit mode
+    at StreamlitStorage.createConnection (file:///app/python/source_code/dist/index.js:1273:11)
+    at file:///app/python/source_code/dist/index.js:2210:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-31 22:37:10	APP	...a22b00e	
+10:37:10 PM [express] GET /api/notifications 500 in 0ms :: {"error":"SQL Warehouse not configured. Pl…
+2025-10-31 22:37:10	APP	...a22b00e	
+Get notifications error: Error: SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2036:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2441:25
+2025-10-31 22:35:44	APP	...a22b00e	
+10:35:44 PM [express] GET /api/rca/failed-jobs 500 in 0ms :: {"error":"SQL Warehouse not configured. …
+2025-10-31 22:35:44	APP	...a22b00e	
+Get failed jobs error: Error: SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2036:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2469:25
+2025-10-31 22:35:44	APP	...a22b00e	
+10:35:44 PM [express] GET /api/notifications 500 in 1ms :: {"error":"SQL Warehouse not configured. Pl…
+2025-10-31 22:35:44	APP	...a22b00e	
+Get notifications error: Error: SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2036:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2441:25
+2025-10-31 22:35:38	APP	...a22b00e	
+10:35:38 PM [express] GET /api/dashboard/metrics 500 in 0ms :: {"error":"SQL Warehouse not configured…
+2025-10-31 22:35:38	APP	...a22b00e	
+Get dashboard metrics error: Error: SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2036:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2358:25
+2025-10-31 22:35:38	APP	...a22b00e	
+10:35:38 PM [express] GET /api/notifications 500 in 0ms :: {"error":"SQL Warehouse not configured. Pl…
+2025-10-31 22:35:38	APP	...a22b00e	
+Get notifications error: Error: SQL Warehouse not configured. Please add your SQL Warehouse credentials in Settings.
+    at getSQLWarehouseConfig (file:///app/python/source_code/dist/index.js:2036:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/python/source_code/dist/index.js:2441:25
+2025-10-31 22:35:37	APP	...a22b00e	
+10:35:37 PM [express] GET /api/sql-warehouse/config 200 i
