@@ -78,13 +78,14 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 ## Recent Changes
 
-### October 31, 2025 - PepsiCo Branding & Professional Theme
+### October 31, 2025 - Purple/Teal Gradient Professional Theme
 
-- **Professional Blue/Purple Color Scheme**: Implemented professional color palette inspired by PepsiCo branding with deep blue (230 80% 50%) primary colors in light mode and rich deep blue background (230 45% 12%) in dark mode. All colors are WCAG compliant with contrast ratios of 14-16:1.
-- **PepsiCo Logo Integration**: Added PepsiCo logo to DashboardHeader component, displayed prominently alongside platform name.
-- **Platform Rebranding**: Renamed from "Azure Platform Support" to "Enterprise Data Analytics Platform Support" across all pages, documentation, and meta tags.
-- **Enhanced Routing**: Added explicit `/dashboard` route for better accessibility while maintaining root path `/` as primary entry point.
-- **Light/Dark Mode Excellence**: Both themes provide exceptional readability with proper contrast, professional appearance, and seamless transitions.
+- **Purple/Teal Gradient Logo**: Implemented professional purple/teal gradient square icon in DashboardHeader, replacing previous PepsiCo branding. Logo features smooth purple-to-teal gradient with "STRATEGY + TRANSFORMATION" and "DATA, ANALYTICS & AI" labels.
+- **Deep Blue/Purple Gradient Backgrounds**: Created BackgroundDecor component with sophisticated deep blue/purple gradient backgrounds featuring decorative elements (flowing curved lines, geometric patterns, dots grid, striped circles, and gradient overlays) inspired by modern corporate design aesthetics.
+- **Text Readability Optimization**: All page headings and subtitles on gradient backgrounds use light colors (text-white and text-white/70) for optimal contrast and readability against dark gradient backgrounds. Card content maintains standard foreground colors on light card backgrounds.
+- **Consistent Theme Application**: Applied gradient theme and DashboardHeader across key pages (Dashboard, Jobs, Tools, Settings, Pages) with unified visual identity.
+- **Color Scheme**: Updated index.css to reflect purple/teal gradient palette matching logo design with professional corporate appearance.
+- **Platform Branding**: Maintains "Enterprise Data Analytics Platform Support" branding consistently across all pages and documentation.
 
 ### October 31, 2025 - Production Readiness & Stability
 
