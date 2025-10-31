@@ -78,6 +78,12 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 ## Recent Changes
 
+### October 31, 2025 - Dashboard UI Cleanup & Notifications
+
+- **Dashboard Header Cleanup**: Removed duplicate filter tabs and logo from DashboardHeader component. Filters now appear only once in main Dashboard page. Header simplified to show only "Azure Platform Support" text, search bar, and utility buttons.
+- **Working Notifications System**: Implemented `/api/notifications` endpoint that queries `system.lakeflow.job_run_timeline` for recent failed/timed-out/canceled jobs (last 24 hours). Notification bell icon now displays dynamic badge count and dropdown menu with recent failures including job name, state, and timestamp. Auto-refreshes every 30 seconds.
+- **Mobile Layout Fix**: Added overflow-x-hidden constraints to prevent dashboard content from sliding under fixed sidebar on mobile devices.
+
 ### January 22, 2025 - RCA & Dashboard Enhancements
 
 - **Spark Log Analysis**: Implemented comprehensive Spark log parser (`server/utils/spark-log-parser.ts`) that extracts errors, exceptions, and stack traces from Databricks `event_details` logs. Integrated into AI RCA workflow for actual job failure analysis.
