@@ -36,7 +36,7 @@ export default function PageView() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -47,7 +47,7 @@ export default function PageView() {
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold text-white">{page.name}</h1>
+                <h1 className="text-3xl font-bold">{page.name}</h1>
                 <Badge 
                   variant={page.status === "published" ? "default" : page.status === "draft" ? "secondary" : "outline"}
                   data-testid="badge-page-status"
@@ -55,7 +55,7 @@ export default function PageView() {
                   {page.status}
                 </Badge>
               </div>
-              <p className="text-white/60 mt-1">
+              <p className="text-muted-foreground mt-1">
                 /{page.slug} • Version {page.version}
               </p>
             </div>
@@ -70,7 +70,7 @@ export default function PageView() {
           )}
         </div>
 
-        <div className="bg-card/50 backdrop-blur-xl border border-white/10 rounded-lg p-6">
+        <div className="bg-card rounded-lg p-6 shadow-sm">
           <PageViewer page={page} />
         </div>
       </div>

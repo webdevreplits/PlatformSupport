@@ -103,7 +103,7 @@ export default function PageForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-3xl mx-auto">
         <Link href="/pages">
           <Button variant="ghost" className="mb-6" data-testid="button-back">
@@ -112,7 +112,7 @@ export default function PageForm() {
           </Button>
         </Link>
 
-        <Card className="border-white/10">
+        <Card className="shadow-sm">
           <CardHeader>
             <CardTitle>{isEdit ? "Edit Page" : "Create New Page"}</CardTitle>
             <CardDescription>

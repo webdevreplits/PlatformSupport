@@ -48,12 +48,12 @@ export default function Pages() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Pages</h1>
-            <p className="text-white/60 mt-1">Manage your application pages</p>
+            <h1 className="text-3xl font-bold">Pages</h1>
+            <p className="text-muted-foreground mt-1">Manage your application pages</p>
           </div>
           {canEdit && (
             <Link href="/pages/new">
@@ -66,7 +66,7 @@ export default function Pages() {
         </div>
 
         {pages && pages.length === 0 ? (
-          <Card className="border-white/10">
+          <Card className="shadow-sm">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <p className="text-muted-foreground mb-4">No pages found</p>
               {canEdit && (
@@ -82,7 +82,7 @@ export default function Pages() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {pages?.map((page) => (
-              <Card key={page.id} className="border-white/10 backdrop-blur-xl bg-card/50" data-testid={`card-page-${page.id}`}>
+              <Card key={page.id} className="shadow-sm" data-testid={`card-page-${page.id}`}>
                 <CardHeader className="gap-2">
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-lg">{page.name}</CardTitle>

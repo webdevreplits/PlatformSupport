@@ -75,10 +75,16 @@ async function callDatabricksEndpoint(
 export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,
   databricksToken: string,
-  databricksBaseUrl: string = "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+  databricksBaseUrl?: string,
   endpointName: string = "databricks-claude-sonnet-4-5"
 ) {
-  return await callDatabricksEndpoint(messages, databricksToken, databricksBaseUrl, endpointName);
+  // Use environment variables for Databricks Apps compatibility
+  const defaultBaseUrl = process.env.DATABRICKS_HOST 
+    ? `${process.env.DATABRICKS_HOST}/serving-endpoints`
+    : "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints";
+  
+  const baseUrl = databricksBaseUrl || defaultBaseUrl;
+  return await callDatabricksEndpoint(messages, databricksToken, baseUrl, endpointName);
 }
 
 export async function summarizeIncident(

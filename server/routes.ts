@@ -357,9 +357,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const decrypted = decrypt(databricksConnection.encryptedCredentials);
     const config = JSON.parse(decrypted);
     
+    // Use environment variables for Databricks Apps compatibility
+    const defaultBaseUrl = process.env.DATABRICKS_HOST 
+      ? `${process.env.DATABRICKS_HOST}/serving-endpoints`
+      : "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints";
+    
     return {
       token: config.token,
-      baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+      baseUrl: config.baseUrl || defaultBaseUrl,
       endpointName: config.endpointName || "databricks-claude-sonnet-4-5"
     };
   }
@@ -380,9 +385,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const decrypted = decrypt(sqlConnection.encryptedCredentials);
     const config = JSON.parse(decrypted);
     
+    // Use environment variables for Databricks Apps compatibility
+    const defaultWorkspaceUrl = process.env.DATABRICKS_HOST || "https://adb-7901759384367063.3.azuredatabricks.net";
+    
     return {
       token: config.token,
-      workspaceUrl: config.workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+      workspaceUrl: config.workspaceUrl || defaultWorkspaceUrl,
       warehouseId: config.warehouseId
     };
   }
@@ -404,9 +412,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if Databricks AI connection already exists
       const existingConnection = await storage.getConnectionByName("Databricks AI", null);
 
+      // Use environment variables for Databricks Apps compatibility
+      const defaultBaseUrl = process.env.DATABRICKS_HOST 
+        ? `${process.env.DATABRICKS_HOST}/serving-endpoints`
+        : "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints";
+      
       const credentialsData = {
         token,
-        baseUrl: baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+        baseUrl: baseUrl || defaultBaseUrl,
         endpointName: endpointName || "databricks-claude-sonnet-4-5"
       };
 
@@ -457,9 +470,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           const decrypted = decrypt(databricksConnection.encryptedCredentials);
           const config = JSON.parse(decrypted);
+          // Use environment variables for Databricks Apps compatibility
+          const defaultBaseUrl = process.env.DATABRICKS_HOST 
+            ? `${process.env.DATABRICKS_HOST}/serving-endpoints`
+            : "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints";
+          
           res.json({ 
             configured: true,
-            baseUrl: config.baseUrl || "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints",
+            baseUrl: config.baseUrl || defaultBaseUrl,
             endpointName: config.endpointName || "databricks-claude-sonnet-4-5",
             hasToken: !!config.token
           });
@@ -566,9 +584,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if SQL Warehouse connection already exists
       const existingConnection = await storage.getConnectionByName("SQL Warehouse", null);
 
+      // Use environment variables for Databricks Apps compatibility
+      const defaultWorkspaceUrl = process.env.DATABRICKS_HOST || "https://adb-7901759384367063.3.azuredatabricks.net";
+
       const credentialsData = {
         token,
-        workspaceUrl: workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+        workspaceUrl: workspaceUrl || defaultWorkspaceUrl,
         warehouseId
       };
 
@@ -618,9 +639,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           const decrypted = decrypt(sqlConnection.encryptedCredentials);
           const config = JSON.parse(decrypted);
+          // Use environment variables for Databricks Apps compatibility
+          const defaultWorkspaceUrl = process.env.DATABRICKS_HOST || "https://adb-7901759384367063.3.azuredatabricks.net";
+          
           res.json({ 
             configured: true,
-            workspaceUrl: config.workspaceUrl || "https://adb-7901759384367063.3.azuredatabricks.net",
+            workspaceUrl: config.workspaceUrl || defaultWorkspaceUrl,
             warehouseId: config.warehouseId || "",
             hasToken: !!config.token
           });

@@ -173,7 +173,8 @@ export default function RCA() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6" data-testid="page-rca">
+    <div className="min-h-screen bg-background p-8">
+      <div className="container mx-auto space-y-6" data-testid="page-rca">
       <div>
         <h1 className="text-3xl font-bold" data-testid="text-page-title">Root Cause Analysis</h1>
         <p className="text-muted-foreground" data-testid="text-page-description">
@@ -436,6 +437,7 @@ export default function RCA() {
           </ScrollArea>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export default function Help() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)]">
+    <div className="min-h-screen bg-background">
       <DashboardHeader onThemeToggle={handleThemeToggle} isDark={isDark} />
 
       <main className="container mx-auto px-4 lg:px-8 py-8">

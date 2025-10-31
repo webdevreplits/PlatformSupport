@@ -34,31 +34,12 @@ interface DashboardMetrics {
   }>;
 }
 
-type FilterCategory = 'all' | 'compute' | 'storage' | 'database' | 'networking' | 'analytics' | 'security';
-
 export default function Dashboard() {
   const chartData = [30, 45, 35, 60, 55, 70, 65, 80, 75, 90];
   const [aiInsights, setAiInsights] = useState<string>("");
-  const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
 
   const handleThemeToggle = () => {
     document.documentElement.classList.toggle("dark");
-  };
-  
-  const filterCategories: { id: FilterCategory; label: string }[] = [
-    { id: 'all', label: 'All' },
-    { id: 'compute', label: 'Compute' },
-    { id: 'storage', label: 'Storage' },
-    { id: 'database', label: 'Database' },
-    { id: 'networking', label: 'Networking' },
-    { id: 'analytics', label: 'Analytics' },
-    { id: 'security', label: 'Security' },
-  ];
-  
-  // Helper to check if widget should be displayed based on filter
-  const shouldShowWidget = (categories: FilterCategory[]): boolean => {
-    if (activeFilter === 'all') return true;
-    return categories.includes(activeFilter);
   };
 
   // Fetch real metrics from Databricks
@@ -93,32 +74,13 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
 
-      <main className="container mx-auto px-4 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Azure Platform Support</h1>
-          <p className="text-muted-foreground">Monitor and manage your Azure infrastructure and services</p>
-        </div>
-
-        {/* Filter Tabs */}
+      <main className="container mx-auto px-4 lg:px-8 py-6">
         <div className="mb-6">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-muted-foreground">Filter by:</span>
-            {filterCategories.map((category) => (
-              <Button
-                key={category.id}
-                variant={activeFilter === category.id ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setActiveFilter(category.id)}
-                data-testid={`filter-${category.id}`}
-                className="hover-elevate active-elevate-2"
-              >
-                {category.label}
-              </Button>
-            ))}
-          </div>
+          <h1 className="text-2xl font-bold mb-1">Azure Platform Support</h1>
+          <p className="text-sm text-muted-foreground">Monitor and manage your Azure infrastructure and services</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
               <CardTitle className="text-sm font-medium">Active Incidents</CardTitle>

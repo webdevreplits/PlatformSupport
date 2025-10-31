@@ -11,18 +11,18 @@ export default function Tools() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(235,50%,9%)] via-[hsl(240,45%,11%)] to-[hsl(250,40%,12%)] p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">Connected Tools</h1>
-          <p className="text-white/60 mt-1">Manage platform integrations and connectors</p>
+          <h1 className="text-3xl font-bold">Connected Tools</h1>
+          <p className="text-muted-foreground mt-1">Manage platform integrations and connectors</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
-              <Card key={tool.id} className="border-white/10 backdrop-blur-xl bg-card/50">
+              <Card key={tool.id} className="shadow-sm">
                 <CardHeader>
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3 flex-1">
