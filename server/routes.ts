@@ -16,8 +16,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Bootstrap routes (always accessible)
   app.use("/api/bootstrap", bootstrapRoutes);
   
-  // Setup middleware (gates other routes until setup is complete)
-  app.use(setupMiddleware);
+  // Setup middleware (gates API routes only, not static/HTML files)
+  app.use("/api", setupMiddleware);
   // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
     try {
