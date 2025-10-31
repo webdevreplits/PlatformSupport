@@ -45,6 +45,13 @@ function Router() {
           </ProtectedLayout>
         </ProtectedRoute>
       </Route>
+      <Route path="/dashboard">
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <Dashboard />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      </Route>
       <Route path="/pages">
         <ProtectedRoute>
           <ProtectedLayout>
