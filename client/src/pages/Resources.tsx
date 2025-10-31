@@ -31,14 +31,14 @@ export default function Resources() {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive"> = {
-      Running: "default",
-      Active: "default",
-      Online: "default",
-      Stopped: "secondary",
-      Failed: "destructive",
+    const colorMap: Record<string, string> = {
+      Running: "bg-orange-500 text-white hover:bg-orange-600",
+      Active: "bg-green-500 text-white hover:bg-green-600",
+      Online: "bg-green-500 text-white hover:bg-green-600",
+      Stopped: "bg-gray-500 text-white hover:bg-gray-600",
+      Failed: "bg-red-500 text-white hover:bg-red-600",
     };
-    return <Badge variant={variants[status] || "secondary"}>{status}</Badge>;
+    return <Badge className={colorMap[status] || "bg-gray-500 text-white hover:bg-gray-600"}>{status}</Badge>;
   };
 
   const getIcon = (category: string) => {

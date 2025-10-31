@@ -31,10 +31,10 @@ export function AppSidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-16 border-r border-white/10 bg-background/80 backdrop-blur-xl flex flex-col items-center py-4 gap-6 z-40">
+    <aside className="fixed left-0 top-0 h-screen w-16 border-r border-white/10 bg-gradient-to-b from-[#1e1b4b] via-[#312e81] to-[#1e3a8a] backdrop-blur-xl flex flex-col items-center py-4 gap-6 z-40">
       <div className="mb-4 relative group">
-        <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-blue-600/20 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
-        <div className="relative bg-white/95 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-white/20">
+        <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/30 via-purple-500/30 to-blue-600/30 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
+        <div className="relative bg-white rounded-xl p-2 shadow-lg">
           <img src={pepsicoP} alt="PepsiCo" className="w-8 h-8 object-contain" />
         </div>
       </div>

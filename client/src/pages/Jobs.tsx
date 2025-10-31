@@ -40,7 +40,11 @@ export default function Jobs() {
                       <CardDescription className="mt-1">Cluster: {job.cluster}</CardDescription>
                     </div>
                   </div>
-                  <Badge variant={job.status === "Success" ? "default" : job.status === "Failed" ? "destructive" : "secondary"}>
+                  <Badge className={
+                    job.status === "Success" ? "bg-green-500 text-white hover:bg-green-600" : 
+                    job.status === "Failed" ? "bg-red-500 text-white hover:bg-red-600" : 
+                    "bg-orange-500 text-white hover:bg-orange-600"
+                  }>
                     {job.status === "Success" && <CheckCircle2 className="h-3 w-3 mr-1" />}
                     {job.status === "Failed" && <XCircle className="h-3 w-3 mr-1" />}
                     {job.status}

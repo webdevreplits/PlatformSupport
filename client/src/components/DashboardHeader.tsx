@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
+import headerLogo from "@assets/image_1761935092920.png";
 
 interface DashboardHeaderProps {
   onThemeToggle?: () => void;
@@ -43,36 +44,31 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#1e3a8a] shadow-lg">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col">
-              <span className="text-xs font-medium text-white/60 uppercase tracking-wide">STRATEGY + TRANSFORMATION</span>
-              <div className="relative">
-                <span className="text-sm font-bold text-white uppercase tracking-wider">DATA, ANALYTICS & AI</span>
-                <div className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-gradient-to-r from-[#0066CC] to-[#00A3E0]"></div>
-              </div>
-            </div>
+        <div className="flex h-16 items-center justify-between gap-3">
+          <div className="flex items-center gap-4">
+            <img src={headerLogo} alt="Strategy + Transformation" className="h-12 w-auto flex-shrink-0" />
             <div className="hidden lg:block h-8 w-px bg-white/20"></div>
-            <span className="hidden lg:block font-semibold text-base text-white whitespace-nowrap">Enterprise Data Analytics Platform Support</span>
+            <span className="hidden lg:block font-semibold text-sm text-white whitespace-nowrap">Enterprise Data Analytics Platform Support</span>
           </div>
 
-          <div className="flex-1 max-w-xl hidden md:block">
+          <div className="flex-1 max-w-md hidden md:block">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
               <Input
                 type="search"
                 placeholder="Search resources, costs, or incidents..."
-                className="pl-10 bg-white/5 border-white/10 focus-visible:ring-primary"
+                className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-primary"
                 data-testid="input-search"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={onThemeToggle}
+              className="text-white/90 hover:text-white hover:bg-white/10 border border-white/20"
               data-testid="button-theme-toggle"
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -80,10 +76,15 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative" data-testid="button-notifications">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="relative text-white/90 hover:text-white hover:bg-white/10 border border-white/20" 
+                  data-testid="button-notifications"
+                >
                   <Bell className="w-4 h-4" />
                   {notificationCount > 0 && (
-                    <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 border-0">
                       {notificationCount}
                     </Badge>
                   )}

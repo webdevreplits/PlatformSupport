@@ -85,7 +85,11 @@ export default function Incidents() {
                     <Badge variant={incident.priority === "Critical" ? "destructive" : incident.priority === "High" ? "destructive" : "secondary"}>
                       {incident.priority}
                     </Badge>
-                    <Badge variant={incident.status === "Resolved" ? "default" : "outline"}>
+                    <Badge className={
+                      incident.status === "Resolved" ? "bg-green-500 text-white hover:bg-green-600" : 
+                      incident.status === "In Progress" ? "bg-orange-500 text-white hover:bg-orange-600" : 
+                      "bg-red-500 text-white hover:bg-red-600"
+                    }>
                       {incident.status}
                     </Badge>
                   </div>
