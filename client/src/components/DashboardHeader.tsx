@@ -2,36 +2,50 @@ import { Search, Bell, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useQuery } from "@tanstack/react-query";
 
 interface DashboardHeaderProps {
   onThemeToggle?: () => void;
   isDark?: boolean;
 }
 
-export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeaderProps) {
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+interface Notification {
+  job_id: string;
+  run_id: string;
+  run_name: string;
+  result_state: string;
+  period_end_time: string;
+  termination_code: string;
+}
 
-  const filters = [
-    { key: "compute", label: "Compute" },
-    { key: "storage", label: "Storage" },
-    { key: "database", label: "Database" },
-    { key: "networking", label: "Networking" },
-    { key: "analytics", label: "Analytics" },
-    { key: "security", label: "Security" },
-  ];
+interface NotificationResponse {
+  count: number;
+  notifications: Notification[];
+}
+
+export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeaderProps) {
+  const { data: notificationData } = useQuery<NotificationResponse>({
+    queryKey: ['/api/notifications'],
+    refetchInterval: 30000,
+  });
+
+  const notificationCount = notificationData?.count || 0;
+  const notifications = notificationData?.notifications || [];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-chart-1 to-chart-4 flex items-center justify-center">
-                <div className="w-4 h-4 bg-white rounded-sm" />
-              </div>
-              <span className="font-semibold text-lg hidden sm:block">Azure Platform Support</span>
-            </div>
+            <span className="font-semibold text-lg">Azure Platform Support</span>
           </div>
 
           <div className="flex-1 max-w-xl hidden md:block">
@@ -55,29 +69,45 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
-            <Button variant="ghost" size="icon" data-testid="button-notifications">
-              <Bell className="w-4 h-4" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                3
-              </Badge>
-            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative" data-testid="button-notifications">
+                  <Bell className="w-4 h-4" />
+                  {notificationCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                      {notificationCount}
+                    </Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuLabel>Recent Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {notifications.length > 0 ? (
+                  notifications.map((notification, idx) => (
+                    <DropdownMenuItem key={idx} className="flex flex-col items-start py-3" data-testid={`notification-${idx}`}>
+                      <div className="flex items-center gap-2 w-full">
+                        <div className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {notification.run_name || `Job ${notification.job_id}`}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {notification.result_state} - {new Date(notification.period_end_time).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </DropdownMenuItem>
+                  ))
+                ) : (
+                  <DropdownMenuItem disabled>
+                    <span className="text-sm text-muted-foreground">No recent notifications</span>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 pb-4 overflow-x-auto scrollbar-hide">
-          <span className="text-sm font-medium text-foreground/70 mr-1">Filter by:</span>
-          {filters.map((filter) => (
-            <Button
-              key={filter.key}
-              variant={activeFilter === filter.key ? "default" : "ghost"}
-              size="sm"
-              className={`rounded-full px-4 ${activeFilter === filter.key ? '' : 'hover-elevate'}`}
-              onClick={() => setActiveFilter(activeFilter === filter.key ? null : filter.key)}
-              data-testid={`filter-${filter.key}`}
-            >
-              {filter.label}
-            </Button>
-          ))}
         </div>
       </div>
     </header>

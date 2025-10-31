@@ -866,6 +866,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get notifications (recent failed jobs)
+  app.get("/api/notifications", authenticateToken, async (req: AuthRequest, res) => {
+    try {
+      const sqlConfig = await getSQLWarehouseConfig(req.user!.id);
+      
+      // Get recent failed jobs (last 24 hours)
+      const notificationsQuery = `
+        SELECT 
+          job_id,
+          run_id,
+          run_name,
+          result_state,
+          period_end_time,
+          termination_code
+        FROM system.lakeflow.job_run_timeline
+        WHERE period_end_time >= CURRENT_TIMESTAMP() - INTERVAL 24 HOURS
+          AND result_state IN ('FAILED', 'TIMEDOUT', 'CANCELED')
+        ORDER BY period_end_time DESC
+        LIMIT 10
+      `;
+      
+      const notifications = await executeSQLQuery(notificationsQuery, sqlConfig);
+      const count = notifications.length;
+      
+      res.json({
+        count,
+        notifications,
+      });
+    } catch (error) {
+      console.error("Get notifications error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get notifications" });
+    }
+  });
+
   // Get failed jobs for RCA Dashboard
   app.get("/api/rca/failed-jobs", authenticateToken, async (req: AuthRequest, res) => {
     try {
