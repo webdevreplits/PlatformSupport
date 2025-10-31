@@ -1,6 +1,5 @@
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { GlassmorphicCard } from "@/components/GlassmorphicCard";
-import { CircularProgress } from "@/components/CircularProgress";
 import { MiniAreaChart } from "@/components/MiniAreaChart";
 import { StatusToggle } from "@/components/StatusToggle";
 import { Activity, AlertCircle, CheckCircle2, Database, Server, Workflow, Sparkles, Loader2 } from "lucide-react";
@@ -212,7 +211,7 @@ export default function Dashboard() {
           
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
             <Card className="shadow-sm p-6">
             <div className="flex items-start justify-between mb-3">
@@ -224,24 +223,6 @@ export default function Dashboard() {
             </div>
             <div className="text-xs text-muted-foreground mb-2">Average Resolution Time</div>
             <Badge variant="default">Within SLA</Badge>
-            </Card>
-          
-
-          
-            <Card className="shadow-sm p-6">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <h3 className="text-sm font-medium text-foreground/70">Job Success Rate</h3>
-              </div>
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
-            </div>
-            <div className="h-20 flex items-center justify-center">
-              {metricsLoading ? (
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              ) : (
-                <CircularProgress value={metrics?.jobs?.success_rate || 0} size={80} strokeWidth={8} className="text-green-500" />
-              )}
-            </div>
             </Card>
           
 

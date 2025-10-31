@@ -25,9 +25,9 @@ import NotFound from "@/pages/not-found";
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen overflow-x-hidden">
       <AppSidebar />
-      <div className="flex-1 ml-16">
+      <div className="flex-1 ml-16 overflow-x-hidden w-full">
         {children}
       </div>
     </div>
