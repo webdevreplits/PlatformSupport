@@ -10,6 +10,8 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 interface FailedJob {
   job_id: string;
@@ -52,6 +54,10 @@ interface AnalysisProgress {
 }
 
 export default function RCA() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   const [rcaReport, setRcaReport] = useState<RCAReport | null>(null);
   const [progress, setProgress] = useState<AnalysisProgress | null>(null);
@@ -173,25 +179,28 @@ export default function RCA() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="container mx-auto space-y-6" data-testid="page-rca">
-      <div>
-        <h1 className="text-3xl font-bold" data-testid="text-page-title">Root Cause Analysis</h1>
-        <p className="text-muted-foreground" data-testid="text-page-description">
-          AI-powered root cause analysis with internet research for platform outages and comprehensive diagnostics
-        </p>
-      </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-6" data-testid="page-rca">
+            <h1 className="text-3xl font-bold" data-testid="text-page-title">Root Cause Analysis</h1>
+            <p className="text-muted-foreground" data-testid="text-page-description">
+              AI-powered root cause analysis with internet research for platform outages and comprehensive diagnostics
+            </p>
+          </div>
 
-      {jobsError && (
+          {jobsError && (
         <Alert variant="destructive" data-testid="alert-jobs-error">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             Failed to load jobs: {jobsError instanceof Error ? jobsError.message : "Unknown error"}
           </AlertDescription>
         </Alert>
-      )}
+          )}
 
-      <Card data-testid="card-failed-jobs">
+          <Card data-testid="card-failed-jobs">
         <CardHeader>
           <CardTitle data-testid="text-failed-jobs-title">Failed Job Runs</CardTitle>
           <CardDescription data-testid="text-failed-jobs-description">
@@ -262,10 +271,10 @@ export default function RCA() {
             </Table>
           )}
         </CardContent>
-      </Card>
+          </Card>
 
-      {/* RCA Results Dialog */}
-      <Dialog open={!!rcaReport} onOpenChange={() => setRcaReport(null)}>
+          {/* RCA Results Dialog */}
+          <Dialog open={!!rcaReport} onOpenChange={() => setRcaReport(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh]" data-testid="dialog-rca-results">
           <DialogHeader>
             <DialogTitle data-testid="text-dialog-title">Root Cause Analysis Results</DialogTitle>
@@ -436,7 +445,8 @@ export default function RCA() {
             )}
           </ScrollArea>
         </DialogContent>
-      </Dialog>
+          </Dialog>
+        </main>
       </div>
     </div>
   );

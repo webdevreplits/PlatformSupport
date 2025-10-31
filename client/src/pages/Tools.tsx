@@ -1,8 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Database, Server, Activity, BarChart3 } from "lucide-react";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default function Tools() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const tools = [
     { id: 1, name: "Databricks", type: "Data Platform", icon: Database, status: "Connected", lastSync: "2 min ago" },
     { id: 2, name: "ServiceNow", type: "ITSM", icon: Server, status: "Connected", lastSync: "5 min ago" },
@@ -11,12 +17,15 @@ export default function Tools() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Connected Tools</h1>
-          <p className="text-muted-foreground mt-1">Manage platform integrations and connectors</p>
-        </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold">Connected Tools</h1>
+            <p className="text-muted-foreground mt-1">Manage platform integrations and connectors</p>
+          </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           {tools.map((tool) => {
@@ -46,7 +55,8 @@ export default function Tools() {
               </Card>
             );
           })}
-        </div>
+          </div>
+        </main>
       </div>
     </div>
   );

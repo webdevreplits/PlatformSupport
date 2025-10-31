@@ -6,8 +6,14 @@ import { ArrowLeft, Edit, Loader2 } from "lucide-react";
 import { PageViewer } from "@/components/PageViewer";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Page } from "@shared/schema";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default function PageView() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const params = useParams();
   const pageId = params.id ? parseInt(params.id) : null;
   const { user } = useAuth();
@@ -36,18 +42,21 @@ export default function PageView() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Link href="/pages">
-              <Button variant="ghost" size="icon" data-testid="button-back">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold">{page.name}</h1>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <Link href="/pages">
+                <Button variant="ghost" size="icon" data-testid="button-back">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </Link>
+              <div>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold">{page.name}</h1>
                 <Badge 
                   variant={page.status === "published" ? "default" : page.status === "draft" ? "secondary" : "outline"}
                   data-testid="badge-page-status"
@@ -70,9 +79,10 @@ export default function PageView() {
           )}
         </div>
 
-        <div className="bg-card rounded-lg p-6 shadow-sm">
-          <PageViewer page={page} />
-        </div>
+          <div className="bg-card rounded-lg p-6 shadow-sm">
+            <PageViewer page={page} />
+          </div>
+        </main>
       </div>
     </div>
   );

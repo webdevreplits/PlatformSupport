@@ -1,8 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Database, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default function Jobs() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const jobs = [
     { id: "job-123", name: "ETL Pipeline - Daily", cluster: "analytics-cluster", status: "Success", duration: "12m 34s", lastRun: "30 min ago" },
     { id: "job-124", name: "Data Quality Check", cluster: "data-quality", status: "Running", duration: "5m 12s", lastRun: "running" },
@@ -11,12 +17,15 @@ export default function Jobs() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Databricks Jobs</h1>
-          <p className="text-muted-foreground mt-1">Monitor job execution and performance</p>
-        </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold">Databricks Jobs</h1>
+            <p className="text-muted-foreground mt-1">Monitor job execution and performance</p>
+          </div>
 
         <div className="grid gap-4">
           {jobs.map((job) => (
@@ -49,7 +58,8 @@ export default function Jobs() {
               </CardContent>
             </Card>
           ))}
-        </div>
+          </div>
+        </main>
       </div>
     </div>
   );

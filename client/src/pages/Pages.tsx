@@ -8,8 +8,14 @@ import { Plus, Edit, Trash2, Eye, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import type { Page } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default function Pages() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -48,13 +54,16 @@ export default function Pages() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Pages</h1>
-            <p className="text-muted-foreground mt-1">Manage your application pages</p>
-          </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold">Pages</h1>
+              <p className="text-muted-foreground mt-1">Manage your application pages</p>
+            </div>
           {canEdit && (
             <Link href="/pages/new">
               <Button data-testid="button-create-page">
@@ -131,6 +140,7 @@ export default function Pages() {
             ))}
           </div>
         )}
+        </main>
       </div>
     </div>
   );

@@ -9,8 +9,13 @@ import { Sparkles, CheckCircle2, AlertCircle, Loader2, Database } from "lucide-r
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default function Settings() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
   const [token, setToken] = useState("");
   const [baseUrl, setBaseUrl] = useState("https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints");
   const [endpointName, setEndpointName] = useState("databricks-claude-sonnet-4-5");
@@ -139,12 +144,15 @@ export default function Settings() {
   const isSqlConfigured = sqlConfigData?.configured;
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-muted-foreground mt-1">Manage your platform configuration and preferences</p>
-        </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold">Settings</h1>
+            <p className="text-muted-foreground mt-1">Manage your platform configuration and preferences</p>
+          </div>
 
         <Tabs defaultValue="ai" className="space-y-6">
           <TabsList>
@@ -479,7 +487,8 @@ export default function Settings() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        </main>
       </div>
     </div>
   );
