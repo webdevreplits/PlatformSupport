@@ -8,6 +8,9 @@ import { Send, Sparkles, Code, AlertCircle, BarChart3, FileText, Loader2 } from 
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 
 interface Message {
   role: "user" | "assistant";
@@ -16,6 +19,9 @@ interface Message {
 }
 
 export default function Assistant() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -73,15 +79,18 @@ export default function Assistant() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold">AI Assistant</h1>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <Sparkles className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold text-white">AI Assistant</h1>
+            </div>
+            <p className="text-white/70">Your intelligent Azure platform copilot</p>
           </div>
-          <p className="text-muted-foreground">Your intelligent Azure platform copilot</p>
-        </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
@@ -187,6 +196,8 @@ export default function Assistant() {
             </Card>
           </div>
         </div>
+        </main>
+        <Footer />
       </div>
     </div>
   );

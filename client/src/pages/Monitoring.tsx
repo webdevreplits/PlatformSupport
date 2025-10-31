@@ -1,4 +1,6 @@
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 import { GlassmorphicCard } from "@/components/GlassmorphicCard";
 import { CircularProgress } from "@/components/CircularProgress";
 import { MiniAreaChart } from "@/components/MiniAreaChart";
@@ -19,22 +21,24 @@ export default function Monitoring() {
   const chartData2 = [45, 40, 55, 50, 70, 60, 80, 75];
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader onThemeToggle={handleThemeToggle} isDark={isDark} />
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={isDark} />
 
-      <main className="container mx-auto px-4 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Workspace Monitoring</h1>
-            <p className="text-muted-foreground">Real-time system performance and analytics</p>
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold mb-2 text-white">Workspace Monitoring</h1>
+              <p className="text-white/70">Real-time system performance and analytics</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" data-testid="button-citiire">Citiire</Button>
+              <Button variant="outline" data-testid="button-status">Status</Button>
+              <Button variant="outline" data-testid="button-flamine">Flamine</Button>
+              <Button variant="default" data-testid="button-acknowliege">Acknowliege . Opel</Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" data-testid="button-citiire">Citiire</Button>
-            <Button variant="outline" data-testid="button-status">Status</Button>
-            <Button variant="outline" data-testid="button-flamine">Flamine</Button>
-            <Button variant="default" data-testid="button-acknowliege">Acknowliege . Opel</Button>
-          </div>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <GlassmorphicCard gradient="blue" className="p-6">
@@ -189,6 +193,8 @@ export default function Monitoring() {
           </GlassmorphicCard>
         </div>
       </main>
+      <Footer />
+      </div>
     </div>
   );
 }

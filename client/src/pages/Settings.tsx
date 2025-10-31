@@ -11,6 +11,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { Footer } from "@/components/Footer";
 
 export default function Settings() {
   const handleThemeToggle = () => {
@@ -489,6 +490,7 @@ export default function Settings() {
           </TabsContent>
           </Tabs>
         </main>
+        <Footer />
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { Footer } from "@/components/Footer";
 
 interface FailedJob {
   job_id: string;
@@ -447,6 +448,7 @@ export default function RCA() {
         </DialogContent>
           </Dialog>
         </main>
+        <Footer />
       </div>
     </div>
   );

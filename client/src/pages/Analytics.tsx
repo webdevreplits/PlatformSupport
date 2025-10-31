@@ -2,8 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, TrendingUp, Users, Database, Activity, Zap } from "lucide-react";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 
 export default function Analytics() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
   const databricksJobs = [
     { name: "ETL Pipeline", runs: 245, success: 242, avgDuration: "12m" },
     { name: "Data Quality Check", runs: 180, success: 178, avgDuration: "5m" },
@@ -25,12 +31,15 @@ export default function Analytics() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Platform Analytics</h1>
-          <p className="text-muted-foreground mt-1">Comprehensive insights into platform performance and usage</p>
-        </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white">Platform Analytics</h1>
+            <p className="text-white/70 mt-1">Comprehensive insights into platform performance and usage</p>
+          </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
@@ -227,6 +236,8 @@ export default function Analytics() {
             </div>
           </TabsContent>
         </Tabs>
+        </main>
+        <Footer />
       </div>
     </div>
   );

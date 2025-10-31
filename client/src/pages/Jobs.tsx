@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Database, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { Footer } from "@/components/Footer";
 
 export default function Jobs() {
   const handleThemeToggle = () => {
@@ -60,6 +61,7 @@ export default function Jobs() {
           ))}
           </div>
         </main>
+        <Footer />
       </div>
     </div>
   );

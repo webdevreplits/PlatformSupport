@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import platformLogo from "@assets/image_1761933414000.png";
 
 interface DashboardHeaderProps {
   onThemeToggle?: () => void;
@@ -45,9 +44,16 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#1e3a8a] shadow-lg">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <img src={platformLogo} alt="Platform" className="h-10 w-10 rounded-lg shadow-md" />
-            <span className="font-semibold text-lg text-white">Enterprise Data Analytics Platform Support</span>
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col">
+              <span className="text-xs font-medium text-white/60 uppercase tracking-wide">STRATEGY + TRANSFORMATION</span>
+              <div className="relative">
+                <span className="text-sm font-bold text-white uppercase tracking-wider">DATA, ANALYTICS & AI</span>
+                <div className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-gradient-to-r from-[#0066CC] to-[#00A3E0]"></div>
+              </div>
+            </div>
+            <div className="hidden lg:block h-8 w-px bg-white/20"></div>
+            <span className="hidden lg:block font-semibold text-base text-white whitespace-nowrap">Enterprise Data Analytics Platform Support</span>
           </div>
 
           <div className="flex-1 max-w-xl hidden md:block">

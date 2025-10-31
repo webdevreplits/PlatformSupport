@@ -6,8 +6,14 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 
 export default function Incidents() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
   const [selectedIncident, setSelectedIncident] = useState<string | null>(null);
   const [aiSummary, setAiSummary] = useState<Record<string, string>>({});
   const [aiScript, setAiScript] = useState<Record<string, string>>({});
@@ -55,12 +61,15 @@ export default function Incidents() {
   });
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">ServiceNow Incidents</h1>
-          <p className="text-muted-foreground mt-1">Track and manage platform incidents with AI assistance</p>
-        </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white">ServiceNow Incidents</h1>
+            <p className="text-white/70 mt-1">Track and manage platform incidents with AI assistance</p>
+          </div>
 
         <div className="grid gap-4">
           {incidents.map((incident) => (
@@ -144,6 +153,8 @@ export default function Incidents() {
             </Card>
           ))}
         </div>
+        </main>
+        <Footer />
       </div>
     </div>
   );

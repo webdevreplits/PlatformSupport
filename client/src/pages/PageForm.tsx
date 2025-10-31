@@ -11,8 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import type { Page } from "@shared/schema";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 
 export default function PageForm() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
   const params = useParams();
   const pageId = params.id ? parseInt(params.id) : null;
   const isEdit = Boolean(pageId);
@@ -96,15 +102,21 @@ export default function PageForm() {
 
   if (isEdit && isLoadingPage) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen relative">
+        <BackgroundDecor />
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
         <Link href="/pages">
           <Button variant="ghost" className="mb-6" data-testid="button-back">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -199,6 +211,8 @@ export default function PageForm() {
             </form>
           </CardContent>
         </Card>
+        </main>
+        <Footer />
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import type { Page } from "@shared/schema";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { Footer } from "@/components/Footer";
 
 export default function PageView() {
   const handleThemeToggle = () => {
@@ -83,6 +84,7 @@ export default function PageView() {
             <PageViewer page={page} />
           </div>
         </main>
+        <Footer />
       </div>
     </div>
   );

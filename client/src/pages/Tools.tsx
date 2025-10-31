@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Database, Server, Activity, BarChart3 } from "lucide-react";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { Footer } from "@/components/Footer";
 
 export default function Tools() {
   const handleThemeToggle = () => {
@@ -57,6 +58,7 @@ export default function Tools() {
           })}
           </div>
         </main>
+        <Footer />
       </div>
     </div>
   );

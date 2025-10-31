@@ -1,5 +1,6 @@
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 import { GlassmorphicCard } from "@/components/GlassmorphicCard";
 import { MiniAreaChart } from "@/components/MiniAreaChart";
 import { StatusToggle } from "@/components/StatusToggle";
@@ -325,6 +326,7 @@ export default function Dashboard() {
           </Card>
         </div>
       </main>
+      <Footer />
       </div>
     </div>
   );

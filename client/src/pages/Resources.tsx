@@ -2,8 +2,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Server, Database, HardDrive, Network } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 
 export default function Resources() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
   const resources = {
     compute: [
       { name: "vm-prod-web-01", type: "Virtual Machine", status: "Running", region: "East US", size: "Standard_D4s_v3" },
@@ -47,12 +53,15 @@ export default function Resources() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Azure Resources</h1>
-          <p className="text-muted-foreground mt-1">Manage and monitor infrastructure resources</p>
-        </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white">Azure Resources</h1>
+            <p className="text-white/70 mt-1">Manage and monitor infrastructure resources</p>
+          </div>
 
         <Tabs defaultValue="compute" className="space-y-6">
           <TabsList>
@@ -117,6 +126,8 @@ export default function Resources() {
             </TabsContent>
           ))}
         </Tabs>
+        </main>
+        <Footer />
       </div>
     </div>
   );

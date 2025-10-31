@@ -3,8 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { DollarSign, TrendingUp, TrendingDown, Calendar } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { BackgroundDecor } from "@/components/BackgroundDecor";
+import { Footer } from "@/components/Footer";
 
 export default function CostAnalysis() {
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+  
   const [timeRange, setTimeRange] = useState("30d");
 
   const costData = {
@@ -25,13 +32,16 @@ export default function CostAnalysis() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Cost Analysis</h1>
-            <p className="text-muted-foreground mt-1">Monitor and optimize Azure spending</p>
-          </div>
+    <div className="min-h-screen relative">
+      <BackgroundDecor />
+      <div className="relative z-10">
+        <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
+        <main className="container mx-auto px-4 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-white">Cost Analysis</h1>
+              <p className="text-white/70 mt-1">Monitor and optimize Azure spending</p>
+            </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-40" data-testid="select-timerange">
               <SelectValue />
@@ -116,6 +126,8 @@ export default function CostAnalysis() {
             </CardContent>
           </Card>
         </div>
+        </main>
+        <Footer />
       </div>
     </div>
   );

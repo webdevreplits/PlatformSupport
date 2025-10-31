@@ -10,6 +10,7 @@ import type { Page } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { BackgroundDecor } from "@/components/BackgroundDecor";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { Footer } from "@/components/Footer";
 
 export default function Pages() {
   const handleThemeToggle = () => {
@@ -141,6 +142,7 @@ export default function Pages() {
           </div>
         )}
         </main>
+        <Footer />
       </div>
     </div>
   );
