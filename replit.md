@@ -128,13 +128,15 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 ### October 31, 2025 - Dual-Mode Architecture for Databricks Apps Compatibility
 
 - **Streamlit Mode Support**: Application now runs WITHOUT PostgreSQL when `DATABASE_URL` is not set
-- **server/db.ts**: Made database connection optional with `DB_ENABLED` flag
+- **server/db.ts**: Made database connection optional with `DB_ENABLED` flag, displays startup mode banner
 - **server/middleware/auth.ts**: Authentication bypasses in streamlit mode, creates mock admin user  
 - **server/storage.ts**: Created `StreamlitStorage` class for in-memory mock data (no database required)
+- **server/routes.ts**: Updated `getDatabricksConfig` and `getSQLWarehouseConfig` to read from environment variables in streamlit mode
+- **Environment Variables**: Streamlit mode reads configuration from `DATABRICKS_HOST`, `DATABRICKS_TOKEN`, `DATABRICKS_WAREHOUSE_ID` instead of database
 - **client/src/contexts/AuthContext.tsx**: Auto-authenticate in streamlit mode by calling `/api/auth/me` without token
 - **Dual Storage Implementation**: Automatically selects `DatabaseStorage` or `StreamlitStorage` based on `DB_ENABLED` flag
 - **No Database Crashes**: All database operations guarded, seed.ts skips when no database, app boots successfully without DATABASE_URL
-- **Documentation**: Created DATABRICKS_APPS_STREAMLIT.md with complete deployment guide for no-database mode
+- **Documentation**: Created DATABRICKS_APPS_STREAMLIT.md with complete deployment guide including required environment variables
 - **Use Case**: Perfect for deploying to Databricks Apps where PostgreSQL is not available or needed
 
 ### October 31, 2025 - Complete PepsiCo Professional Theme Redesign

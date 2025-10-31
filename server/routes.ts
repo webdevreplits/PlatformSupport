@@ -9,6 +9,7 @@ import { executeSQLQuery, getFailedJobs, getJobRunDetails, getClusterInfo, getAu
 import { encrypt, decrypt } from "./utils/encryption";
 import { runStatusScraper, type StatusPageConfig } from "./utils/status-scraper";
 import { correlateJobFailure } from "./utils/rca-correlator";
+import { DB_ENABLED } from "./db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -346,6 +347,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       throw new Error("User not found");
     }
 
+    // In streamlit mode, read from environment variables
+    if (!DB_ENABLED) {
+      const token = process.env.DATABRICKS_TOKEN || process.env.OPENAI_API_KEY;
+      const defaultBaseUrl = process.env.DATABRICKS_HOST 
+        ? `${process.env.DATABRICKS_HOST}/serving-endpoints`
+        : "https://adb-7901759384367063.3.azuredatabricks.net/serving-endpoints";
+
+      if (!token) {
+        throw new Error("Databricks token not configured. Please set DATABRICKS_TOKEN or OPENAI_API_KEY environment variable.");
+      }
+
+      return {
+        token,
+        baseUrl: defaultBaseUrl,
+        endpointName: "databricks-claude-sonnet-4-5"
+      };
+    }
+
     // Get Databricks AI connection by name (organization-level config with toolId = null)
     const databricksConnection = await storage.getConnectionByName("Databricks AI", null);
     
@@ -374,6 +393,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const user = await storage.getUser(userId);
     if (!user) {
       throw new Error("User not found");
+    }
+
+    // In streamlit mode, read from environment variables
+    if (!DB_ENABLED) {
+      const token = process.env.DATABRICKS_TOKEN;
+      const workspaceUrl = process.env.DATABRICKS_HOST;
+      const warehouseId = process.env.DATABRICKS_WAREHOUSE_ID;
+
+      if (!token || !workspaceUrl || !warehouseId) {
+        throw new Error("SQL Warehouse not configured. Please set environment variables: DATABRICKS_TOKEN, DATABRICKS_HOST, DATABRICKS_WAREHOUSE_ID");
+      }
+
+      return {
+        token,
+        workspaceUrl,
+        warehouseId
+      };
     }
 
     const sqlConnection = await storage.getConnectionByName("SQL Warehouse", null);

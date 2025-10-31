@@ -31,16 +31,24 @@ No code changes needed! Just push your code to Databricks Apps workspace.
 In Databricks Apps → Environment tab, add **ONLY**:
 
 ```bash
-# Required for AI features
+# Required: Databricks workspace and authentication
 DATABRICKS_HOST=https://your-workspace.cloud.databricks.com
 DATABRICKS_TOKEN=your-databricks-pat-token
 
-# Optional: For OpenAI-based features
+# Required: SQL Warehouse for jobs, RCA, and analytics features
+DATABRICKS_WAREHOUSE_ID=your-warehouse-id
+
+# Optional: For OpenAI-based AI features (if not using Databricks serving endpoints)
 OPENAI_API_KEY=sk-your-openai-key
 
 # Optional: For session security (auto-generated if not provided)
 SESSION_SECRET=your-random-32-char-string
 ```
+
+**How to find your SQL Warehouse ID:**
+1. Go to Databricks → SQL Warehouses
+2. Click on your warehouse
+3. Copy the ID from the URL: `/sql/warehouses/{warehouse-id}`
 
 **IMPORTANT:** Do NOT set `DATABASE_URL` - the app will automatically run in streamlit mode without it!
 
@@ -102,8 +110,9 @@ This dual-mode design allows you to:
 - **Solution**: Remove `DATABASE_URL` from environment variables completely. The app should auto-detect streamlit mode.
 
 ### Can't access features
-- **Verify** `DATABRICKS_HOST` and `DATABRICKS_TOKEN` are set correctly
-- **Check** that your Databricks token has permissions to query system tables
+- **Verify** `DATABRICKS_HOST`, `DATABRICKS_TOKEN`, and `DATABRICKS_WAREHOUSE_ID` are set correctly
+- **Check** that your Databricks token has permissions to query system tables and use the SQL warehouse
+- **Find your warehouse ID**: Go to Databricks SQL Warehouses → Click your warehouse → Copy ID from URL
 - **Review** logs for specific errors about Databricks API calls
 
 ### Want to add database later?

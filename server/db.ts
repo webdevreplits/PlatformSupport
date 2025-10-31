@@ -25,8 +25,9 @@ if (!DB_ENABLED) {
   console.log('  ✗ Persistent Settings');
   console.log('');
   console.log('Configuration: Use environment variables');
-  console.log('  - DATABRICKS_HOST');
-  console.log('  - DATABRICKS_TOKEN');
+  console.log('  - DATABRICKS_HOST (required)');
+  console.log('  - DATABRICKS_TOKEN (required)');
+  console.log('  - DATABRICKS_WAREHOUSE_ID (required for SQL features)');
   console.log('  - OPENAI_API_KEY (optional, for AI features)');
   console.log('=================================================================\n');
 }
