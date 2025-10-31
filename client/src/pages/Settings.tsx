@@ -150,8 +150,8 @@ export default function Settings() {
         <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold">Settings</h1>
-            <p className="text-muted-foreground mt-1">Manage your platform configuration and preferences</p>
+            <h1 className="text-3xl font-bold text-white">Settings</h1>
+            <p className="text-white/70 mt-1">Manage your platform configuration and preferences</p>
           </div>
 
         <Tabs defaultValue="ai" className="space-y-6">

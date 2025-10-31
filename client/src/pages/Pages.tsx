@@ -61,8 +61,8 @@ export default function Pages() {
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold">Pages</h1>
-              <p className="text-muted-foreground mt-1">Manage your application pages</p>
+              <h1 className="text-3xl font-bold text-white">Pages</h1>
+              <p className="text-white/70 mt-1">Manage your application pages</p>
             </div>
           {canEdit && (
             <Link href="/pages/new">
@@ -77,7 +77,7 @@ export default function Pages() {
         {pages && pages.length === 0 ? (
           <Card className="shadow-sm">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <p className="text-muted-foreground mb-4">No pages found</p>
+              <p className="text-foreground mb-4">No pages found</p>
               {canEdit && (
                 <Link href="/pages/new">
                   <Button variant="outline" data-testid="button-create-first-page">
