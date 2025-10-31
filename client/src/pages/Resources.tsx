@@ -59,8 +59,8 @@ export default function Resources() {
         <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white">Azure Resources</h1>
-            <p className="text-white/70 mt-1">Manage and monitor infrastructure resources</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight">Azure Resources</h1>
+            <p className="text-white/80 mt-2 text-base">Manage and monitor infrastructure resources</p>
           </div>
 
         <Tabs defaultValue="compute" className="space-y-6">

@@ -80,7 +80,8 @@ export default function Dashboard() {
 
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="mb-6">
-            <p className="text-sm text-white/70">Monitor and manage your data analytics infrastructure and services</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight mb-2">Dashboard</h1>
+            <p className="text-base text-white/80">Monitor and manage your data analytics infrastructure and services</p>
           </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">

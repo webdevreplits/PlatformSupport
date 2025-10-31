@@ -62,8 +62,8 @@ export default function Pages() {
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white">Pages</h1>
-              <p className="text-white/70 mt-1">Manage your application pages</p>
+              <h1 className="text-4xl font-bold text-white tracking-tight">Pages</h1>
+              <p className="text-white/80 mt-2 text-base">Manage your application pages</p>
             </div>
           {canEdit && (
             <Link href="/pages/new">
@@ -97,7 +97,11 @@ export default function Pages() {
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-lg">{page.name}</CardTitle>
                     <Badge 
-                      variant={page.status === "published" ? "default" : page.status === "draft" ? "secondary" : "outline"}
+                      className={
+                        page.status === "published" ? "bg-green-500 text-white hover:bg-green-600" : 
+                        page.status === "draft" ? "bg-gray-500 text-white hover:bg-gray-600" : 
+                        "bg-orange-500 text-white hover:bg-orange-600"
+                      }
                       data-testid={`badge-status-${page.id}`}
                     >
                       {page.status}

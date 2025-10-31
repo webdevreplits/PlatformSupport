@@ -44,11 +44,11 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#1e3a8a] shadow-lg">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-3">
+        <div className="flex h-20 items-center justify-between gap-3">
           <div className="flex items-center gap-4">
-            <img src={headerLogo} alt="Strategy + Transformation" className="h-12 w-auto flex-shrink-0" />
-            <div className="hidden lg:block h-8 w-px bg-white/20"></div>
-            <span className="hidden lg:block font-semibold text-sm text-white whitespace-nowrap">Enterprise Data Analytics Platform Support</span>
+            <img src={headerLogo} alt="Strategy + Transformation" className="h-16 w-auto flex-shrink-0" />
+            <div className="hidden lg:block h-10 w-px bg-white/30"></div>
+            <span className="hidden lg:block font-bold text-lg text-white whitespace-nowrap tracking-tight">Enterprise Data Analytics Platform Support</span>
           </div>
 
           <div className="flex-1 max-w-md hidden md:block">
@@ -63,15 +63,15 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={onThemeToggle}
-              className="text-white/90 hover:text-white hover:bg-white/10 border border-white/20"
+              className="text-white hover:text-white hover:bg-white/20 border-2 border-white/40 bg-white/10"
               data-testid="button-theme-toggle"
             >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
             
             <DropdownMenu>
@@ -79,12 +79,12 @@ export function DashboardHeader({ onThemeToggle, isDark = true }: DashboardHeade
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="relative text-white/90 hover:text-white hover:bg-white/10 border border-white/20" 
+                  className="relative text-white hover:text-white hover:bg-white/20 border-2 border-white/40 bg-white/10" 
                   data-testid="button-notifications"
                 >
-                  <Bell className="w-4 h-4" />
+                  <Bell className="w-5 h-5" />
                   {notificationCount > 0 && (
-                    <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 border-0">
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 border-0 font-bold">
                       {notificationCount}
                     </Badge>
                   )}

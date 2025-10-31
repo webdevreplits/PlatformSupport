@@ -24,8 +24,8 @@ export default function Jobs() {
         <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white">Databricks Jobs</h1>
-            <p className="text-white/70 mt-1">Monitor job execution and performance</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight">Databricks Jobs</h1>
+            <p className="text-white/80 mt-2 text-base">Monitor job execution and performance</p>
           </div>
 
         <div className="grid gap-4">

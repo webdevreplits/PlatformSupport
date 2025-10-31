@@ -24,8 +24,8 @@ export default function Tools() {
         <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white">Connected Tools</h1>
-            <p className="text-white/70 mt-1">Manage platform integrations and connectors</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight">Connected Tools</h1>
+            <p className="text-white/80 mt-2 text-base">Manage platform integrations and connectors</p>
           </div>
 
         <div className="grid md:grid-cols-2 gap-4">

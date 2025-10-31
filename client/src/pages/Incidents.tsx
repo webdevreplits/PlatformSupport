@@ -67,8 +67,8 @@ export default function Incidents() {
         <DashboardHeader onThemeToggle={handleThemeToggle} isDark={document.documentElement.classList.contains('dark')} />
         <main className="container mx-auto px-4 lg:px-8 py-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white">ServiceNow Incidents</h1>
-            <p className="text-white/70 mt-1">Track and manage platform incidents with AI assistance</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight">ServiceNow Incidents</h1>
+            <p className="text-white/80 mt-2 text-base">Track and manage platform incidents with AI assistance</p>
           </div>
 
         <div className="grid gap-4">
