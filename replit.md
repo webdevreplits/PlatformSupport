@@ -1,8 +1,8 @@
-# AzureOps Intelligence - AI-Powered Azure Platform Support
+# Enterprise Data Analytics Platform Support
 
 ## Overview
 
-AzureOps Intelligence is an AI-powered, no-code internal dashboard and app builder platform for Azure Platform Support teams. It provides real-time infrastructure monitoring, AI assistance, cost analysis, and workflow automation to streamline Azure operations. Key capabilities include an AI Assistant for support queries and automation, AI-powered operational insights, incident analysis, and a visual page builder. The platform aims to enhance efficiency, reduce operational costs, and improve incident resolution times for Azure environments.
+Enterprise Data Analytics Platform Support is an AI-powered, no-code internal dashboard and app builder platform for data analytics support teams. It provides real-time infrastructure monitoring, AI assistance, cost analysis, and workflow automation to streamline data operations. Key capabilities include an AI Assistant for support queries and automation, AI-powered operational insights, incident analysis, and a visual page builder. The platform aims to enhance efficiency, reduce operational costs, and improve incident resolution times for data analytics environments.
 
 ## User Preferences
 

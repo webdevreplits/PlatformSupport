@@ -76,8 +76,8 @@ export default function Dashboard() {
 
       <main className="container mx-auto px-4 lg:px-8 py-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-1">Azure Platform Support</h1>
-          <p className="text-sm text-muted-foreground">Monitor and manage your Azure infrastructure and services</p>
+          <h1 className="text-2xl font-bold mb-1">Enterprise Data Analytics Platform Support</h1>
+          <p className="text-sm text-muted-foreground">Monitor and manage your data analytics infrastructure and services</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
