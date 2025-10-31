@@ -78,6 +78,17 @@ The platform integrates Databricks Claude Sonnet 4.5 for various AI functionalit
 
 ## Recent Changes
 
+### October 31, 2025 - Databricks Apps Deployment Support
+
+- **Lazy Database Initialization**: Implemented ConfigService with encrypted JSON persistence for runtime configuration. App now starts successfully without DATABASE_URL environment variable.
+- **Setup Wizard**: Created multi-step SetupWizard UI for initial configuration (database, admin user, AI credentials, encryption passphrase).
+- **Bootstrap API**: Added `/api/bootstrap/*` endpoints for setup status, database validation, initialization, and unlock.
+- **Unlock Mechanism**: Implemented unlock API and UI that allows users to enter encryption passphrase after restart if ENCRYPTION_PASSPHRASE environment variable is not set, preventing permanent lockouts.
+- **Readiness Middleware**: Implemented setupMiddleware that gates routes until setup is complete or app is unlocked, while allowing bootstrap endpoints to remain accessible.
+- **Encryption Key Management**: ConfigService automatically loads encryption key from ENCRYPTION_PASSPHRASE environment variable on startup, or users can provide it via unlock UI.
+- **Backward Compatibility**: Supports both environment variable configuration (original) and runtime UI-based configuration (new).
+- **Zero-Config Deployment**: App can deploy to Databricks Apps without pre-configured environment variables. Users configure database and secrets through UI after deployment, then optionally add ENCRYPTION_PASSPHRASE to environment for automatic unlock on restarts.
+
 ### October 31, 2025 - Complete PepsiCo Professional Theme Redesign
 
 - **"DATA, ANALYTICS & AI" Text Logo**: Implemented professional text-based logo in DashboardHeader featuring "STRATEGY + TRANSFORMATION" label above "DATA, ANALYTICS & AI" with blue gradient underline, replacing previous gradient square icon.

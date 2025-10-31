@@ -5,7 +5,7 @@ import {
   type Alert, type InsertAlert, type AuditLog, type InsertAuditLog, type Version, type InsertVersion,
   type Organization, type InsertOrganization
 } from "@shared/schema";
-import { db } from "./db";
+import { getDb } from "./db";
 import { eq, and } from "drizzle-orm";
 
 export interface IStorage {
@@ -62,42 +62,50 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // Users
   async getUser(id: number): Promise<User | undefined> {
+    const db = getDb();
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
+    const db = getDb();
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
+    const db = getDb();
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   // Organizations
   async getOrganization(id: number): Promise<Organization | undefined> {
+    const db = getDb();
     const [org] = await db.select().from(organizations).where(eq(organizations.id, id));
     return org || undefined;
   }
 
   async createOrganization(insertOrg: InsertOrganization): Promise<Organization> {
+    const db = getDb();
     const [org] = await db.insert(organizations).values(insertOrg).returning();
     return org;
   }
 
   // Pages
   async getPages(orgId: number): Promise<Page[]> {
+    const db = getDb();
     return await db.select().from(pages).where(eq(pages.orgId, orgId));
   }
 
   async getPage(id: number): Promise<Page | undefined> {
+    const db = getDb();
     const [page] = await db.select().from(pages).where(eq(pages.id, id));
     return page || undefined;
   }
 
   async getPageBySlug(slug: string, orgId: number): Promise<Page | undefined> {
+    const db = getDb();
     const [page] = await db.select().from(pages).where(
       and(eq(pages.slug, slug), eq(pages.orgId, orgId))
     );
@@ -105,6 +113,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createPage(insertPage: InsertPage): Promise<Page> {
+    const db = getDb();
     const [page] = await db.insert(pages).values({
       ...insertPage,
       layoutJson: insertPage.layoutJson ?? {},
@@ -113,20 +122,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updatePage(id: number, updateData: Partial<InsertPage>): Promise<Page> {
+    const db = getDb();
     const [page] = await db.update(pages).set(updateData).where(eq(pages.id, id)).returning();
     return page;
   }
 
   async deletePage(id: number): Promise<void> {
+    const db = getDb();
     await db.delete(pages).where(eq(pages.id, id));
   }
 
   // Widgets
   async getWidgetsByPage(pageId: number): Promise<Widget[]> {
+    const db = getDb();
     return await db.select().from(widgets).where(eq(widgets.pageId, pageId));
   }
 
   async createWidget(insertWidget: InsertWidget): Promise<Widget> {
+    const db = getDb();
     const [widget] = await db.insert(widgets).values({
       ...insertWidget,
       type: insertWidget.type,
@@ -137,44 +150,53 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateWidget(id: number, updateData: Partial<InsertWidget>): Promise<Widget> {
+    const db = getDb();
     const [widget] = await db.update(widgets).set(updateData).where(eq(widgets.id, id)).returning();
     return widget;
   }
 
   async deleteWidget(id: number): Promise<void> {
+    const db = getDb();
     await db.delete(widgets).where(eq(widgets.id, id));
   }
 
   // Tools
   async getTools(orgId: number): Promise<Tool[]> {
+    const db = getDb();
     return await db.select().from(tools).where(eq(tools.orgId, orgId));
   }
 
   async getTool(id: number): Promise<Tool | undefined> {
+    const db = getDb();
     const [tool] = await db.select().from(tools).where(eq(tools.id, id));
     return tool || undefined;
   }
 
   async createTool(insertTool: InsertTool): Promise<Tool> {
+    const db = getDb();
     const [tool] = await db.insert(tools).values(insertTool).returning();
     return tool;
   }
 
   async updateTool(id: number, updateData: Partial<InsertTool>): Promise<Tool> {
+    const db = getDb();
     const [tool] = await db.update(tools).set(updateData).where(eq(tools.id, id)).returning();
     return tool;
   }
 
   async deleteTool(id: number): Promise<void> {
+    const db = getDb();
     await db.delete(tools).where(eq(tools.id, id));
   }
 
   // Connections
   async getConnections(toolId: number): Promise<Connection[]> {
+    const db = getDb();
     return await db.select().from(connections).where(eq(connections.toolId, toolId));
   }
 
   async getConnectionByName(name: string, toolId: number | null = null): Promise<Connection | undefined> {
+    const db = getDb();
     const query = toolId !== null 
       ? db.select().from(connections).where(and(eq(connections.name, name), eq(connections.toolId, toolId)))
       : db.select().from(connections).where(eq(connections.name, name));
@@ -183,21 +205,25 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createConnection(insertConnection: InsertConnection): Promise<Connection> {
+    const db = getDb();
     const [connection] = await db.insert(connections).values(insertConnection).returning();
     return connection;
   }
 
   async updateConnection(id: number, updateData: Partial<InsertConnection>): Promise<Connection> {
+    const db = getDb();
     const [connection] = await db.update(connections).set(updateData).where(eq(connections.id, id)).returning();
     return connection;
   }
 
   // Workflows
   async getWorkflows(orgId: number): Promise<Workflow[]> {
+    const db = getDb();
     return await db.select().from(workflows).where(eq(workflows.orgId, orgId));
   }
 
   async createWorkflow(insertWorkflow: InsertWorkflow): Promise<Workflow> {
+    const db = getDb();
     const [workflow] = await db.insert(workflows).values({
       ...insertWorkflow,
       workflowJson: insertWorkflow.workflowJson ?? {},
@@ -206,17 +232,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateWorkflow(id: number, updateData: Partial<InsertWorkflow>): Promise<Workflow> {
+    const db = getDb();
     const [workflow] = await db.update(workflows).set(updateData).where(eq(workflows.id, id)).returning();
     return workflow;
   }
 
   // Audit Logs
   async createAuditLog(insertLog: InsertAuditLog): Promise<AuditLog> {
+    const db = getDb();
     const [log] = await db.insert(auditLogs).values(insertLog).returning();
     return log;
   }
 
   async getAuditLogs(resourceType: string, resourceId: number): Promise<AuditLog[]> {
+    const db = getDb();
     return await db.select().from(auditLogs).where(
       and(eq(auditLogs.resourceType, resourceType), eq(auditLogs.resourceId, resourceId))
     );
@@ -224,6 +253,7 @@ export class DatabaseStorage implements IStorage {
 
   // Versions
   async createVersion(insertVersion: InsertVersion): Promise<Version> {
+    const db = getDb();
     const [version] = await db.insert(versions).values({
       ...insertVersion,
       versionJson: insertVersion.versionJson ?? {},
@@ -232,6 +262,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getVersions(resourceType: string, resourceId: number): Promise<Version[]> {
+    const db = getDb();
     return await db.select().from(versions).where(
       and(eq(versions.resourceType, resourceType), eq(versions.resourceId, resourceId))
     );

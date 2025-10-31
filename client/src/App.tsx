@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppSidebar } from "@/components/AppSidebar";
+import SetupGuard from "@/components/SetupGuard";
 import Dashboard from "@/pages/Dashboard";
 import Pages from "@/pages/Pages";
 import PageForm from "@/pages/PageForm";
@@ -151,12 +152,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Router />
-          <Toaster />
-        </TooltipProvider>
-      </AuthProvider>
+      <TooltipProvider>
+        <SetupGuard>
+          <AuthProvider>
+            <Router />
+            <Toaster />
+          </AuthProvider>
+        </SetupGuard>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }
